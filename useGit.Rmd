@@ -1,0 +1,52 @@
+---
+title: "Research essentials"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+    toc_float: true
+geometry: left = .5in, right = .5in, top = 1in, bottom = .6in
+urlcolor: blue
+---
+
+# Install/upgrade softwares:
+* Windows machine:
+    + Install pre-compiled binary of [R](https://cloud.r-project.org) for your OS.
+    + Install [RStudio Desktop](https://www.rstudio.com/products/rstudio/download/preview/).
+    + Install [miktex](https://miktex.org/download).
+    + Install [cygwin](https://www.cygwin.com).
+    + Install [Git for Windows](https://gitforwindows.org); we will refer this as "Git bash" from now on.
+* Linux machine
+    + Install R with `sudo apt-get install r-base r-base-dev`
+    + Install RStudio with 
+    ```{bash rstudio, eval = FALSE}
+      sudo apt-get install gdebi-core
+      wget https://download2.rstudio.org/rstudio-server-1.1.453-amd64.deb
+      sudo gdebi rstudio-server-1.1.453-amd64.deb
+      ```
+    + Install Git with `sudo apt-get install git`
+    
+# Git up
+* Register an account with [GitHub](https://github.com).
+* Get the [GitHub Student Developer Pack](https://education.github.com/pack) for free.
+* Configure your machine
+    + In a shell (Git bash in Windows, or terminal in Linux), do
+    ```{bash git, eval = FALSE}
+    git config --global user.name 'First Last'
+    git config --global user.email 'statishard@utdallas.edu'
+    ```
+    + Check if you edited it successfully.
+    ```{bash see}
+    git config --global --list
+    ```
+    + If you have a favor edictor (e.g., emacs, atom, etc.), do
+    ```{bash edictor, eval = FALSE}
+    git config --global core.editor "emacs"
+    ```
+* If you run into error message along the lines of
+    ```{bash git-error, eval = FALSE}
+    git@github.com: Permission denied (publickey).
+    fatal: Could not read from remote repository.
+    ```
+You probably need to generate a new SSH key and add it to your GitHub account.
+Follow the instruction [here](help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/).

@@ -1,0 +1,167 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\usetikzlibrary{arrows,positioning} 
+\tikzset{
+  % Define standard arrow tip
+  >=stealth',
+  % Define style for boxes
+  punkt/.style={
+    rectangle,
+    rounded corners,
+    draw=black, very thick,
+    text width=6.5em,
+    minimum height=2em,
+    text centered},
+  % Define arrow style
+  pil/.style={
+    ->,
+    thick,
+    shorten <=2pt,
+    shorten >=2pt,}
+}
+\usetikzlibrary{trees}
+% Set the overall layout of the tree
+\tikzstyle{level 1}=[level distance=2.5cm, sibling distance=4cm] 
+\tikzstyle{level 2}=[level distance=2.5cm, sibling distance=2.5cm]
+\tikzstyle{level 3}=[level distance=2.5cm, sibling distance=1cm]
+
+% Define styles for bags and leafs
+\tikzstyle{bag} = [text width=4em, text centered]
+\tikzstyle{end} = [circle, minimum width=3pt,fill, inner sep=0pt]
+\tikzstyle{openend} = [circle, minimum width=3pt, inner sep=0pt]
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, filecolor=blue, anchorcolor=yellow}
+
+\usetikzlibrary{arrows,positioning} 
+\tikzset{
+  % Define standard arrow tip
+  >=stealth',
+  % Define style for boxes
+  punkt/.style={rectangle, rounded corners, draw=black, very thick, text width=6.5em, 
+    minimum height=2em, text centered},
+  % Define arrow style
+  pil/.style={ ->, thick, shorten <=2pt, shorten >=2pt,}}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\Var}{\mathrm{Var}}%
+\newcommand{\var}{\mathrm{var}}%
+\newcommand{\V}{\mathrm{V}}%
+\newcommand{\R}{\texttt{R} }%
+\newcommand{\Cov}{\mathrm{Cov}}%
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\
+  \small{Textbook coverage: Chapter 1}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+
+% UTD logo on top right corner
+% \usepackage[absolute, overlay]{textpos}
+% \addtobeamertemplate{frametitle}{}{%
+% \begin{textblock*}{100cm}(.94\textwidth, 0.6cm)
+%   \includegraphics[trim = 1.8cm .9cm 1.8cm .92cm, clip, scale = .28, keepaspectratio]{UTDlogo}
+% \end{textblock*}}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+<< setup, echo= FALSE, results='asis'>>=
+knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = "scriptsize")
+@ 
+\end{frame}
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Introduction}
+\begin{frame}
+  \frametitle{Survival analysis?}
+  \begin{itemize}
+  \item Survival analysis aka
+    \begin{itemize}
+    \item duration analysis
+    \item event history analysis
+    \item time to event analysis
+    \end{itemize}
+  \item Models the relationship between duration ($Y$) and covariates ($X$).
+    \begin{itemize}
+    \item time until graduation
+    \item time until failure of  an electronic component
+    \item time until a patient dies
+    \end{itemize}
+  \item Linear regression, e.g., ordinary least squares \texttt{lm(Y $\sim$ X)}, is usually not feasible.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Loading \texttt{survMisc}, Ver 0.4.6.}
+  \begin{itemize}
+  %% \item We will see this through the Worcester Heart Attach Study (WHAS).
+  \item Most datasets in the book are available via \R package \pkg{survMisc}, 
+    version 0.4.6 or eariler. 
+  \item Archived \R package can be installed as follows
+  <<install, eval = FALSE>>=
+  ## install.package("devtools")
+  library(devtools)
+  install_version("survMisc", version = "0.4.6")
+  @
+  \item \texttt{install.package()} installs the latest version.
+  \item \texttt{install\_version()} installs a specified package.
+  \end{itemize}
+\end{frame}
+
+\end{document}

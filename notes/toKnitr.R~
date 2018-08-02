@@ -1,0 +1,2 @@
+library(knitr)
+knit("note1.Rnw")

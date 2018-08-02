@@ -1,0 +1,214 @@
+\documentclass[10pt]{beamer}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\usetikzlibrary{arrows,positioning} 
+\tikzset{
+  % Define standard arrow tip
+  >=stealth',
+  % Define style for boxes
+  punkt/.style={
+    rectangle,
+    rounded corners,
+    draw=black, very thick,
+    text width=6.5em,
+    minimum height=2em,
+    text centered},
+  % Define arrow style
+  pil/.style={
+    ->,
+    thick,
+    shorten <=2pt,
+    shorten >=2pt,}
+}
+\usetikzlibrary{trees}
+% Set the overall layout of the tree
+\tikzstyle{level 1}=[level distance=2.5cm, sibling distance=4cm] 
+\tikzstyle{level 2}=[level distance=2.5cm, sibling distance=2.5cm]
+\tikzstyle{level 3}=[level distance=2.5cm, sibling distance=1cm]
+
+% Define styles for bags and leafs
+\tikzstyle{bag} = [text width=4em, text centered]
+\tikzstyle{end} = [circle, minimum width=3pt,fill, inner sep=0pt]
+\tikzstyle{openend} = [circle, minimum width=3pt, inner sep=0pt]
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, filecolor=blue, anchorcolor=yellow}
+
+\usetikzlibrary{arrows,positioning} 
+\tikzset{
+  % Define standard arrow tip
+  >=stealth',
+  % Define style for boxes
+  punkt/.style={rectangle, rounded corners, draw=black, very thick, text width=6.5em, 
+    minimum height=2em, text centered},
+  % Define arrow style
+  pil/.style={ ->, thick, shorten <=2pt, shorten >=2pt,}}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\Var}{\mathrm{Var}}%
+\newcommand{\var}{\mathrm{var}}%
+\newcommand{\V}{\mathrm{V}}%
+\newcommand{\R}{\texttt{R} }%
+\newcommand{\Cov}{\mathrm{Cov}}%
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\
+  \small{Textbook coverage: Chapter 2}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+
+% UTD logo on top right corner
+% \usepackage[absolute, overlay]{textpos}
+% \addtobeamertemplate{frametitle}{}{%
+% \begin{textblock*}{100cm}(.94\textwidth, 0.6cm)
+%   \includegraphics[trim = 1.8cm .9cm 1.8cm .92cm, clip, scale = .28, keepaspectratio]{UTDlogo}
+% \end{textblock*}}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+
+\end{frame}
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Survivor, hazard and cumulative hazard functions}
+\begin{frame}
+  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \begin{itemize}
+  \item Suppose the actual (uncensored, untruncated) survival time of an individual is $t$
+    and can be regarded as the observed value of a variable, $T$.
+  \item We assume the support of $T$ is non-negative or $(0, \infty)$.
+  \item We call $T$ the \emph{random variable} associated with the survival time, 
+    and we define $T$ has a cumulative distribution function given by
+    $F(t) = P(T \le t)$.
+  \item The survival function of $T$ is then defined as $$S(t) = 1 - P(T\le t) = 1 - F(t).$$
+  \item Why are we more interested in $S(t)$?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Loading \texttt{survMisc}, Ver 0.4.6.}
+  \begin{itemize}
+  %% \item We will see this through the Worcester Heart Attach Study (WHAS).
+  \item Most datasets in the book are available via \R package \pkg{survMisc}, 
+    version 0.4.6 or eariler. 
+  \item Archived \R package can be installed as follows
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlcom{## install.package("devtools")}
+\hlstd{> }\hlkwd{library}\hlstd{(devtools)}
+\hlstd{> }\hlkwd{install_version}\hlstd{(}\hlstr{"survMisc"}\hlstd{,} \hlkwc{version} \hlstd{=} \hlstr{"0.4.6"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+  \item \texttt{install.package()} installs the latest version.
+  \item \texttt{install\_version()} installs a specified package.
+  \end{itemize}
+\end{frame}
+
+\end{document}
