@@ -57,6 +57,36 @@ ggplot(whas100 %>% filter(id <= 20)) +
     geom_point(aes(x = 0, y = id), size = 3) + xlab("Time (Year)") + ggtitle("Patient (Follow-up) time")
 ggsave("tab1-1-2.pdf")
 
+
+ggplot(whas100 %>% filter(id <= 20)) +
+    geom_segment(aes(x = 0, xend = lenfol, y = id, yend = id), size = 1) +
+    scale_y_continuous(breaks = 1:20) + ## scale_y_reverse() + 
+    geom_point(aes(x = lenfol, y = id, shape = fstat), size = 2.5, stroke = 1.7) +
+    scale_shape_manual(values = c(1, 4)) +
+    geom_point(aes(x = 0, y = id), size = 3) + xlab("Time (Year)") +
+    ggtitle("Patient (Follow-up) time") +
+    geom_vline(xintercept = 800, color = 2, lwd = 1.2) 
+## geom_vline(xintercept = whas100$lenfol[1], color = "#065901", lwd = 1.1, lty = 1, alpha = .5) +
+## geom_vline(xintercept = whas100$lenfol[2], color = "#0a8e02", lwd = 1.1, lty = 1, alpha = .5) +
+## geom_vline(xintercept = whas100$lenfol[4], color = "#0cb702", lwd = 1.1, lty = 1, alpha = .5) +
+## geom_vline(xintercept = whas100$lenfol[9], color = "#0bd500", lwd = 1.1, lty = 1, alpha = .5) +
+## geom_vline(xintercept = whas100$lenfol[12], color = "#13ff05", lwd = 1.1, lty = 1, alpha = .5) +
+## geom_vline(xintercept = whas100$lenfol[13], color = "#1a8209", lwd = 1.1, lty = 1, alpha = .5) 
+ggsave("tab1-1-4.pdf")
+
+whas20_2 <- whas100 %>% filter(id <= 20)
+whas20_2$fstat[c(4, 9, 13)] <- whas20_2$fstat[c(16, 16, 16)]
+
+ggplot(whas20_2) + 
+    geom_segment(aes(x = 0, xend = lenfol, y = id, yend = id), size = 1) +
+    scale_y_continuous(breaks = 1:20) + ## scale_y_reverse() + 
+    geom_point(aes(x = lenfol, y = id, shape = fstat), size = 2.5, stroke = 1.7) +
+    scale_shape_manual(values = c(1, 4)) +
+    geom_point(aes(x = 0, y = id), size = 3) + xlab("Time (Year)") +
+    ggtitle("Patient (Follow-up) time (modified data)") +
+    geom_vline(xintercept = 800, color = 2, lwd = 1.2) 
+ggsave("tab1-1-5.pdf")
+
 max(whas100$foldate)
 
 ## Coding with whas10
@@ -101,11 +131,31 @@ whas10 %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% with(plot(lenfol, surv, '
 whas10 %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% ggplot(aes(lenfol, surv)) + geom_step()
 ggsave("whas10-ecdf.pdf")
 
+whas100 %>% filter(id <= 20) %>%
+    mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% ggplot(aes(lenfol, surv)) + geom_step() +
+    geom_vline(xintercept = 800)
+
 whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>%
     ggplot(aes(lenfol, surv)) + geom_step() + geom_smooth()
 ggsave("whas100-ecdf.pdf")
 
 
+km <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100, subset = id <= 20)
+summary(km)
 
-whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - rank(lenfol, ties.method = "max") / sum(lenfol)) %>%
-    ggplot(aes(lenfol, surv)) + geom_step() + geom_smooth()
+pdf("km1.pdf")
+plot(km)
+dev.off()
+ggsurvplot(km)
+ggsave("km2.pdf")
+
+
+
+km <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100)
+pdf("km3.pdf")
+plot(km)
+dev.off()
+ggsurvplot(km)
+ggsave("km4.pdf")
+
+summary(km)

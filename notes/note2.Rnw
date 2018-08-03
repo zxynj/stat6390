@@ -80,8 +80,10 @@
 \newcommand{\Var}{\mathrm{Var}}
 \newcommand{\var}{\mathrm{var}}
 \newcommand{\E}{\mathrm{E}}
-%\newcommand{\d}{\mathrm{d}}
 \newcommand{\I}{\mathrm{I}}
+\newcommand{\p}{\mathrm{P}}
+\newcommand{\Skm}{\hat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\hat{S}_{\scriptsize{NA}}}
 \newcommand{\V}{\mathrm{V}}
 \newcommand{\R}{\texttt{R}}
 \newcommand{\Cov}{\mathrm{Cov}}
@@ -139,11 +141,11 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item We assume the support of $T$ is non-negative or $(0, \infty)$.
   \item We call $T$ the \emph{random variable} associated with the survival time, 
     and we define $T$ has a cumulative distribution function given by
-    $F(t) = P(T \le t)$.
-  \item The survival function of $T$ is then defined as $$S(t) = 1 - P(T\le t) = 1 - F(t).$$
+    $F(t) = \p(T \le t)$.
+  \item The survival function of $T$ is then defined as $$S(t) = 1 - \p(T\le t) = 1 - F(t).$$
   \item Why are we more interested in $S(t)$?
   \end{itemize}
-  <<library, message = FALSE>>=
+  <<library, echo = FALSE, message = FALSE>>=
   library(tidyverse)
   @
 
@@ -155,10 +157,10 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \item The \empr{hazard function} is widely used to survival analysis. 
     \item The hazard function $h(t)$ is defined below
       \begin{equation}
-        h(t) = \lim_{\delta\to0}\frac{\Pr(t\le T < t + \delta|T\ge t)}{\delta}.
+        h(t) = \lim_{\delta\to0}\frac{\p(t\le T < t + \delta|T\ge t)}{\delta}.
         \label{eq:haz}
       \end{equation}
-    \item $\Pr(t\le T< t + \delta|T\ge t)$ is a conditional probability.
+    \item $\p(t\le T< t + \delta|T\ge t)$ is a conditional probability.
       %the probability $T$ lies between $t$ and $t + \delta$ \emph{condition on} $T \ge t$.
     \item The conditional probability is then expressed as a probability per nit time by dividing by the time interval, $\delta$, to give a \emph{rate}.
     \item The function $h(t)$ is also referred to as the \empr{hazard rate}, the \empr{instantaneous death rate}, 
@@ -179,7 +181,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \item If the event of interest is not death, $h(t)$ can also be regarded as the \emph{expected number of events}
       experienced by an individual in unit time, given that the event has not occurred before then. 
       \begin{itemize}
-        \item Think of $\E\{\I(\cdot)\} = \Pr(\cdot)$.
+        \item Think of $\E\{\I(\cdot)\} = \p(\cdot)$.
         \item The part ``given that the event...'' might be ignored if events follow the Poisson process.
         \end{itemize}
       \end{itemize}
@@ -191,8 +193,8 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \item The definition in~\eqref{eq:haz} leads to some useful relationships between survivor and hazard functions:
       \begin{equation*}
         \hspace{-.5cm}
-        (1) = \lim_{\delta\to0}\frac{\Pr(t\le T < t + \delta)}{\delta\cdot\Pr(T < t)} = 
-        \lim_{\delta\to0}\frac{F(t + \delta) - F(t)}{\delta} \cdot \frac{1}{\Pr(T < t)} =
+        (1) = \lim_{\delta\to0}\frac{\p(t\le T < t + \delta)}{\delta\cdot\p(T < t)} = 
+        \lim_{\delta\to0}\frac{F(t + \delta) - F(t)}{\delta} \cdot \frac{1}{\p(T < t)} =
         \frac{\dif F(t)}{\dif t}\cdot \frac{1}{S(t)}.
       \end{equation*}
     \item $h(t)$ is approximately the probability that an individual experiences an event at this instant ($t$)
@@ -268,7 +270,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   @
   <<subset-whas>>=
   whas10 <- whas100 %>% filter(fstat > 0) %>% filter(row_number() <= 10)
-  whas10
+  whas10 
   @
 \end{itemize}
 \hfill\tiny* see note 1 for details.
@@ -291,7 +293,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item The empirical survivor function is a non-increasing step function.
   \end{itemize}
   <<ecdf-plot, eval = FALSE>>=
-  whas10 %>% ggplot(aes(lenfol, surv)) + geom_step(size = 1.2)
+  whas20 %>% ggplot(aes(lenfol, surv)) + geom_step(size = 1.2)
   @
   \begin{center}
     \includegraphics[scale = .3]{whas10-ecdf}
@@ -315,7 +317,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \includegraphics[scale = .3]{whas100-ecdf}
   \end{center} \vspace{-.3cm}
   \begin{itemize}
-  \item The pipeline between \code{ggplot} is $+$ instead of \code{\%>\%}.
+  \item The pipeline between \code{ggplot} is ``$+$'' instead of ``\code{\%>\%}''.
   \end{itemize}
 \end{frame}
 
@@ -323,9 +325,172 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \begin{frame}[fragile]
   \frametitle{Kaplan-Meier estiamtor}
   \begin{itemize}
-  \item Putting everything together, we could plot the empirical survival curve for all the uncensored subjects in \code{whas100}:
+  \item With censoring, the same idea can be applied with proper adjustment.
+  \item Kaplan-Meier estimator is the default estimator used by many packages. 
+  \item The basic idea is to decompose $\p(T > t)$ by conditioning on prior times.
+  \item Suppose a sample size of $n$, $\p(T>t)$ can be decomposed as
+    {\scriptsize
+    \begin{equation*}
+      \Skm(t) \equiv  \p(T > t) = 
+      \p(T > t_{(0)}) \cdot \p(T > t_{(1)} | T > t_{(0)}) \cdot \p(T > t_{(2)} | T > t_{(1)}) 
+      \cdot\ldots\cdot \p(T > t | T > t_{(i)}),
+    \end{equation*}}
+    for a series of time intervals $0 \equiv t_{(0)} < t_{(1)} < \ldots < t_{(i)} < t$ for some $i\le n$.
+  \item In general, the series $\{t_{(1)}, \ldots, t_{(m)}\}$ 
+    denotes the $m$ ordered death times.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kaplan-Meier estiamtor}
+  Suppose we want $\p(T > 800)$ among the first 20 patients in \texttt{whas1000}.
+  \begin{columns}
+    \column{0.45\textwidth}
+    \includegraphics[scale = .3]{tab1-1-4}
+    \column{0.55\textwidth}
+    \begin{itemize}
+    \item There are 6 events before $t = 800$.
+    \item The events occured at 
+      {\scriptsize
+      \begin{tabular}{lllllll}
+        $t_{(0)}$ & $t_{(1)}$ & $t_{(2)}$ & $t_{(3)}$ & $t_{(4)}$ & $t_{(5)}$ & $t_{(6)}$ \\
+        \midrule
+        0 & 6 & 98 & 189 & 302 & 374 & 492 \\
+      \end{tabular}}
+    \end{itemize}
+  \end{columns}
+  \vspace{-.3cm}
+  {\scriptsize
+  \begin{align*}
+    \Skm(800) &= \p(T > 800) =\\
+    &= \p(T > 0) \times \p(T > 6|T > 0) \times \p(T > 98|T > 6) \times
+    \ldots\times \p(T > 492|T > 374) \\
+    &=1 \times \frac{19}{20} \times \frac{18}{19} \times \frac{17}{18} \times \frac{16}{17} \times \frac{15}{16} \times 
+    \frac{14}{15} = \frac{14}{20} = 70\%
+  \end{align*}
+  }
+  Why does $\Skm(800) = \hat S_e(800)$ here?
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kaplan-Meier estimator}
+  \begin{itemize}
+  \item The Kaplan-Meier estimator can be obtained with the \code{survfit} function.
+    % from \pkg{survival}.
+    <<survfit>>=
+    library(survival)
+    km <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100, subset = id <= 20)
+    summary(km)
+    @
+  \end{itemize}    
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kaplan-Meier estimator}
+  \begin{itemize}
+  \item The Kaplan-Meier curve can be plotted with \code{plot} or \code{ggsurvplot}.
+    <<survfit-plot, eval = FALSE>>=
+    library(survminer)
+    plot(km)
+    ggsurvplot(km)
+    @
+    \includegraphics[scale = .28]{km1}\hspace{.2cm}
+    \includegraphics[scale = .28]{km2}
+  \item Since \pkg{survminer} depends on the newest version of \pkg{survMisc},
+    you might need to update the latter to be able to use \code{ggsurvplot}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kaplan-Meier estimator}
+  Suppose we want $\p(T > 800)$ based on the following modified data:
+  \begin{columns}
+    \column{0.45\textwidth}
+    \includegraphics[scale = .3]{tab1-1-5}
+    \column{0.55\textwidth}
+    \begin{itemize}
+    \item There are 3 events before $t = 800$.
+    \item The events occured at 
+      {\scriptsize
+      \begin{tabular}{lllllll}
+        $t_{(0)}$ & $t_{(1)}$ & $t_{(2)}$ & $t_{(3)}$ \\
+        \midrule
+        0 & 6 & 374 & 492 \\
+      \end{tabular}}
+    \item In this modified data, $t = 98, 189, 302$ are considered as censored.
+    \end{itemize}
+  \end{columns}
+  \vspace{-.3cm}
+  {\scriptsize
+  \begin{align*}
+    \Skm(800) &= \p(T > 800) =\\
+    &= \p(T > 0) \times \p(T > 6|T > 0) \times \p(T > 374|T > 6) \times \p(T > 492|T > 374) \\
+    &=1 \times \frac{19}{20} \times \frac{15}{16} \times \frac{14}{15} \approx 83.1\%
+  \end{align*}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Kaplan-Meier estimator}
+  \begin{itemize}
+  \item The Kaplan-Meier estimator for the whole data is
+    <<survfit-whole, eval = FALSE>>=
+    library(survival)
+    km <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100)
+    plot(km)
+    ggsurvplot(km)    
+    @    
+    \includegraphics[scale = .28]{km3}\hspace{.2cm}
+    \includegraphics[scale = .28]{km4}
+  \item If the last observed time corresponds to a censored observation, 
+    then the estimate of the survival function does not go to zero.
+  \end{itemize}    
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Kaplan-Meier estimator}
+  \begin{itemize}
+  \item Suppose we have a sample of $n$ independent observations $(t_i, c_i), i = 1, 2, \ldots, n$.
+  \item There are $m$ deaths and $m\le n$.
+  \item The series $\{t_{(1)}, \ldots, t_{(m)}\}$ are the $m$ ordered death times.
+  \item The Kaplan-Meier estimator has the form
+    \begin{equation*}
+      \Skm(t) = \sum_{t_{(i)} \le t}\frac{n_i - d_i}{n_i} = \sum_{t_{(i)} \le t} 1 - \frac{d_i}{n_i},
+    \end{equation*}
+    where $n_i$ is the number of individual who are alive at $t_{(i)}$ (at risk),
+    and $d_i$ is the number of individual who died at $t_{(i)}$.
+  \item A potential problem with the Kaplan-Meier estimator is when $n_i$ is small and
+    $n_i = d_i$ occurs at early time.
+  \end{itemize}    
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nelson-Aalon estimator}
+  \begin{itemize}
+  \item An alternative estimate of $\Skm(t)$ is the \empr{Nelson-Aalon estimator}:
+    \begin{equation*}
+      \Sna(t) = \prod_{t_{(i)} \le t} \exp\left(-\frac{d_i}{n_i}\right).
+    \end{equation*}
+  \item The main idea is to see $d_i/n_i$ as the event rate, i.e., $h(t_{(i)}) = d_i/n_i$.
+  \item Recall the relationship $h(t) = f(t) / S(t)$ and think of $d_i/n$ and $n_i/n$ 
+    are raw rough estimates of $f(t)$ and $S(t)$.
+  \item By the similar argument, we have
+    $$H(t) = \sum_{t_{(i)} \le t} d_i/n_i, \mbox{ and } S(t) = e^{-H(t)} = \Sna(t).$$
+  \item $\Sna(t)$ and $\Skm(t)$ are derived differently, but both based on $d_i$ and $n_i$.
+  \item In general $\Sna(t)\neq\Skm(t)$ but $\Sna(t)\approx\Skm(t)$.
+  \item $\Sna(t)$ has slightly nicer properties and is more stable.
   \end{itemize}
 \end{frame}
 
 
+\begin{frame}[fragile]
+  \frametitle{Nelson-Aalon estimator}
+  \begin{itemize}
+  \item
+  \end{itemize}
+\end{frame}
+
 \end{document}
+
+
