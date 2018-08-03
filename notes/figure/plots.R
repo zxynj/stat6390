@@ -59,7 +59,6 @@ ggsave("tab1-1-2.pdf")
 
 max(whas100$foldate)
 
-
 ## Coding with whas10
 whas100 <- as.tibble(whas100)
 
@@ -76,5 +75,37 @@ data(heart)
 head(heart)
 heart %>% with(Surv(start, stop, event))
 
-
 heart %>% with(Surv(start, stop, type = "interval"))
+
+
+## Note 2
+t0 <- seq(0, 7, length = 1e3)
+dat <- tibble(x = rep(t0, 4),
+              y = c(dexp(t0, .5), pexp(t0, .5), 1 - pexp(t0, .5), dexp(t0, .5) / (1 - pexp(t0, .5))),
+              Function = rep(1:4, each = 1e3))
+dat$Function <- as.factor(dat$Function)
+levels(dat$Function) <- c("f(t)", "F(t)", "S(t)", "h(t)")
+
+ggplot(data = dat, aes(x = x, y = y, color = Function)) + geom_line(size = 1.1) + xlab("t") + ylab("")
+
+load("whas100.RData")
+whas100 <- as.tibble(whas100)
+
+whas100 %>% filter(fstat > 0) %>% top_n(10)
+
+whas10 <- whas100 %>% filter(fstat > 0) %>% filter(row_number() <= 10)
+whas10 %>% mutate(surv = 1 - ecdf(lenfol)(lenfol))
+whas10 %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% select(lenfol, surv) %>% plot
+whas10 %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% with(plot(lenfol, surv, 's'))
+
+whas10 %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% ggplot(aes(lenfol, surv)) + geom_step()
+ggsave("whas10-ecdf.pdf")
+
+whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>%
+    ggplot(aes(lenfol, surv)) + geom_step() + geom_smooth()
+ggsave("whas100-ecdf.pdf")
+
+
+
+whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - rank(lenfol, ties.method = "max") / sum(lenfol)) %>%
+    ggplot(aes(lenfol, surv)) + geom_step() + geom_smooth()

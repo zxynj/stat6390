@@ -127,11 +127,14 @@
 \newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
-\newcommand{\Var}{\mathrm{Var}}%
-\newcommand{\var}{\mathrm{var}}%
-\newcommand{\V}{\mathrm{V}}%
-\newcommand{\R}{\texttt{R} }%
-\newcommand{\Cov}{\mathrm{Cov}}%
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\E}{\mathrm{E}}
+%\newcommand{\d}{\mathrm{d}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\Cov}{\mathrm{Cov}}
 
 \mode<presentation> {
   \usetheme{UTD}
@@ -176,7 +179,7 @@
     \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
 
 \section{Survivor, hazard and cumulative hazard functions}
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Survivor, hazard and cumulative hazard functions}
   \begin{itemize}
   \item Suppose the actual (uncensored, untruncated) survival time of an individual is $t$
@@ -188,27 +191,236 @@
   \item The survival function of $T$ is then defined as $$S(t) = 1 - P(T\le t) = 1 - F(t).$$
   \item Why are we more interested in $S(t)$?
   \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Loading \texttt{survMisc}, Ver 0.4.6.}
-  \begin{itemize}
-  %% \item We will see this through the Worcester Heart Attach Study (WHAS).
-  \item Most datasets in the book are available via \R package \pkg{survMisc}, 
-    version 0.4.6 or eariler. 
-  \item Archived \R package can be installed as follows
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlcom{## install.package("devtools")}
-\hlstd{> }\hlkwd{library}\hlstd{(devtools)}
-\hlstd{> }\hlkwd{install_version}\hlstd{(}\hlstr{"survMisc"}\hlstd{,} \hlkwc{version} \hlstd{=} \hlstr{"0.4.6"}\hlstd{)}
+\hlstd{> }\hlkwd{library}\hlstd{(tidyverse)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-  \item \texttt{install.package()} installs the latest version.
-  \item \texttt{install\_version()} installs a specified package.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \begin{itemize}
+    \item The \empr{hazard function} is widely used to survival analysis. 
+    \item The hazard function $h(t)$ is defined below
+      \begin{equation}
+        h(t) = \lim_{\delta\to0}\frac{\Pr(t\le T < t + \delta|T\ge t)}{\delta}.
+        \label{eq:haz}
+      \end{equation}
+    \item $\Pr(t\le T< t + \delta|T\ge t)$ is a conditional probability.
+      %the probability $T$ lies between $t$ and $t + \delta$ \emph{condition on} $T \ge t$.
+    \item The conditional probability is then expressed as a probability per nit time by dividing by the time interval, $\delta$, to give a \emph{rate}.
+    \item The function $h(t)$ is also referred to as the \empr{hazard rate}, the \empr{instantaneous death rate}, 
+      the \empr{intensity rate}, or the \empr{force of mortality}.
+    \item Event rate at time $t$, conditional on the event not having occurred before $t$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \begin{itemize}
+    \item In terms of probability, if $t$ is measured in days, $h(t)$ is the approximate probability that an individual, 
+      who is \emph{at risk} of the event occurring at the start of day $t$, experiences the event during that day.
+      \begin{itemize}
+      \item In this case $\delta = 1$.
+      \item $\lim_{\delta \to0}$ can be thought of as changing the unit from days to hours, minutes, seconds, milliseconds...
+      \end{itemize}
+    \item If the event of interest is not death, $h(t)$ can also be regarded as the \emph{expected number of events}
+      experienced by an individual in unit time, given that the event has not occurred before then. 
+      \begin{itemize}
+        \item Think of $\E\{\I(\cdot)\} = \Pr(\cdot)$.
+        \item The part ``given that the event...'' might be ignored if events follow the Poisson process.
+        \end{itemize}
+      \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \begin{itemize}
+    \item The definition in~\eqref{eq:haz} leads to some useful relationships between survivor and hazard functions:
+      \begin{equation*}
+        \hspace{-.5cm}
+        (1) = \lim_{\delta\to0}\frac{\Pr(t\le T < t + \delta)}{\delta\cdot\Pr(T < t)} = 
+        \lim_{\delta\to0}\frac{F(t + \delta) - F(t)}{\delta} \cdot \frac{1}{\Pr(T < t)} =
+        \frac{\dif F(t)}{\dif t}\cdot \frac{1}{S(t)}.
+      \end{equation*}
+    \item $h(t)$ is approximately the probability that an individual experiences an event at this instant ($t$)
+      given that he/she is risk free up to $t$.
+    \item If $T$ is a continuous random variable, then we have 
+      \begin{equation}
+        h(t) = \frac{f(t)}{S(t)}.
+        \label{eq:haz2}
+      \end{equation}
+    \item This shows that from any one of the three functions, $f(t)$, $S(t)$, and $h(t)$, 
+      the other two can be determined. 
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \begin{itemize}
+    \item Equation~\eqref{eq:haz2} also implies
+      $$h(t) = -\frac{\dif}{\dif t}\left\{ \log S(t)\right\} \mbox{ and } S(t) = e^{-H(t)},$$
+      where $H(t) = \int_0^th(u)\,\dif u$ is the \empr{cumulative hazard function}.
+    \item Similarly, the cumulative hazard function can also be obtained from 
+      $$H(t) = -\log S(t).$$
+    \item The cumulative hazard function is the cumulative risk of an event occurring by time $t$.
+    \item If the event is death, then $H(t)$ summarizes the risk of death up to time $t$, given that death has not occurred by $t$.
+    \item If the event is not death, $H(t)$ can be interpreted as the expected number of events that occur in the interval $(0, t)$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \begin{itemize}
+    \item It is possible for $H(t) > 1$, $h(t) > 1$, or $f(t) > 1$.
+    \item Like $F(t)$, $S(t)$ is bounded in $[0, 1]$.
+    \item $F(t)$ and $H(t)$ is non-decreasing; $S(t)$ is non-increasing.
+    \item $h(t)$ can go up and down.
+    \item For example, suppose $T\sim\exp(\lambda)$, where $\lambda$ is the rate. Then
+      \begin{itemize}
+      \item $S(t) = e^{\lambda t}$.
+      \item $h(t) = \lambda$.
+      \item $H(t) = \lambda t$.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Estimating $S(t)$}
+
+\begin{frame}
+  \frametitle{Empirical survivor function}
+  \begin{itemize}
+  \item The $S(t)$ can be estimated non-parametrically with the \empr{product limit} estimator, 
+    which is also known as the \empr{Kaplan-Meier} estimator.
+  \item We first assume there is a single sample of survival times, 
+    and none of these are censored. 
+  \item In this case, the survivor probability at $t$, $S(t)$, is defined as 
+    \begin{equation}
+      \hat S_e(t) = \frac{\mbox{\# individuals with survival times} \ge t}{\mbox{\# individuals in the data set}}.
+        \label{eq:empS}
+    \end{equation}
+  \item Equation~\eqref{eq:empS} is called \empr{empirical survivor function}. 
+  \item Similar $\hat F_e(t) = 1 - \hat S_e(t)$ is called the \empr{empirical cumulative distribution function}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Empirical survivor function}
+  \begin{itemize}
+  \item We illustrate with the first 10 uncensored subjects in the \texttt{whas100} data.
+  \item Make sure \pkg{tidyverse} package and \code{whas100} are properly loaded*.
+
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{whas10} \hlkwb{<-} \hlstd{whas100} \hlopt{%>%} \hlkwd{filter}\hlstd{(fstat} \hlopt{>} \hlnum{0}\hlstd{)} \hlopt{%>%} \hlkwd{filter}\hlstd{(}\hlkwd{row_number}\hlstd{()} \hlopt{<=} \hlnum{10}\hlstd{)}
+\hlstd{> }\hlstd{whas10}
+\end{alltt}
+\begin{verbatim}
+# A tibble: 10 x 9
+      id admitdate  foldate      los lenfol fstat   age gender   bmi
+   <int> <fct>      <fct>      <int>  <int> <int> <int>  <int> <dbl>
+ 1     1 3/13/1995  3/19/1995      4      6     1    65      0  31.4
+ 2     2 1/14/1995  1/23/1996      5    374     1    88      1  22.7
+ 3     3 2/17/1995  10/4/2001      5   2421     1    77      0  27.9
+ 4     4 4/7/1995   7/14/1995      9     98     1    81      1  21.5
+ 5     5 2/9/1995   5/29/1998      4   1205     1    78      0  30.7
+ 6     6 1/16/1995  9/11/2000      7   2065     1    82      1  26.5
+ 7     7 1/17/1995  10/15/1997     3   1002     1    66      1  35.7
+ 8     8 11/15/1994 11/24/2000    56   2201     1    81      1  28.3
+ 9     9 8/18/1995  2/23/1996      5    189     1    76      0  27.1
+10    12 5/26/1995  9/29/1996     11    492     1    83      0  24.7
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{itemize}
+\hfill\tiny* see note 1 for details.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Empirical survivor function}
+  \begin{itemize}
+  \item The empirical estimates can be easily computed with \code{ecdf}.
+  \end{itemize}
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{whas10} \hlkwb{<-} \hlstd{whas10} \hlopt{%>%} \hlkwd{mutate}\hlstd{(}\hlkwc{surv} \hlstd{=} \hlnum{1} \hlopt{-} \hlkwd{ecdf}\hlstd{(lenfol)(lenfol))}
+\hlstd{> }\hlstd{whas10}
+\end{alltt}
+\begin{verbatim}
+# A tibble: 10 x 10
+      id admitdate  foldate      los lenfol fstat   age gender   bmi  surv
+   <int> <fct>      <fct>      <int>  <int> <int> <int>  <int> <dbl> <dbl>
+ 1     1 3/13/1995  3/19/1995      4      6     1    65      0  31.4 0.9  
+ 2     2 1/14/1995  1/23/1996      5    374     1    88      1  22.7 0.6  
+ 3     3 2/17/1995  10/4/2001      5   2421     1    77      0  27.9 0    
+ 4     4 4/7/1995   7/14/1995      9     98     1    81      1  21.5 0.8  
+ 5     5 2/9/1995   5/29/1998      4   1205     1    78      0  30.7 0.3  
+ 6     6 1/16/1995  9/11/2000      7   2065     1    82      1  26.5 0.200
+ 7     7 1/17/1995  10/15/1997     3   1002     1    66      1  35.7 0.4  
+ 8     8 11/15/1994 11/24/2000    56   2201     1    81      1  28.3 0.100
+ 9     9 8/18/1995  2/23/1996      5    189     1    76      0  27.1 0.7  
+10    12 5/26/1995  9/29/1996     11    492     1    83      0  24.7 0.5  
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Empirical survivor function}
+  \begin{itemize}
+  \item The empirical survivor function is a non-increasing step function.
+  \end{itemize}
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{whas10} \hlopt{%>%} \hlkwd{ggplot}\hlstd{(}\hlkwd{aes}\hlstd{(lenfol, surv))} \hlopt{+} \hlkwd{geom_step}\hlstd{(}\hlkwc{size} \hlstd{=} \hlnum{1.2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+  \begin{center}
+    \includegraphics[scale = .3]{whas10-ecdf}
+  \end{center}
+  \begin{itemize}
+  \item The $\hat S_e(t)$ is 1 at $t = 0$ and 0 at the final death time. %, $\max(t)$.
+  \item The $\hat S_e(t)$ is assumed to be constant between adjacent death times.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Empirical survivor function}
+  \begin{itemize}
+  \item Putting everything together, we could plot the empirical survival curve for all the uncensored subjects in \code{whas100}:
+  \end{itemize}
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{whas100} \hlopt{%>%} \hlkwd{filter}\hlstd{(fstat} \hlopt{>} \hlnum{0}\hlstd{)} \hlopt{%>%} \hlkwd{mutate}\hlstd{(}\hlkwc{surv} \hlstd{=} \hlnum{1} \hlopt{-} \hlkwd{ecdf}\hlstd{(lenfol)(lenfol))} \hlopt{%>%}
+\hlstd{+ }    \hlkwd{ggplot}\hlstd{(}\hlkwd{aes}\hlstd{(lenfol, surv))} \hlopt{+} \hlkwd{geom_step}\hlstd{()} \hlopt{+} \hlkwd{geom_smooth}\hlstd{()}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+  \begin{center}
+    \includegraphics[scale = .3]{whas100-ecdf}
+  \end{center} \vspace{-.3cm}
+  \begin{itemize}
+  \item The pipeline between \code{ggplot} is $+$ instead of \code{\%>\%}.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Kaplan-Meier estiamtor}
+  \begin{itemize}
+  \item Putting everything together, we could plot the empirical survival curve for all the uncensored subjects in \code{whas100}:
+  \end{itemize}
+\end{frame}
+
 
 \end{document}
