@@ -625,7 +625,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Inference on $\Skm(t)$}
   \begin{itemize}
   \item With the Greenwood formula, the condifdence interval of $\Skm(t)$ can be obtained using the usual form of $\mbox{PE}\pm Z_{\alpha/2}\times\mbox{SE}$.
-  \item The bounds can still be less than zero or greater than one.
+  \item The bounds can still be outside of $[0, 1]$.
   \end{itemize}
 \end{frame}
 
