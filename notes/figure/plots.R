@@ -159,3 +159,17 @@ ggsurvplot(km)
 ggsave("km4.pdf")
 
 summary(km)
+
+cox <- coxph(Surv(lenfol, fstat) ~ 1, data = whas100)
+H0 <- basehaz(cox)
+head(H0)
+plot(H0)
+pdf("km5.pdf")
+plot(km, lwd = 1.5)
+lines(H0$time, exp(-H0$hazard), col = 2, 's', lwd = 1.5)
+legend("bottomleft", bty = "n", lty = 1, lwd = 1.5, col = 1:2, c("Kaplan-Meier", "Nelson-Aalon"))
+dev.off()
+
+ggcoxfunctional(cox, data = whas100)
+
+whas100 %>% with(coxph(Surv(lenfol, fstat) ~ 1)) %>% ggcoxfunctional

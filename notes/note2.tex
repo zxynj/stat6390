@@ -132,8 +132,10 @@
 \newcommand{\E}{\mathrm{E}}
 \newcommand{\I}{\mathrm{I}}
 \newcommand{\p}{\mathrm{P}}
-\newcommand{\Skm}{\hat{S}_{\scriptsize{KM}}}
-\newcommand{\Sna}{\hat{S}_{\scriptsize{NA}}}
+\newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
+\newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
+\newcommand{\Hna}{\widehat{H}_{\scriptsize{NA}}}
 \newcommand{\V}{\mathrm{V}}
 \newcommand{\R}{\texttt{R}}
 \newcommand{\Cov}{\mathrm{Cov}}
@@ -279,7 +281,7 @@
     \item $h(t)$ can go up and down.
     \item For example, suppose $T\sim\exp(\lambda)$, where $\lambda$ is the rate. Then
       \begin{itemize}
-      \item $S(t) = e^{\lambda t}$.
+      \item $S(t) = e^{-\lambda t}$.
       \item $h(t) = \lambda$.
       \item $H(t) = \lambda t$.
   \end{itemize}
@@ -420,11 +422,11 @@
   \item Suppose a sample size of $n$, $\p(T>t)$ can be decomposed as
     {\scriptsize
     \begin{equation*}
-      \Skm(t) \equiv  \p(T > t) = 
+      \Skm(t) \doteq   \p(T > t) = 
       \p(T > t_{(0)}) \cdot \p(T > t_{(1)} | T > t_{(0)}) \cdot \p(T > t_{(2)} | T > t_{(1)}) 
       \cdot\ldots\cdot \p(T > t | T > t_{(i)}),
     \end{equation*}}
-    for a series of time intervals $0 \equiv t_{(0)} < t_{(1)} < \ldots < t_{(i)} < t$ for some $i\le n$.
+    for a series of time intervals $0 \doteq  t_{(0)} < t_{(1)} < \ldots < t_{(i)} < t$ for some $i\le n$.
   \item In general, the series $\{t_{(1)}, \ldots, t_{(m)}\}$ 
     denotes the $m$ ordered death times.
   \end{itemize}
@@ -576,7 +578,7 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100, subset = id <=
   \item The series $\{t_{(1)}, \ldots, t_{(m)}\}$ are the $m$ ordered death times.
   \item The Kaplan-Meier estimator has the form
     \begin{equation*}
-      \Skm(t) = \sum_{t_{(i)} \le t}\frac{n_i - d_i}{n_i} = \sum_{t_{(i)} \le t} 1 - \frac{d_i}{n_i},
+      \Skm(t) = \prod_{t_{(i)} \le t}\frac{n_i - d_i}{n_i} = \prod_{t_{(i)} \le t} 1 - \frac{d_i}{n_i},
     \end{equation*}
     where $n_i$ is the number of individual who are alive at $t_{(i)}$ (at risk),
     and $d_i$ is the number of individual who died at $t_{(i)}$.
@@ -596,10 +598,41 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100, subset = id <=
   \item Recall the relationship $h(t) = f(t) / S(t)$ and think of $d_i/n$ and $n_i/n$ 
     are raw rough estimates of $f(t)$ and $S(t)$.
   \item By the similar argument, we have
-    $$H(t) = \sum_{t_{(i)} \le t} d_i/n_i, \mbox{ and } S(t) = e^{-H(t)} = \Sna(t).$$
+    $$\Hna(t) \doteq H(t) = \sum_{t_{(i)} \le t} d_i/n_i, \mbox{ and } S(t) = e^{-\Hna(t)} = \Sna(t).$$
   \item $\Sna(t)$ and $\Skm(t)$ are derived differently, but both based on $d_i$ and $n_i$.
-  \item In general $\Sna(t)\neq\Skm(t)$ but $\Sna(t)\approx\Skm(t)$.
+  \item In general $\Sna(t)\ge\Skm(t)$ but $\Sna(t)\approx\Skm(t)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nelson-Aalon estimator}
+  \begin{itemize}
   \item $\Sna(t)$ has slightly nicer properties and is more stable.
+  \item If the interest is in estimating the cumulative hazard function, $H(t)$, 
+    we can use either the $\Hna(t)$, or $\Hkm = -\log(\Skm(t))$.
+  \item $\Sna(t)$ can be obtained with \code{coxph} of the \pkg{survival} package.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{args}\hlstd{(coxph)}
+\end{alltt}
+\begin{verbatim}
+function (formula, data, weights, subset, na.action, init, control, 
+    ties = c("efron", "breslow", "exact"), singular.ok = TRUE, 
+    robust = FALSE, model = FALSE, x = FALSE, y = TRUE, tt, method = ties, 
+    ...) 
+NULL
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+  \item \code{coxph} refers to ``Cox proportional hazard model'' that has the form
+    \begin{equation}
+      h(t) = h_0(t) e^{X^\top\beta}, 
+      \label{eq:cox}
+    \end{equation}
+    where $X$ is the covariate matrix, $\beta$ is the regression coefficient, 
+    and $h_0(t)$ is called the \emph{baseline hazard} function.
+  \item More details will be given in Chapter 3. 
   \end{itemize}
 \end{frame}
 
@@ -607,9 +640,139 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100, subset = id <=
 \begin{frame}[fragile]
   \frametitle{Nelson-Aalon estimator}
   \begin{itemize}
-  \item
+  \item For now, we will assume $\beta = 0$ in~\eqref{eq:cox}, which implies $h(t) = h_0(t)$.
+  \item We will use $h_0(t)$ to obtain $\Sna(t)$.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{cox} \hlkwb{<-} \hlkwd{coxph}\hlstd{(}\hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{data} \hlstd{= whas100)}
+\hlstd{> }\hlstd{H0} \hlkwb{<-} \hlkwd{basehaz}\hlstd{(cox)}
+\hlstd{> }\hlkwd{str}\hlstd{(H0)}
+\end{alltt}
+\begin{verbatim}
+'data.frame':	95 obs. of  2 variables:
+ $ hazard: num  0.0201 0.0303 0.0406 0.051 0.0616 ...
+ $ time  : num  6 14 44 62 89 98 104 107 114 123 ...
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{plot}\hlstd{(km)}
+\hlstd{> }\hlkwd{lines}\hlstd{(H0}\hlopt{$}\hlstd{time,} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{H0}\hlopt{$}\hlstd{hazard),} \hlstr{'s'}\hlstd{,} \hlkwc{col} \hlstd{=} \hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+    \begin{center}
+      \includegraphics[scale = .25, trim = 1cm 1.6cm 1cm 2cm, clip]{km5}
+    \end{center}
   \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{Life-table estimates}
+  \begin{itemize}
+  \item When dataset is large, the $\Skm(t)$ and $\Sna(t)$ can be obtained with intervals of time, 
+    rather than exact time points.
+    \begin{itemize}
+    \item The series $\{t_{(1)}, \ldots, t_{(m)}\}$ represents intervals. 
+    \item $d_i$ represents the number of individual who died in $t_{(i)}$.
+    \item $n_i$ represents the number of individual who are alive in $t_{(i)}$.
+    \end{itemize}
+  \item Potential problem with censoring? 
+  \item Adjustments under uniform assumption (p25).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+    \item The 95\% confidence interval does not follow the usual form of 
+      $$\mbox{PE} \pm 1.96 \times\mbox{SE}.$$
+    \item This is mainly because $\Skm(t)$ lies between 0 and 1. 
+    \item Two common methods to obtain the 95\% confidence interval for $\Skm(t)$ are the
+      $\log$ and $\log$-$\log$ transformations.
+    \item The idea is to derive the standard errors on the transformed scale first, 
+      then back-transform these back.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Delta Method}
+  \begin{itemize}
+    \item We need the Delta method to estimate the standard errors.
+    \item The Delta method states that
+      $$ \Var\{f(X)\}\approx \Var(X) \cdot\{f^\prime(x_0)\}^2,$$
+      where $f^\prime(x_0)$ is the 1st derivative of $f(\cdot)$ evaluates at constant $x_0$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Delta Method}
+  \begin{itemize}
+    \item A special case of the Delta method is when $f(\cdot) = \log(\cdot)$.
+    \item Setting $f(\cdot) = \log(\cdot)$, we have
+      $$ \Var\{f(X)\}\approx \frac{\Var(X)}{x_0^2}.$$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+    \item We will first look at the $\log$ transformation.
+    \item Recall $$\Skm(t) = \prod_{t_{(i)}\le t}\frac{n_i - d_i}{n_i}.$$
+    \item The variance of $\log$-transformed $\Skm(t)$ gives
+       $$\Var\left[\log\left\{\Skm(t)\right\}\right] = \Var\left\{\sum_{t_{(i)}\le t}\log\left(\frac{n_i - d_i}{n_i}\right)\right\} = 
+       \sum_{t_{(i)}\le t}\Var\left\{\log\left(\frac{n_i - d_i}{n_i}\right)\right\}.$$
+     \item We assume independence between observations in the risk sets.
+     \item For convenience, let's write $p_i = (n_i - d_i) / n_i$, and $\hat p_i$ when $n_i$ and $d_i$ are known.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+  \item The key is to estimate $\Var\left\{\log\left(p_i\right)\right\}$ with the Delta method.
+  \item For each $t_{(i)}$, $n_i$ is a fixed constant $d_i$ is random. 
+  \item $n_i - d_i$ is the risk set size and can be assumed to follow the binomial distribution with parameters $n_i$ and $1 - d_i / n_i$.
+    Then
+    \begin{align*}
+      % \E(p_i) &= \frac{\E(n_i - d_i)}{n_i} = 1 - \frac{d_i}{n_i}, \\
+      \Var(p_i) &= \frac{\Var(n_i - d_i)}{n_i^2} = \frac{\frac{d_i}{n_i}\cdot\left(1 - \frac{d_i}{n_i}\right)}{n_i}.
+    \end{align*}
+  \item With the Delta method, we have
+    % $$ \Var\{\log(p_i)\} \approx \frac{\Var(p_i)}{\E^2(p_i)} = \frac{d_i}{n_i\cdot(n_i-d_i)}. $$
+    $$ \Var\{\log(p_i)\} \approx \frac{\Var(p_i)}{\hat p_i} = \frac{d_i}{n_i\cdot(n_i-d_i)}. $$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+  \item From the above result, we have
+    $$\Var\left[\log\{\Skm(t)\}\right] \approx \sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}. $$
+  \item By the Delta method, 
+    $$\Var\left[\log\{\Skm(t)\}\right] \approx \Var\{\Skm(t)\} \cdot \frac{1}{\Skm^2(t)}.$$ 
+  \item Altogether, this gives
+    $$ \Var\{\Skm(t)\} \approx \Skm^2(t)\cdot\sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}.$$
+  \item This result is known as the \emph{Greenwood's formula}.
+  \item This estimator can be obtained from a counting process approach.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+  \item With the Greenwood formula, the condifdence interval of $\Skm(t)$ can be obtained using the usual form of $\mbox{PE}\pm Z_{\alpha/2}\times\mbox{SE}$.
+  \item The bounds can still be less than zero or greater than one.
+  \end{itemize}
+\end{frame}
+
 
 \end{document}
 
