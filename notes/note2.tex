@@ -127,11 +127,14 @@
 \newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\tp}{\hat t_p}
 \newcommand{\Var}{\mathrm{Var}}
+\newcommand{\SE}{\mathrm{SE}}
 \newcommand{\var}{\mathrm{var}}
 \newcommand{\E}{\mathrm{E}}
 \newcommand{\I}{\mathrm{I}}
 \newcommand{\p}{\mathrm{P}}
+\newcommand{\Ss}{\widehat{S}}
 \newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
 \newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
 \newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
@@ -596,7 +599,7 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100, subset = id <=
     \end{equation*}
   \item The main idea is to see $d_i/n_i$ as the event rate, i.e., $h(t_{(i)}) = d_i/n_i$.
   \item Recall the relationship $h(t) = f(t) / S(t)$ and think of $d_i/n$ and $n_i/n$ 
-    are raw rough estimates of $f(t)$ and $S(t)$.
+    are raw estimates of $f(t)$ and $S(t)$.
   \item By the similar argument, we have
     $$\Hna(t) \doteq H(t) = \sum_{t_{(i)} \le t} d_i/n_i, \mbox{ and } S(t) = e^{-\Hna(t)} = \Sna(t).$$
   \item $\Sna(t)$ and $\Skm(t)$ are derived differently, but both based on $d_i$ and $n_i$.
@@ -609,7 +612,17 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100, subset = id <=
   \begin{itemize}
   \item $\Sna(t)$ has slightly nicer properties and is more stable.
   \item If the interest is in estimating the cumulative hazard function, $H(t)$, 
-    we can use either the $\Hna(t)$, or $\Hkm = -\log(\Skm(t))$.
+    we can use either the $\Hna(t)$, or $\Hkm(t) = -\log\Skm(t)$.
+  \item The $\Hkm(t)$ follows directly form from $\Skm(t)$:
+    \begin{equation*}
+      \Hkm(t) = - \sum_{t_{(i)}\le t}\log\left(\frac{n_i - d_i}{n_i}\right).
+    \end{equation*}
+  \end{itemize}
+\end{frame}    
+    
+\begin{frame}[fragile]
+  \frametitle{Nelson-Aalon estimator}
+  \begin{itemize}
   \item $\Sna(t)$ can be obtained with \code{coxph} of the \pkg{survival} package.
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -689,42 +702,44 @@ NULL
 \begin{frame}
   \frametitle{Inference on $\Skm(t)$}
   \begin{itemize}
-    \item The 95\% confidence interval does not follow the usual form of 
+    \item The 95\% confidence interval (CI) does not follow the usual form of 
       $$\mbox{PE} \pm 1.96 \times\mbox{SE}.$$
     \item This is mainly because $\Skm(t)$ lies between 0 and 1. 
-    \item Two common methods to obtain the 95\% confidence interval for $\Skm(t)$ are the
+    \item Two common methods to obtain the 95\% CI for $\Skm(t)$ are the
       $\log$ and $\log$-$\log$ transformations.
     \item The idea is to derive the standard errors on the transformed scale first, 
       then back-transform these back.
   \end{itemize}
 \end{frame}
 
+\section{The Delta method}
 \begin{frame}
   \frametitle{The Delta Method}
   \begin{itemize}
     \item We need the Delta method to estimate the standard errors.
     \item The Delta method states that
-      $$ \Var\{f(X)\}\approx \Var(X) \cdot\{f^\prime(x_0)\}^2,$$
-      where $f^\prime(x_0)$ is the 1st derivative of $f(\cdot)$ evaluates at constant $x_0$.
+      $$ \Var\{g(X)\}\approx \Var(X) \cdot\{g^\prime(x_0)\}^2,$$
+      where $g^\prime(x_0)$ is the 1st derivative of $g(\cdot)$ evaluates at constant $x_0$.
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{The Delta Method}
   \begin{itemize}
-    \item A special case of the Delta method is when $f(\cdot) = \log(\cdot)$.
-    \item Setting $f(\cdot) = \log(\cdot)$, we have
+    \item A special case of the Delta method is when $g(\cdot) = \log(\cdot)$.
+    \item Setting $g(\cdot) = \log(\cdot)$, we have
       $$ \Var\{f(X)\}\approx \frac{\Var(X)}{x_0^2}.$$
   \end{itemize}
 \end{frame}
 
+\section{Inference on $\Skm(t)$}
 \begin{frame}
   \frametitle{Inference on $\Skm(t)$}
   \begin{itemize}
     \item We will first look at the $\log$ transformation.
     \item Recall $$\Skm(t) = \prod_{t_{(i)}\le t}\frac{n_i - d_i}{n_i}.$$
     \item The variance of $\log$-transformed $\Skm(t)$ gives
-       $$\Var\left[\log\left\{\Skm(t)\right\}\right] = \Var\left\{\sum_{t_{(i)}\le t}\log\left(\frac{n_i - d_i}{n_i}\right)\right\} = 
+       $$\Var\left\{\log\Skm(t)\right\} = \Var\left\{\sum_{t_{(i)}\le t}\log\left(\frac{n_i - d_i}{n_i}\right)\right\} = 
        \sum_{t_{(i)}\le t}\Var\left\{\log\left(\frac{n_i - d_i}{n_i}\right)\right\}.$$
      \item We assume independence between observations in the risk sets.
      \item For convenience, let's write $p_i = (n_i - d_i) / n_i$, and $\hat p_i$ when $n_i$ and $d_i$ are known.
@@ -754,9 +769,9 @@ NULL
   \frametitle{Inference on $\Skm(t)$}
   \begin{itemize}
   \item From the above result, we have
-    $$\Var\left[\log\{\Skm(t)\}\right] \approx \sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}. $$
+    $$\Var\left\{\log\Skm(t)\right\} \approx \sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}. $$
   \item By the Delta method, 
-    $$\Var\left[\log\{\Skm(t)\}\right] \approx \Var\{\Skm(t)\} \cdot \frac{1}{\Skm^2(t)}.$$ 
+    $$\Var\left\{\log\Skm(t)\right\} \approx \Var\{\Skm(t)\} \cdot \frac{1}{\Skm^2(t)}.$$ 
   \item Altogether, this gives
     $$ \Var\{\Skm(t)\} \approx \Skm^2(t)\cdot\sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}.$$
   \item This result is known as the \emph{Greenwood's formula}.
@@ -768,12 +783,150 @@ NULL
 \begin{frame}
   \frametitle{Inference on $\Skm(t)$}
   \begin{itemize}
-  \item With the Greenwood formula, the condifdence interval of $\Skm(t)$ can be obtained using the usual form of $\mbox{PE}\pm Z_{\alpha/2}\times\mbox{SE}$.
-  \item The bounds can still be less than zero or greater than one.
+  \item The Greenwood formula is the default method for \texttt{survfit}.
+  \item With the Greenwood formula, the $100(1- \alpha)\%$ condifdence interval of $\Skm(t)$ can be obtained using the usual form of $\mbox{PE}\pm Z_{\alpha/2}\times\mbox{SE}$.
+  \item The bounds can still be outside of $[0, 1]$.
+  \item An alternative approach is to consider the $\log$-$\log$ transformation.
   \end{itemize}
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+  \item By the Delta method, we have
+    % $\log$-$\log$ transformation considers
+    \begin{equation*}
+      \Var\left[\log\left\{-\log \Skm(t)\right\}\right] \approx 
+      % \frac{\Var\left[\log\Skm(t)\right]}{\left\{-\log\Skm(t)\right\}^2}
+      \frac{1}{\{-\log\Skm(t)\}^2} \cdot\sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}.
+    \end{equation*}
+  \item This imples that the $100(1- \alpha)\%$ condifdence interval can be constructed by inversing 
+    \begin{equation*}
+      \log\{-\log\Skm(t)\} \pm Z_{\alpha/2} \times \SE\left[\log\{-\log\Skm(t)\}\right]
+    \end{equation*}
+  \item Since $-\log$ of a survival function gives the cumulative hazard function, e.g., $-\log S(t) = H(t)$, 
+    the $\log$-$\log$ approach called the ``$\log$ hazard'' approach. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+  \item Types of CI can be specified with \code{conf.type} in \code{survfit}.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlopt{?}\hlstd{survfit.coxph}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+  \item Some options are available for \code{conf.type} depending on $g(\cdot)$ used in the Delta method.
+    \begin{description}
+    \item[\code{plain}] $g(x) = x$
+      \item[\code{log}] $g(x) = \log(x)$
+      \item[\code{log-log}] $g(x) = \log\{-\log(x)\}$
+      \item[\code{logit}] $g(x) = \log\left(\frac{x}{1 - x}\right)$
+      \item[\code{arcsin}] $g(x) = \arcsin\sqrt(x)$
+      \end{description}
+  \item In addition, \citet{peto1977design} proposed to estimate $\Var\{\Skm(t)\}$ from
+    \begin{equation*}
+      \Var\{\Skm(t)\} = \frac{\Skm(t) \cdot (1 - \Skm(t))}{n_i}
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inference on $\Skm(t)$}
+  \begin{itemize}
+    \item The following depict $\Skm(t)$ with the five \code{conf.type}'s for \code{whas100}.
+    \item The CI's are quite close to each other.
+  \end{itemize}
+  \begin{center}
+    \includegraphics[height = 5.7cm]{kmplot} \hspace{.02cm}
+    \includegraphics[height = 5.7cm]{kmplot2}
+  \end{center}
+\end{frame}
+
+\section{Median and percentiles}
+\begin{frame}
+  \frametitle{*Inference on the median and percentiles}
+  \begin{itemize}
+  \item Given a $\Ss(t)$ ($\Skm(t)$ or $\Sna(t)$), the estimate of the $p$th percentile is 
+    $$ \tp = \min\{t: \hat{S}(t) \le (p / 100)\}.$$
+  \item The Delta method can be used again to obtain $\Var(\tp)$.
+  \item Setting $g(\cdot) = S(\cdot)$, we have the relationship
+    \begin{equation*}
+    \Var\{\Ss(\tp)\} \approx \Var(\tp) \cdot \{f(\tp)\}^2,
+    \label{eq:mp}
+    \end{equation*}
+    where $f(t) = \dif \Ss(t) / \dif t$.
+  \item The only unknown in the above equation is $f(t)$, 
+    which can be approximated with linear interpolation:
+    $$\hat f(\tp) \approx\frac{\Ss(\hat u_p) - \Ss(\hat l_p)}{\hat l_p - \hat u_p}, $$
+    where $\hat u_p < \tp < \hat l_p$, $\hat u_p = \max\{t:\Ss(t) \ge p / 100 + \epsilon\}$ and 
+    $\hat l_p = \min\{t:\Ss(t) \le p / 100 - \epsilon\}$, for some small constant $\epsilon$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{*Inference on the median and percentiles}
+  \begin{itemize}
+  \item Replacing the unknown quantities with their empirical estimates, 
+    the $100(1-\alpha)$\% CI can be obtained through
+    $\tp \pm Z_{\alpha/2}\times\SE(\tp)$.
+  \item Clinicians are specifically interested in median survival (follow-up) time, 
+    because survival time data often tend to skewed to the right.
+  \item Other quantity of interest is the semi-interquartiles range (SIQR):
+    $$\mbox{SIQR} = \frac{t_{75} - t_{25}}{2}.$$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{*Inference on the median and percentiles}
+  \begin{itemize}  
+  \item Median survival time is printed by \code{survfit}.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{survfit}\hlstd{(}\hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{data} \hlstd{= whas100)}
+\end{alltt}
+\begin{verbatim}
+Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100)
+
+      n  events  median 0.95LCL 0.95UCL 
+    100      51    2201    1806      NA 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+  \item However, median follow-up time does not usually exists.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{survfit}\hlstd{(}\hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{data} \hlstd{= whas100[}\hlnum{81}\hlopt{:}\hlnum{100}\hlstd{,])}
+\end{alltt}
+\begin{verbatim}
+Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100, 
+    ])
+
+      n  events  median 0.95LCL 0.95UCL 
+     20       9      NA    1577      NA 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+  \item A more practical approach?
+  \end{itemize}
+\end{frame}
+
+
+\section{Reference}
+\begin{frame}[shrink = 20]
+\frametitle{Reference}
+\begin{center}
+\scriptsize
+\bibliographystyle{biom}
+\bibliography{stat6390}
+\end{center}
+\end{frame}
+
 \end{document}
-
-

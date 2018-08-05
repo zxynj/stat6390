@@ -2,6 +2,8 @@
 
 R CMD BATCH toKnitr.R
 pdflatex note2.tex
+bibtex note2.aux
+pdflatex note2.tex
 pdflatex note2.tex
 
 rm *log

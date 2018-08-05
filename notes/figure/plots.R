@@ -173,3 +173,33 @@ dev.off()
 ggcoxfunctional(cox, data = whas100)
 
 whas100 %>% with(coxph(Surv(lenfol, fstat) ~ 1)) %>% ggcoxfunctional
+
+
+
+km0 <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100, conf.type = "none")
+km <- lapply(c("plain", "log", "log-log", "logit", "arcsin"), function(x) update(km0, conf.type = x))
+plot(km0)
+invisible(lapply(km, lines))
+
+plot(km0)
+invisible(lapply(1:4, function(x) lines(km[[x]], col = 6 - x, lwd = 1.1)))
+lines(km0, lwd = 1.2)
+legend("bottomleft", c("log", "log-log", "logit", "arcsin"), col = 5:2, lwd = 1.1, bty = "n")
+
+do.call(rbind, km)
+
+kmplot <- do.call(rbind, lapply(km, function(x) with(x, cbind(time, surv, lower, upper))))
+kmplot <- as.tibble(kmplot) %>% mutate(type = as.factor(rep(1:5, each = 95)))
+levels(kmplot$type) <- c("plain", "log", "log-log", "logit", "arcsin")
+
+
+ggplot(kmplot, aes(x = time, y = surv)) + geom_step(size = 1.2) + ylab("Probability") +
+    geom_step(aes(x = time, y = lower, col = type), size = .8) +
+    geom_step(aes(x = time, y = upper, col = type), size = .8) 
+ggsave("kmplot.pdf")
+
+ggplot(kmplot, aes(x = time, y = surv)) + geom_step(size = 1.2) + ylab("Probability") +
+    geom_step(aes(x = time, y = lower, col = type), size = .8) +
+    geom_step(aes(x = time, y = upper, col = type), size = .8) +
+    xlim(0, 500) + ylim(0.655, 1) # + theme(legend.position="none")
+ggsave("kmplot2.pdf")
