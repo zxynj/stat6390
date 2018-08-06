@@ -117,6 +117,7 @@
 
 \newcommand{\cov}{\mathrm{cov}}
 \newcommand{\dif}{\mathrm{d}}
+\newcommand{\dt}{\mathrm{d}t}
 \newcommand{\bigbrk}{\vspace*{2in}}
 \newcommand{\smallbrk}{\vspace*{.1in}}
 \newcommand{\midbrk}{\vspace*{1in}}
@@ -208,12 +209,12 @@
     \item The \empr{hazard function} is widely used to survival analysis. 
     \item The hazard function $h(t)$ is defined below
       \begin{equation}
-        h(t) = \lim_{\delta\to0}\frac{\p(t\le T < t + \delta|T\ge t)}{\delta}.
+        h(t) = \lim_{\dt\to0}\frac{\p(t\le T < t + \dt|T\ge t)}{\dt}.
         \label{eq:haz}
       \end{equation}
-    \item $\p(t\le T< t + \delta|T\ge t)$ is a conditional probability.
-      %the probability $T$ lies between $t$ and $t + \delta$ \emph{condition on} $T \ge t$.
-    \item The conditional probability is then expressed as a probability per nit time by dividing by the time interval, $\delta$, to give a \emph{rate}.
+    \item $\p(t\le T< t + \dt|T\ge t)$ is a conditional probability.
+      %the probability $T$ lies between $t$ and $t + \dt$ \emph{condition on} $T \ge t$.
+    \item The conditional probability is then expressed as a probability per nit time by dividing by the time interval, $\dt$, to give a \emph{rate}.
     \item The function $h(t)$ is also referred to as the \empr{hazard rate}, the \empr{instantaneous death rate}, 
       the \empr{intensity rate}, or the \empr{force of mortality}.
     \item Event rate at time $t$, conditional on the event not having occurred before $t$.
@@ -226,8 +227,8 @@
     \item In terms of probability, if $t$ is measured in days, $h(t)$ is the approximate probability that an individual, 
       who is \emph{at risk} of the event occurring at the start of day $t$, experiences the event during that day.
       \begin{itemize}
-      \item In this case $\delta = 1$.
-      \item $\lim_{\delta \to0}$ can be thought of as changing the unit from days to hours, minutes, seconds, milliseconds...
+      \item In this case $\dt = 1$.
+      \item $\lim_{\dt \to0}$ can be thought of as changing the unit from days to hours, minutes, seconds, milliseconds...
       \end{itemize}
     \item If the event of interest is not death, $h(t)$ can also be regarded as the \emph{expected number of events}
       experienced by an individual in unit time, given that the event has not occurred before then. 
@@ -244,8 +245,8 @@
     \item The definition in~\eqref{eq:haz} leads to some useful relationships between survivor and hazard functions:
       \begin{equation*}
         \hspace{-.5cm}
-        (1) = \lim_{\delta\to0}\frac{\p(t\le T < t + \delta)}{\delta\cdot\p(T < t)} = 
-        \lim_{\delta\to0}\frac{F(t + \delta) - F(t)}{\delta} \cdot \frac{1}{\p(T < t)} =
+        (1) = \lim_{\dt\to0}\frac{\p(t\le T < t + \dt)}{\dt\cdot\p(T < t)} = 
+        \lim_{\dt\to0}\frac{F(t + \dt) - F(t)}{\dt} \cdot \frac{1}{\p(T < t)} =
         \frac{\dif F(t)}{\dif t}\cdot \frac{1}{S(t)}.
       \end{equation*}
     \item $h(t)$ is approximately the probability that an individual experiences an event at this instant ($t$)
@@ -879,6 +880,7 @@ NULL
     because survival time data often tend to skewed to the right.
   \item Other quantity of interest is the semi-interquartiles range (SIQR):
     $$\mbox{SIQR} = \frac{t_{75} - t_{25}}{2}.$$
+  \item Like the variance, the larger the SIQR, the more dispersed is the survival time distribution.
   \end{itemize}
 \end{frame}
 
@@ -899,7 +901,7 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-  \item However, median follow-up time does not usually exists.
+  \item Median follow-up time does not always exists.
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -918,9 +920,93 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
   \end{itemize}
 \end{frame}
 
+\section{Introduction to Counting Processes}
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item As is seen from before, the focus in survival analysis is on observing the occurrence of events over time. 
+  \item Such occurrences constitute point (counting) process; counting number of events as they come along. 
+  \item There is a very neat mathematical theory for counting processes.
+  \item More in-depth details can be found in \citet{fleming2011counting,kalbfleisch2011statistical}.
+  \end{itemize}    
+\end{frame}
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Appendix 2 gives a short introduction of counting processes, in the case of right censoring. 
+  \item We start by focusing on a single type of event without censoring.
+  \item For a given time $t$, let $N(t)$ be the number of events over the time period $(0, t]$, 
+    then $N(t)$ is a counting process.
+  \item The counting process $N(t)$ is \emph{continuous from the right}, with jump size 1.
+  \end{itemize}    
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Poisson process}
+  \begin{itemize}  
+  \item A well-known example of a counting process is the homogeneous Poisson process.
+  \item Jumps occur randomly and independently of each other (independent increment property).
+  \item A homogeneous Poisson process is described by its \emph{intensity} $\lambda$.
+  \item The $\lambda$ is the probability of occurrence of an event in a small interval divided by the length of the interval.
+  \item We will apply this idea to modeling counting process.
+  \end{itemize}    
+\end{frame}
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Suppose the intensity function that describe $N(t)$ is $\lambda(t)$.
+  \item Under our assumption that a subject can experience at most one event, 
+    consider a small time interval $[t, t + \dt)$,
+    $\lambda(t)$ is
+    \begin{equation*}
+      \lambda(t) \dt = \p(\dif N(t) = 1|\mbox{past}),
+    \end{equation*}
+    where $\dif N(t)$ denotes the \# of events in $[t, t + dt)$, or simply $N(t + \dt) - N(t)$.
+  \item Formally speaking, the ``past'' represents the \emph{filtration} of the process up to but not including time $t$.
+  \end{itemize}    
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Under our assumption, $\dif N(t)$ is binary, and 
+    $$\lambda(t) \dt = \E(\dif N(t) = 1|\mbox{past}).$$
+  \item Then it follows
+    \begin{equation}
+      \label{eq:Emart}
+      \E(\dif N(t) - \lambda(t) \dt |past) = 0.
+    \end{equation}
+  \item If we define a new process 
+    \begin{equation}
+      \label{eq:mart}
+      M(t) = N(t) - \int_0^t\lambda(s) \dif s,
+    \end{equation}
+    then we have $\E(\dif M(t) | past) = 0$.
+  \item It turns out $M(t)$ is a zero-mean martingale.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Definition~\eqref{eq:mart} can be written as
+    $$\dif N(t) = \lambda(t) \dif t + \dif M(t),$$
+    reflecting the relationship \emph{observation = signal + noise}.
+  \item Think of $M(t)$ as the sum of random errors.
+  \item Let 
+    $$\Lambda(t) = \int_0^t\lambda(s)\dif s,$$
+    \eqref{eq:Emart} and~\eqref{eq:mart} implies $\Lambda(t)$ is the cumulative expected \# of events in $(0, t]$, 
+    or $\Lambda(t) = \E\{N(t)\}$.
+  \end{itemize}
+\end{frame}    
+    
 
 \section{Reference}
-\begin{frame}[shrink = 20]
+\begin{frame}[shrink = 25]
 \frametitle{Reference}
 \begin{center}
 \scriptsize
