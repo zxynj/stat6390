@@ -766,7 +766,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Counting processes}
   \begin{itemize}  
   \item Appendix 2 gives a short introduction of counting processes, in the case of right censoring. 
-  \item We start by focusing on a single type of event without censoring.
+  \item We start by focusing on a \emph{single type} of event without censoring.
   \item For a given time $t$, let $N(t)$ be the number of events over the time period $(0, t]$, 
     then $N(t)$ is a counting process.
   \item The counting process $N(t)$ is \emph{continuous from the right}, with jump size 1.
@@ -788,14 +788,14 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \begin{frame}
   \frametitle{Counting processes}
   \begin{itemize}  
-  \item Suppose the intensity function that describe $N(t)$ is $\lambda(t)$.
+  \item Suppose the intensity function that describes $N(t)$ is $\lambda(t)$.
   \item Under our assumption that a subject can experience at most one event, 
     consider a small time interval $[t, t + \dt)$,
     $\lambda(t)$ is
     \begin{equation*}
       \lambda(t) \dt = \p(\dif N(t) = 1|\mbox{past}),
     \end{equation*}
-    where $\dif N(t)$ denotes the \# of events in $[t, t + dt)$, or simply $N(t + \dt) - N(t)$.
+    where $\dif N(t)$ denotes the \# of events in $[t, t + dt)$, or $N(t + \dt) - N(t)$.
   \item Formally speaking, the ``past'' represents the \emph{filtration} of the process up to but not including time $t$.
   \end{itemize}    
 \end{frame}
@@ -834,7 +834,43 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     or $\Lambda(t) = \E\{N(t)\}$.
   \item $\Lambda(t)$ versus $H(t)$?
   \end{itemize}
-\end{frame}    
+\end{frame} 
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Now we will look at the scenario when there is only one event type and 
+    a subject can experience at most one event.
+  \item In this case, the counting process $N(t) = \I(T \le t)$, 
+    where $T$ is the survival time with hazard $h(t)$.
+  \item The $N(t)$ defined above has a jump size 1 at $T$.
+  \item We then have
+    \begin{equation*}
+      \p(\dif N(t) = 1 |\mbox{past}) = \left\{\begin{matrix}
+      h(t)\dif t & \mbox{if} T \ge t\\ 
+      0 & \mbox{if} T < t
+      \end{matrix}\right.
+      = h(t)\I(T\ge t) \dif t. 
+    \end{equation*}
+  \item The relationship above implies the intensity process $\lambda(t) = h(t)\cdot \I(T\ge t)$.
+  \end{itemize}
+\end{frame} 
+
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Builing onto our assumption, now assume we have independent $n$ subjects, 
+    each with $T_i$, $i = 1, \ldots, n$, and hazard $h_i(t)$.
+  \item From the last example, we have 
+    $$N_i(t) = \I(T_i\le t) \mbox{ and }\lambda_i(t) = h_i(t) \I(T_i\ge t).$$
+  \item Define the \emph{aggregated} process by adding together the individual processes:
+    $$N(t) = \sum_{i = 1}^nN_i(t).$$
+  \item This process counts the \# of individuals have experienced the event by $t$.
+  \item Does jump size matter?
+  \end{itemize}
+\end{frame} 
+
     
 
 \section{Reference}
