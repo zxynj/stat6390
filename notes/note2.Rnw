@@ -832,6 +832,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     $$\Lambda(t) = \int_0^t\lambda(s)\dif s,$$
     \eqref{eq:Emart} and~\eqref{eq:mart} implies $\Lambda(t)$ is the cumulative expected \# of events in $(0, t]$, 
     or $\Lambda(t) = \E\{N(t)\}$.
+  \item $\Lambda(t)$ versus $H(t)$?
   \end{itemize}
 \end{frame}    
     
