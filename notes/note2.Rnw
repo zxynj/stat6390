@@ -138,14 +138,14 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
     \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
 
-\section{Survivor, hazard and cumulative hazard functions}
+\section{Survival, hazard and cumulative hazard functions}
 \begin{frame}[fragile]
-  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \frametitle{Survival, hazard and cumulative hazard functions}
   \begin{itemize}
-  \item Suppose the actual (uncensored, untruncated) survival time of an individual is $t$
-    and can be regarded as the observed value of a variable, $T$.
+  \item Define $T$ as the random variable of the actual (uncensored, untruncated) survival 
+    time of an individual. 
   \item We assume the support of $T$ is non-negative or $(0, \infty)$.
-  \item We call $T$ the \emph{random variable} associated with the survival time, 
+  \item We call $T$ the \empr{random variable} associated with the survival time, 
     and we define $T$ has a cumulative distribution function given by
     $F(t) = \p(T \le t)$.
   \item The survival function of $T$ is then defined as $$S(t) = 1 - \p(T\le t) = 1 - F(t).$$
@@ -158,7 +158,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \frametitle{Survival, hazard and cumulative hazard functions}
   \begin{itemize}
     \item The \empr{hazard function} is widely used to survival analysis. 
     \item The hazard function $h(t)$ is defined below
@@ -167,8 +167,8 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
         \label{eq:haz}
       \end{equation}
     \item $\p(t\le T< t + \dt|T\ge t)$ is a conditional probability.
-      %the probability $T$ lies between $t$ and $t + \dt$ \emph{condition on} $T \ge t$.
-    \item The conditional probability is then expressed as a probability per nit time by dividing by the time interval, $\dt$, to give a \emph{rate}.
+      %the probability $T$ lies between $t$ and $t + \dt$ \empr{condition on} $T \ge t$.
+    \item The conditional probability is then expressed as a probability per unit time by dividing by the time interval, $\dt$, to give a \empr{rate}.
     \item The function $h(t)$ is also referred to as the \empr{hazard rate}, the \empr{instantaneous death rate}, 
       the \empr{intensity rate}, or the \empr{force of mortality}.
     \item Event rate at time $t$, conditional on the event not having occurred before $t$.
@@ -176,15 +176,15 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \frametitle{Survival, hazard and cumulative hazard functions}
   \begin{itemize}
     \item In terms of probability, if $t$ is measured in days, $h(t)$ is the approximate probability that an individual, 
-      who is \emph{at risk} of the event occurring at the start of day $t$, experiences the event during that day.
+      who is \empr{at risk of the event} occurring at the start of day $t$, experiences the event during that day.
       \begin{itemize}
       \item In this case $\dt = 1$.
       \item $\lim_{\dt \to0}$ can be thought of as changing the unit from days to hours, minutes, seconds, milliseconds...
       \end{itemize}
-    \item If the event of interest is not death, $h(t)$ can also be regarded as the \emph{expected number of events}
+    \item If the event of interest is not death, $h(t)$ can also be regarded as the \empr{expected number of events}
       experienced by an individual in unit time, given that the event has not occurred before then. 
       \begin{itemize}
         \item Think of $\E\{\I(\cdot)\} = \p(\cdot)$.
@@ -194,13 +194,13 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \frametitle{Survival, hazard and cumulative hazard functions}
   \begin{itemize}
-    \item The definition in~\eqref{eq:haz} leads to some useful relationships between survivor and hazard functions:
+    \item The definition in~\eqref{eq:haz} leads to some useful relationships between survival and hazard functions:
       \begin{equation*}
         \hspace{-.5cm}
-        (1) = \lim_{\dt\to0}\frac{\p(t\le T < t + \dt)}{\dt\cdot\p(T < t)} = 
-        \lim_{\dt\to0}\frac{F(t + \dt) - F(t)}{\dt} \cdot \frac{1}{\p(T < t)} =
+        (1) = \lim_{\dt\to0}\frac{\p(t\le T < t + \dt)}{\dt\cdot\p(T \ge t)} = 
+        \lim_{\dt\to0}\frac{F(t + \dt) - F(t)}{\dt} \cdot \frac{1}{\p(T \ge t)} =
         \frac{\dif F(t)}{\dif t}\cdot \frac{1}{S(t)}.
       \end{equation*}
     \item $h(t)$ is approximately the probability that an individual experiences an event at this instant ($t$)
@@ -216,7 +216,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \frametitle{Survival, hazard and cumulative hazard functions}
   \begin{itemize}
     \item Equation~\eqref{eq:haz2} also implies
       $$h(t) = -\frac{\dif}{\dif t}\left\{ \log S(t)\right\} \mbox{ and } S(t) = e^{-H(t)},$$
@@ -231,11 +231,11 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 
 
 \begin{frame}
-  \frametitle{Survivor, hazard and cumulative hazard functions}
+  \frametitle{Survival, hazard and cumulative hazard functions}
   \begin{itemize}
     \item It is possible for $H(t) > 1$, $h(t) > 1$, or $f(t) > 1$.
-    \item Like $F(t)$, $S(t)$ is bounded in $[0, 1]$.
-    \item $F(t)$ and $H(t)$ is non-decreasing; $S(t)$ is non-increasing.
+    \item $F(t)$, $S(t)$ are bounded in $[0, 1]$.
+    \item $F(t)$ and $H(t)$ are non-decreasing; $S(t)$ is non-increasing.
     \item $h(t)$ can go up and down.
     \item For example, suppose $T\sim\exp(\lambda)$, where $\lambda$ is the rate. Then
       \begin{itemize}
@@ -249,24 +249,23 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \section{Estimating $S(t)$}
 
 \begin{frame}
-  \frametitle{Empirical survivor function}
+  \frametitle{Empirical survival function}
   \begin{itemize}
   \item The $S(t)$ can be estimated non-parametrically with the \empr{product limit} estimator, 
     which is also known as the \empr{Kaplan-Meier} estimator.
-  \item We first assume there is a single sample of survival times, 
-    and none of these are censored. 
-  \item In this case, the survivor probability at $t$, $S(t)$, is defined as 
+  \item We first assume none of survival times are censored. 
+  \item In this case, the survival probability at $t$, $S(t)$, is defined as 
     \begin{equation}
       \hat S_e(t) = \frac{\mbox{\# individuals with survival times} \ge t}{\mbox{\# individuals in the data set}}.
         \label{eq:empS}
     \end{equation}
-  \item Equation~\eqref{eq:empS} is called \empr{empirical survivor function}. 
-  \item Similar $\hat F_e(t) = 1 - \hat S_e(t)$ is called the \empr{empirical cumulative distribution function}.
+  \item Equation~\eqref{eq:empS} is called \empr{empirical survival function}. 
+  \item Similarly, $\hat F_e(t) = 1 - \hat S_e(t)$ is called the \empr{empirical cumulative distribution function}.
     \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Empirical survivor function}
+  \frametitle{Empirical survival function}
   \begin{itemize}
   \item We illustrate with the first 10 uncensored subjects in the \texttt{whas100} data.
   \item Make sure \pkg{tidyverse} package and \code{whas100} are properly loaded*.
@@ -283,7 +282,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Empirical survivor function}
+  \frametitle{Empirical survival function}
   \begin{itemize}
   \item The empirical estimates can be easily computed with \code{ecdf}.
   \end{itemize}
@@ -294,12 +293,12 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Empirical survivor function}
+  \frametitle{Empirical survival function}
   \begin{itemize}
-  \item The empirical survivor function is a non-increasing step function.
+  \item The empirical survival function is a non-increasing step function.
   \end{itemize}
   <<ecdf-plot, eval = FALSE>>=
-  whas20 %>% ggplot(aes(lenfol, surv)) + geom_step(size = 1.2)
+  whas10 %>% ggplot(aes(lenfol, surv)) + geom_step(size = 1.2)
   @
   \begin{center}
     \includegraphics[scale = .3]{whas10-ecdf}
@@ -311,7 +310,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Empirical survivor function}
+  \frametitle{Empirical survival function}
   \begin{itemize}
   \item Putting everything together, we could plot the empirical survival curve for all the uncensored subjects in \code{whas100}:
   \end{itemize}
@@ -375,7 +374,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \frac{14}{15} = \frac{14}{20} = 70\%
   \end{align*}
   }
-  Why does $\Skm(800) = \hat S_e(800)$ here?
+  $\Skm(800) = \hat S_e(800)$ here, why?
 \end{frame}
 
 \begin{frame}[fragile]
@@ -458,7 +457,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Kaplan-Meier estimator}
   \begin{itemize}
   \item Suppose we have a sample of $n$ independent observations $(t_i, c_i), i = 1, 2, \ldots, n$.
-  \item There are $m$ deaths and $m\le n$.
+  \item Suppose there are $m$ deaths and $m\le n$.
   \item The series $\{t_{(1)}, \ldots, t_{(m)}\}$ are the $m$ ordered death times.
   \item The Kaplan-Meier estimator has the form
     \begin{equation*}
@@ -498,6 +497,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \begin{equation*}
       \Hkm(t) = - \sum_{t_{(i)}\le t}\log\left(\frac{n_i - d_i}{n_i}\right).
     \end{equation*}
+  \item Problems with this estimator? 
   \end{itemize}
 \end{frame}    
     
@@ -514,7 +514,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
       \label{eq:cox}
     \end{equation}
     where $X$ is the covariate matrix, $\beta$ is the regression coefficient, 
-    and $h_0(t)$ is called the \emph{baseline hazard} function.
+    and $h_0(t)$ is called the \empr{baseline hazard} function.
   \item More details will be given in Chapter 3. 
   \end{itemize}
 \end{frame}
@@ -553,6 +553,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \end{itemize}
   \item Potential problem with censoring? 
   \item Adjustments under uniform assumption (p25).
+  \item Better to adopt methods for data with interval censoring.
 \end{itemize}
 \end{frame}
 
@@ -561,7 +562,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \begin{itemize}
     \item The 95\% confidence interval (CI) does not follow the usual form of 
       $$\mbox{PE} \pm 1.96 \times\mbox{SE}.$$
-    \item This is mainly because $\Skm(t)$ lies between 0 and 1. 
+    \item This is mainly because $\Skm(t)$ needs to lie between 0 and 1. 
     \item Two common methods to obtain the 95\% CI for $\Skm(t)$ are the
       $\log$ and $\log$-$\log$ transformations.
     \item The idea is to derive the standard errors on the transformed scale first, 
@@ -608,8 +609,8 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Inference on $\Skm(t)$}
   \begin{itemize}
   \item The key is to estimate $\Var\left\{\log\left(p_i\right)\right\}$ with the Delta method.
-  \item For each $t_{(i)}$, $n_i$ is a fixed constant $d_i$ is random. 
-  \item $n_i - d_i$ is the risk set size and can be assumed to follow the binomial distribution with parameters $n_i$ and $1 - d_i / n_i$.
+  \item For each $t_{(i)}$, $n_i$ is fixed but $d_i$ is random. 
+  \item $n_i - d_i$ can be assumed to follow the binomial distribution with parameters $n_i$ and $1 - d_i / n_i$.
     Then
     \begin{align*}
       % \E(p_i) &= \frac{\E(n_i - d_i)}{n_i} = 1 - \frac{d_i}{n_i}, \\
@@ -627,11 +628,11 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \begin{itemize}
   \item From the above result, we have
     $$\Var\left\{\log\Skm(t)\right\} \approx \sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}. $$
-  \item By the Delta method, 
+  \item By the Delta method (again), 
     $$\Var\left\{\log\Skm(t)\right\} \approx \Var\{\Skm(t)\} \cdot \frac{1}{\Skm^2(t)}.$$ 
   \item Altogether, this gives
     $$ \Var\{\Skm(t)\} \approx \Skm^2(t)\cdot\sum_{t_{(i)}\le t}\frac{d_i}{n_i\cdot(n_i-d_i)}.$$
-  \item This result is known as the \emph{Greenwood's formula}.
+  \item This result is known as the \empr{Greenwood's formula}, or the $\log$ transformation.
   \item This estimator can be obtained from a counting process approach.
   \end{itemize}
 \end{frame}
@@ -715,7 +716,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \end{equation*}
     where $f(t) = \dif \Ss(t) / \dif t$.
   \item The only unknown in the above equation is $f(t)$, 
-    which can be approximated with linear interpolation:
+    which can be approximated by linear interpolation:
     $$\hat f(\tp) \approx\frac{\Ss(\hat u_p) - \Ss(\hat l_p)}{\hat l_p - \hat u_p}, $$
     where $\hat u_p < \tp < \hat l_p$, $\hat u_p = \max\{t:\Ss(t) \ge p / 100 + \epsilon\}$ and 
     $\hat l_p = \min\{t:\Ss(t) \le p / 100 - \epsilon\}$, for some small constant $\epsilon$.
@@ -757,7 +758,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \begin{itemize}  
   \item As is seen from before, the focus in survival analysis is on observing the occurrence of events over time. 
   \item Such occurrences constitute point (counting) process; counting number of events as they come along. 
-  \item There is a very neat mathematical theory for counting processes.
+  \item There is a very neat collection of theories for counting processes.
   \item More in-depth details can be found in \citet{fleming2011counting,kalbfleisch2011statistical}.
   \end{itemize}    
 \end{frame}
@@ -766,10 +767,10 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Counting processes}
   \begin{itemize}  
   \item Appendix 2 gives a short introduction of counting processes, in the case of right censoring. 
-  \item We start by focusing on a \emph{single type} of event without censoring.
+  \item We start by focusing on a \empr{single type} of event without censoring.
   \item For a given time $t$, let $N(t)$ be the number of events over the time period $(0, t]$, 
     then $N(t)$ is a counting process.
-  \item The counting process $N(t)$ is \emph{continuous from the right}, with jump size 1.
+  \item The counting process $N(t)$ is \empr{continuous from the right}, with jump size 1.
   \end{itemize}    
 \end{frame}
 
@@ -779,7 +780,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \begin{itemize}  
   \item A well-known example of a counting process is the homogeneous Poisson process.
   \item Jumps occur randomly and independently of each other (independent increment property).
-  \item A homogeneous Poisson process is described by its \emph{intensity} $\lambda$.
+  \item A homogeneous Poisson process is described by its \empr{intensity} $\lambda$.
   \item The $\lambda$ is the probability of occurrence of an event in a small interval divided by the length of the interval.
   \item We will apply this idea to modeling counting process.
   \end{itemize}    
@@ -796,7 +797,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
       \lambda(t) \dt = \p(\dif N(t) = 1|\mbox{past}),
     \end{equation*}
     where $\dif N(t)$ denotes the \# of events in $[t, t + dt)$, or $N(t + \dt) - N(t)$.
-  \item Formally speaking, the ``past'' represents the \emph{filtration} of the process up to but not including time $t$.
+  \item Formally speaking, the ``past'' represents the \empr{filtration} of the process up to but not including time $t$.
   \end{itemize}    
 \end{frame}
 
@@ -805,7 +806,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Counting processes}
   \begin{itemize}  
   \item Under our assumption, $\dif N(t)$ is binary, and 
-    $$\lambda(t) \dt = \E(\dif N(t) = 1|\mbox{past}).$$
+    $$\lambda(t) \dt = \E\{\I(\dif N(t) = 1)|\mbox{past}\} = \E\{\dif N(t)|\mbox{past}\}.$$
   \item Then it follows
     \begin{equation}
       \label{eq:Emart}
@@ -825,8 +826,11 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Counting processes}
   \begin{itemize}  
   \item Definition~\eqref{eq:mart} can be written as
-    $$\dif N(t) = \lambda(t) \dif t + \dif M(t),$$
-    reflecting the relationship \emph{observation = signal + noise}.
+    \begin{equation}
+      \dif N(t) = \lambda(t) \dif t + \dif M(t),
+      \label{eq:mart2}
+    \end{equation}
+    reflecting the relationship \empr{observation = signal + noise}.
   \item Think of $M(t)$ as the sum of random errors.
   \item Let 
     $$\Lambda(t) = \int_0^t\lambda(s)\dif s,$$
@@ -839,8 +843,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \begin{frame}
   \frametitle{Counting processes}
   \begin{itemize}  
-  \item Now we will look at the scenario when there is only one event type and 
-    a subject can experience at most one event.
+  \item Now we will look at the scenario when there is only \empr{one event type} and a subject can experience \empr{at most one event}.
   \item In this case, the counting process $N(t) = \I(T \le t)$, 
     where $T$ is the survival time with hazard $h(t)$.
   \item The $N(t)$ defined above has a jump size 1 at $T$.
@@ -860,18 +863,80 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \begin{frame}
   \frametitle{Counting processes}
   \begin{itemize}  
-  \item Builing onto our assumption, now assume we have independent $n$ subjects, 
+  \item Building onto our assumption, now assume we have \empr{independent $n$ subjects},
     each with $T_i$, $i = 1, \ldots, n$, and hazard $h_i(t)$.
+  \item Suppose $h_i(t) = h(t)$ for all $i$.
   \item From the last example, we have 
     $$N_i(t) = \I(T_i\le t) \mbox{ and }\lambda_i(t) = h_i(t) \I(T_i\ge t).$$
   \item Define the \emph{aggregated} process by adding together the individual processes:
     $$N(t) = \sum_{i = 1}^nN_i(t).$$
-  \item This process counts the \# of individuals have experienced the event by $t$.
-  \item Does jump size matter?
+  \item This process counts the \# of individuals who experienced the event by $t$.
+  \item Is $N(t)$ here a proper counting process?
   \end{itemize}
 \end{frame} 
 
-    
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Assuming continuous survival times, and the aggregated processs jumps one unit at a time, 
+    $$\E(\dif N(t)|\mbox{past}) =  \sum_{i = 1}^n\E(\dif N_i(t)|\mbox{past})$$
+    implies the aggregated intensity satisfies $\lambda(t) \dif t = \sum_{i = 1}^n\lambda_i(t)\dif t$ and 
+    $$\lambda(t) = h(t)Y(t), $$
+    where $Y(t) = \sum_{i = 1}^n\I(T_i\ge t)$ is the number of individuals at risk right before $t$, 
+    e.g., $Y(t) = n - N(t^-)$.
+  \item Plug $\lambda(t)$ into Equation~\eqref{eq:mart2} gives the Nelson-Aalen estimator for $H(t)$.
+  \end{itemize}
+\end{frame} 
+
+\begin{frame}
+  \frametitle{Derivation of $\Hna(t)$}
+  \begin{itemize}  
+  \item Plug $\lambda(t)$ into Equation~\eqref{eq:mart2}, we have
+    \begin{equation*}
+      \dif N(t) = h(t) Y(t) \dif t + \dif M(t)
+    \end{equation*}
+  \item Intergrating both side after diving by $Y(t)$ gives
+    \begin{equation*}
+      \int_0^t\frac{1}{Y(t)}\dif N(t) - \int_0^th(t) \dif t = \int_0^t\frac{1}{Y(t)}\dif M(t)
+    \end{equation*}
+  \item The right-hand side is a stochastic integral with respect to a 0-mean martingale.
+  \item The first term in the left-hand side gives $\Hna(t)$.
+  \item Then $\E\left\{\Hna(t) - \widehat{H}(t)\right\} = 0$ and $\Hna(t)$ is an unbiased estimator of $\widehat{H}(t)$.
+  \item The variance estimator can be derived using the \emph{optional variation process}.
+  \end{itemize}
+\end{frame} 
+
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item For nonparametric or semi-parametric methods, we do not need to have a distributional assumption on the censoring time, $C$.
+  \item Rather, we will assume independent censoring:
+    $$\p(t \le \tilde{T}_i < t + \dif t, \Delta_i = 1|\tilde{T}_i\ge t, \mbox{past}) = 
+    \p(t\le T_i<t + \dif t|T_i\ge t),$$
+    where $\tilde{T}_i = \min(T_i, C_i)$ and $\Delta_i = \I(T_i < C_i)$, for $i = 1, \ldots, n$.
+  \item In the presense of right censoring, the counting process is specified as
+    $$ N_i(t) = \I\{\tilde{T}_i\le t, \Delta_i = 1\}, i = 1, \ldots, n, $$
+    and $\lambda_i(t)\dif t = \p(\dif N_i(t) = 1|\mbox{past})$. 
+  \item Applying the independent censoring assumption, the intensity process for $N_i(t)$ takes the form $\lambda_i(t) = h_i(t) Y_i(t)$, where
+    $Y_i(t) = \I(\tilde{T}_i\ge t)$ is the at risk indicator for individual $i$.
+  \end{itemize}
+\end{frame} 
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item As in the uncensored example, the \emph{aggregated} process is
+    $$N(t) = \sum_{i = 1}^nN_i(t)= \sum_{i = 1}^n\I(\tilde{T}_i\le t, \Delta_i = 1),$$
+    and the \emph{aggregated} intensity process is 
+    $$ \lambda(t) = \sum_{i = 1}^n\lambda_i(t) = \sum_{i = 1}^nh_i(t)Y_i(t). $$
+  \item In the case where $h_i(t) = h(t)$ for all $i$, the intensity process takes the form $\lambda(t) = h(t)Y(t)$,
+    where $Y(t) = \sum_{i = 1}^nY_i(t)$.
+  \item The Nelson-Aalen estimator can be derived similarly.
+  \end{itemize}
+\end{frame} 
+
 
 \section{Reference}
 \begin{frame}[shrink = 25]
