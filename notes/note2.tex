@@ -1072,7 +1072,7 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
   \item The right-hand side is a stochastic integral with respect to a 0-mean martingale.
   \item The first term in the left-hand side gives $\Hna(t)$.
   \item Then $\E\left\{\Hna(t) - \widehat{H}(t)\right\} = 0$ and $\Hna(t)$ is an unbiased estimator of $\widehat{H}(t)$.
-  \item The variance estimator can be derived using the \emph{optional variation process}.
+  \item The variance estimator can be derived using the \emph{variation processes}.
   \end{itemize}
 \end{frame} 
 
@@ -1105,6 +1105,91 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
   \item The Nelson-Aalen estimator can be derived similarly.
   \end{itemize}
 \end{frame} 
+
+\section{Comparison of survival functions}
+\begin{frame}[fragile]
+  \frametitle{Comparison of survival functions}
+  \begin{itemize}
+  \item The simplest way of comparing the survival functions is to plot them on the same axe.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{km} \hlkwb{<-} \hlkwd{survfit}\hlstd{(}\hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlstd{gender,} \hlkwc{data} \hlstd{= whas100)}
+\hlstd{> }\hlstd{km}
+\end{alltt}
+\begin{verbatim}
+Call: survfit(formula = Surv(lenfol, fstat) ~ gender, data = whas100)
+
+          n events median 0.95LCL 0.95UCL
+gender=0 65     28   2624    2012      NA
+gender=1 35     23   1806     841      NA
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+  \item \code{ggsurvplot} gives more informative output.
+  \end{itemize} \vspace{-.32cm}
+  \begin{center}
+    \includegraphics[scale = .26]{km-gender1}\hspace{.2cm}
+    \includegraphics[scale = .26]{km-gender2}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison of survival functions}
+  \begin{itemize}
+  \item In the \code{whas100} study, 
+    the survival function for female patients (\code{gender = 0}) is always greater than 
+    that for male patients.
+  \item Two explanations for the observed difference:
+    \begin{itemize}
+    \item A real difference between the survival times of the two groups.
+    \item The difference has been observed is the result of chance variation. 
+    \end{itemize}
+  \item Procedures such as the \empr{hypothesis test} is needed to distinguish 
+    the two possible explanations. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hypothesis testing}
+  \begin{itemize}
+  \item As the hypothesis tests commonly encountered, 
+    the testing procedure here consists of the following major steps:
+    \begin{enumerate}
+    \item State the \empr{null hypothesis} and the \empr{alternative hypothesis}. 
+    \item Formulate a \empr{test statistic} that measures the extent to which 
+      the observed data depart from the null hypothesis. 
+    \item Calculate the $p$-value; the probability of obtaining a value as extreme 
+      or more extreme than the observed value, when the null hypothesis is true. 
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hypothesis testing}
+  \begin{itemize}
+  \item $p$-value can be interpreted as a measure of the strength of evidence 
+    against the null hypothesis.
+  \item A $p$-value of 0.000 should be interpreted as $p < 0.001$.
+  \item A one-sided hypothesis test is only appropriate when there is 
+    no interest in departures from the null hypothesis in the opposite direction.
+  \item We will look at non-parametric procedures including the log-rank test and the Wilcoxon test.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The log-rank test}
+  \begin{itemize}
+  \item
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The log-rank test}
+  \begin{itemize}
+  \item
+  \end{itemize}
+\end{frame}
 
 
 \section{Reference}

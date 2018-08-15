@@ -203,3 +203,11 @@ ggplot(kmplot, aes(x = time, y = surv)) + geom_step(size = 1.2) + ylab("Probabil
     geom_step(aes(x = time, y = upper, col = type), size = .8) +
     xlim(0, 500) + ylim(0.655, 1) # + theme(legend.position="none")
 ggsave("kmplot2.pdf")
+
+
+km <- survfit(Surv(lenfol, fstat) ~ gender, data = whas100)
+pdf("km-gender1.pdf")
+plot(km)
+dev.off()
+ggsurvplot (km)
+ggsave("km-gender2.pdf")
