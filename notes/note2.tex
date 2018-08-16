@@ -1012,7 +1012,7 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
 \begin{frame}
   \frametitle{Counting processes}
   \begin{itemize}  
-  \item Now we will look at the scenario when there is only \empr{one event type} and a subject can experience \empr{at most one event}.
+  \item Now we will look at the scenario when there is only \empr{one event type} and a subject can experience \empr{at most one event} (no ties in event times).
   \item In this case, the counting process $N(t) = \I(T \le t)$, 
     where $T$ is the survival time with hazard $h(t)$.
   \item The $N(t)$ defined above has a jump size 1 at $T$.
@@ -1032,12 +1032,12 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
 \begin{frame}
   \frametitle{Counting processes}
   \begin{itemize}  
-  \item Building onto our assumption, now assume we have \empr{independent $n$ subjects},
+  \item Building onto our assumption, now assume we have \empr{$n$ independent subjects},
     each with $T_i$, $i = 1, \ldots, n$, and hazard $h_i(t)$.
   \item Suppose $h_i(t) = h(t)$ for all $i$.
   \item From the last example, we have 
     $$N_i(t) = \I(T_i\le t) \mbox{ and }\lambda_i(t) = h_i(t) \I(T_i\ge t).$$
-  \item Define the \emph{aggregated} process by adding together the individual processes:
+  \item Define the \empr{aggregated} process by adding together the individual processes:
     $$N(t) = \sum_{i = 1}^nN_i(t).$$
   \item This process counts the \# of individuals who experienced the event by $t$.
   \item Is $N(t)$ here a proper counting process?
@@ -1069,10 +1069,12 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
     \begin{equation*}
       \int_0^t\frac{1}{Y(t)}\dif N(t) - \int_0^th(t) \dif t = \int_0^t\frac{1}{Y(t)}\dif M(t)
     \end{equation*}
-  \item The right-hand side is a stochastic integral with respect to a 0-mean martingale.
-  \item The first term in the left-hand side gives $\Hna(t)$.
-  \item Then $\E\left\{\Hna(t) - \widehat{H}(t)\right\} = 0$ and $\Hna(t)$ is an unbiased estimator of $\widehat{H}(t)$.
-  \item The variance estimator can be derived using the \emph{variation processes}.
+  \item The right-hand side is a stochastic integral with respect to a zero-mean martingale.
+  \item The first term in the left-hand side gives $\Hna(t) = \sum_{t_{(i)}\le t}\frac{1}{n_i}$.
+  \item Then $\E\left\{\Hna(t) - \widehat{H}(t)\right\} = 0$ and
+    $\Hna(t)$ is an unbiased estimator of $\widehat{H}(t)$.
+  \item The variance estimator can be derived using the \empr{variation processes} or 
+    with transformation through the Delta methods.
   \end{itemize}
 \end{frame} 
 
@@ -1080,7 +1082,26 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
 \begin{frame}
   \frametitle{Counting processes}
   \begin{itemize}  
-  \item For nonparametric or semi-parametric methods, we do not need to have a distributional assumption on the censoring time, $C$.
+  \item Consider the same assumptions but allowing ties in event times.
+  \item Two common approaches to deal with tied event times depend on how tied event times arise.
+    \begin{enumerate}
+    \item Two event times coincide due to rounding. 
+      $$\Hna(t) = \sum_{t_{(i)}\le t}\sum_{k = 1}^{d_i}\frac{1}{n_i - k}.$$
+    \item Event times are genuinely discrete, so that tied event times are real
+      and not due to rounding.
+      $$\Hna(t) = \sum_{t_{(i)}\le t}\frac{d_i}{n_i}.$$
+    \end{enumerate}
+  \item More discussion on large number properties with tied event times can be found in 
+    \citet{anderson1993statistical}.
+  \end{itemize}
+\end{frame} 
+
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item For nonparametric or semi-parametric methods, 
+    we do not need to have a distributional assumption on the censoring time, $C$.
   \item Rather, we will assume independent censoring:
     $$\p(t \le \tilde{T}_i < t + \dif t, \Delta_i = 1|\tilde{T}_i\ge t, \mbox{past}) = 
     \p(t\le T_i<t + \dif t|T_i\ge t),$$
@@ -1088,7 +1109,8 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
   \item In the presense of right censoring, the counting process is specified as
     $$ N_i(t) = \I\{\tilde{T}_i\le t, \Delta_i = 1\}, i = 1, \ldots, n, $$
     and $\lambda_i(t)\dif t = \p(\dif N_i(t) = 1|\mbox{past})$. 
-  \item Applying the independent censoring assumption, the intensity process for $N_i(t)$ takes the form $\lambda_i(t) = h_i(t) Y_i(t)$, where
+  \item Applying the independent censoring assumption, 
+    the intensity process for $N_i(t)$ takes the form $\lambda_i(t) = h_i(t) Y_i(t)$, where
     $Y_i(t) = \I(\tilde{T}_i\ge t)$ is the at risk indicator for individual $i$.
   \end{itemize}
 \end{frame} 
@@ -1096,13 +1118,25 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
 \begin{frame}
   \frametitle{Counting processes}
   \begin{itemize}  
-  \item As in the uncensored example, the \emph{aggregated} process is
+  \item As in the uncensored example, the \empr{aggregated} process is
     $$N(t) = \sum_{i = 1}^nN_i(t)= \sum_{i = 1}^n\I(\tilde{T}_i\le t, \Delta_i = 1),$$
-    and the \emph{aggregated} intensity process is 
+    and the \empr{aggregated} intensity process is 
     $$ \lambda(t) = \sum_{i = 1}^n\lambda_i(t) = \sum_{i = 1}^nh_i(t)Y_i(t). $$
-  \item In the case where $h_i(t) = h(t)$ for all $i$, the intensity process takes the form $\lambda(t) = h(t)Y(t)$,
+  \item In the case where $h_i(t) = h(t)$ for all $i$, 
+    the intensity process takes the form $\lambda(t) = h(t)Y(t)$,
     where $Y(t) = \sum_{i = 1}^nY_i(t)$.
   \item The Nelson-Aalen estimator can be derived similarly.
+  \end{itemize}
+\end{frame} 
+
+\begin{frame}
+  \frametitle{Counting processes}
+  \begin{itemize}  
+  \item Counting processes are non-decreasing.
+  \item Martingales associated with $M(t)$ are sub-martingales.
+  \item Doob-Meyer decomposition guarantees the relationship 
+    $$ N(t) = h(t)Y(t) + M(t).$$
+  \item Martingale central limit theorem.
   \end{itemize}
 \end{frame} 
 
