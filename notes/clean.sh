@@ -14,3 +14,5 @@ rm *snm
 rm *toc
 rm *nav
 rm *vrb
+rm .RData
+rm .Rhistory
