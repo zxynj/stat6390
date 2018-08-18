@@ -220,9 +220,9 @@
       so dropping incomplete observations means losing information. 
     \item Imputation requires additional assumption from the distribution of $Y$.
     \item Replacing missing values with mean or median would result in 
-      underestimation if the missingness are caused by \emph{right censoring}.
+      underestimation if the missingness are caused by \empr{right censoring}.
     \end{itemize}
-  \item Common source of missing values in survival data: \emph{censoring} and \emph{truncation}.
+  \item Common source of missing values in survival data: \empr{censoring} and \empr{truncation}.
   \end{itemize}
 \end{frame}
 
@@ -260,9 +260,9 @@
   \frametitle{Loading \texttt{survMisc}, Ver 0.4.6.}
   \begin{itemize}
   %% \item We will see this through the Worcester Heart Attach Study (WHAS).
-  \item Most datasets in the book are available via \R package \pkg{survMisc}, 
-    version 0.4.6 or eariler. 
-  \item Archived \R package can be installed as follows
+  \item Most datasets in the book are available via \R package \pkg{survMisc} 
+  \item Some datasets are only available in version 0.4.6 or eariler. 
+  \item Archived \R package can be installed with
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -425,7 +425,7 @@ $ bmi       <dbl> 31.38134, 22.65790, 27.87892, 21.47878, 30.70601, 26...
 \begin{frame}[fragile]
   \frametitle{WHAS}
   \begin{itemize}
-  \item Patients are \emph{not} all recruited at exactly the same time.
+  \item Patients are \empr{not} all recruited at exactly the same time.
   \item The end of study appear to be Jan. 05, 2003. 
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -522,7 +522,7 @@ NULL
 \item There are 100 observation times, e.g., $t_1$, \ldots, $t_{100}$.
 \item Censored events are accompanied with $+$.
 \item With the definition $Y$ is the exact event time, $C$ is the censoring time, then
-  $T = \min(Y, C)$ is the \emph{observed} event time. 
+  $T = \min(Y, C)$ is the \empr{observed} event time. 
 \end{itemize}
 \end{frame}
 
@@ -586,35 +586,15 @@ NULL
     \item Less common. 
     \item If the event of interest has already occurred when observation begins, 
       the subject is usually not selected in the study. 
-      If these subjects are left out, this is referred to \emph{length biased sampling} or a special type of \emph{left truncation}.
+      If these subjects are left out, this is referred to \empr{length biased sampling} or a special type of \empr{left truncation}.
     \end{itemize}
   \item \empr{Interval censoring} is when individuals are known to have experienced an event within an interval of time.
     \begin{itemize}
     \item When either end of the interval is undefined ($\infty$ or 0), 
       this reduced to either the left censoring or right censoring.
     \item When the length of interval is small (e.g., $\to0$), one might treats events as uncensored.
-    \end{itemize}    
+    \end{itemize}
   \end{itemize}
 \end{frame}  
 
 \end{document}
-
-
-
-  \item 
-  \item After recruitment, patients are followed until they die, 
-    or until a censoring event happens.
-  \item 
-
-    
-  \begin{columns}
-    \column{0.5\textwidth}
-    \begin{center}
-      \includegraphics[scale = .35]{tab1-1-1}
-    \end{center}
-    \column{0.5\textwidth}
-    \begin{itemize}
-    \item The end of study is Jan. 05, 2003. 
-    \item Patients remain alive at the end of study, or left the study by then are considered (right) censored.
-    \end{itemize}
-  \end{columns}
