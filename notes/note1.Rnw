@@ -299,7 +299,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \begin{frame}[fragile]
 \frametitle{WHAS}
   \begin{itemize}
-  \item There are common two ways to display follow-up times
+  \item There are two common ways to display follow-up times
   \end{itemize}
   \begin{center}
     \includegraphics[scale = .3]{tab1-1-1}\hspace{.5cm}
@@ -368,20 +368,74 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \begin{frame}[fragile]
   \frametitle{\texttt{Surv} objects}
   \begin{itemize}
-  \item The \texttt{Surv} can be plotted with \R's generic function \texttt{plot}:
+  \item The \texttt{Surv} can be plotted with \R's generic function \texttt{plot}.
+  \item When \pkg{survMisc} $\le$ V0.4.6 is loaded, an event plot will be displayed.
     <<surv-plot, eval = FALSE>>=
     whas100 %>% with(Surv(lenfol, fstat)) %>% plot
     @
     \begin{center}\vspace{-.1cm}
-    \includegraphics[scale = .43]{tab1-1-3}
+    \includegraphics[scale = .3, trim = 0cm 1.8cm 1cm .5cm, clip]{tab1-1-3}
     \end{center}
+  \item This feature has been deprecated with newer version of \pkg{survMisc}, 
+    where a \empr{Kaplan-Meier} curve will be shown.
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{\texttt{reSurv} objects}
+  \begin{itemize}
+  \item Although \code{whas100} does not contain recurrent event data, 
+    a similar event plot can be produced with package \pkg{reReg}.
+  \item The latest (development) version of \pkg{reReg} can be installed via \texttt{GitHub}.
+    <<install-reReg>>=
+    ## devtools::install_github("stc04003/reReg")
+    library(reReg)
+    @
+  \item A \code{reSurv} object must be declared first.
+  %% \item \code{Surv} and \code{reSurv} share some similarities.
+  %%   <<reSurv>>=
+  %%   args(Surv)
+  %%   args(reSurv)
+  %%   @
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{reSurv} objects}
+  \begin{itemize}
+  \item \code{reSurv} prints a list-column tibble.
+    <<reSurv-whas100>>=
+    with(whas100, reSurv(lenfol, id, rep(0, 100), fstat))
+    @
+  \item One way to plot the event plot with \pkg{reReg} is through \code{plotEvents}
+    <<reSurv-plot, eval = FALSE>>=
+    plotEvents(reSurv(lenfol, id, rep(0, 100), fstat) ~ 1, data = whas100)
+    @
+  \item The function \code{plotEvents} also allows stratifications.
+<<reSurv-plot2, eval = FALSE>>=
+plotEvents(reSurv(lenfol, id, rep(0, 100), fstat) ~ bmi2,
+           data = whas100 %>% mutate(bmi2 = factor(bmi > 30, labels = c("High BMI", "Normal BMI"))))
+@    
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{reSurv} objects}
+  \begin{itemize}
+  \item The following are the event plots produced with the on the last page.
+    \centering
+    \includegraphics[scale = .28]{tab1-1-3-2}\hspace{.5cm}
+    \includegraphics[scale = .28]{tab1-1-3-3}
+  \item See \url{https://github.com/stc04003/reReg} for mroe details.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{\texttt{Surv} objects}
   \begin{itemize}
-  \item Another example of survival data that is subject to right censoring is the standard heart transplant program
+  \item Another example that is subject to right censoring is the Stanford Heart Transplant Data
     <<surv-heart>>=
     data(heart)
     head(heart)
@@ -413,4 +467,46 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \end{itemize}
 \end{frame}  
 
+\section{Left truncation}
+\begin{frame}[fragile]
+  \frametitle{Left truncation (Section 7.4)}
+  \begin{itemize}
+  \item After right censoring, the next most common source of incomplete observation is \empr{left truncation} or \empr{delayed entry}.
+  \item An example is the Channing House Data, which can be loaded from the \pkg{boot} package.
+    <<chan>>=
+    data(channing, package = "boot")
+    head(channing)
+    @
+  \item The variables are: 
+    \begin{description}
+    \item[entry] age (months) of entry into the retirement home
+    \item[exit] age (months) of exiting the retirement home
+    \item[cens] death status at exit (1 = dead, 0 = alive)
+    \end{description}
+  \end{itemize}  
+\end{frame}    
+    
+\begin{frame}
+  \frametitle{Left truncation}
+  \begin{itemize}    
+  \item The data were collected between 1964 and 1975 and feature 52\% (right) censoring, as well as left truncation. 
+  \item The observed age at death has to be higher than the age at which the subject entered the Channing House retirement house.
+    \begin{center}
+    \includegraphics[scale = .3]{channing}
+    \end{center}
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Left truncation}
+  \begin{itemize}
+  \item Data that are truncated are unobservable.
+  \item The survival experiences of subjects with delayed entry do not contribute to the analysis until time exceeds an intermediate event. 
+  \item If $T_i$ and $Y_i$ are the truncation time and the failure time for the $i$th patient, respectively. Left truncation implies $T_i < Y_i$.
+  \item Standard survival analysis methods require independent censoring and \empr{quasi-independence} of failure and truncation.
+  \end{itemize}  
+\end{frame}
+
+
+  
 \end{document}

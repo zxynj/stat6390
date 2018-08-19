@@ -1,5 +1,7 @@
 #! /bin/bash
 
+rm .RData
+rm .Rhistory
 
 echo 'knitr::knit("note2.Rnw")' > toKnitr.R
 
