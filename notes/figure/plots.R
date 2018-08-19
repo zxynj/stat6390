@@ -211,3 +211,17 @@ plot(km)
 dev.off()
 ggsurvplot (km)
 ggsave("km-gender2.pdf")
+
+
+
+
+library(reReg)
+load("whas100.RData")
+whas100 <- as.tibble(whas100)
+
+reDat <- with(whas100, reSurv(lenfol, id, rep(0, 100), fstat))
+plot(reDat)
+
+plotEvents(reSurv(lenfol, id, rep(0, 100), fstat) ~ gender, data = whas100)
+plotEvents(reSurv(lenfol, id, rep(0, 100), fstat) ~ bmi2,
+           data = whas100 %>% mutate(bmi2 = bmi > 30))
