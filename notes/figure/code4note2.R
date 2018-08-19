@@ -144,3 +144,8 @@ plot(km)
 dev.off()
 ggsurvplot (km)
 ggsave("km-gender2.pdf")
+
+
+survdiff(Surv(lenfol, fstat) ~ gender, data = whas100)
+survdiff(Surv(lenfol, fstat) ~ gender, data = whas100, rho = .5)
+survdiff(Surv(lenfol, fstat) ~ gender, data = whas100, rho = 1)
