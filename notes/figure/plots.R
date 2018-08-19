@@ -221,7 +221,10 @@ whas100 <- as.tibble(whas100)
 
 reDat <- with(whas100, reSurv(lenfol, id, rep(0, 100), fstat))
 plot(reDat)
+ggsave("tab1-1-3-2.pdf")
 
 plotEvents(reSurv(lenfol, id, rep(0, 100), fstat) ~ gender, data = whas100)
+
 plotEvents(reSurv(lenfol, id, rep(0, 100), fstat) ~ bmi2,
-           data = whas100 %>% mutate(bmi2 = bmi > 30))
+           data = whas100 %>% mutate(bmi2 = factor(bmi > 30, labels = c("High BMI", "Normal BMI"))))
+ggsave("tab1-1-3-3.pdf")
