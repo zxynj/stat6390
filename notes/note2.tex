@@ -1310,7 +1310,7 @@ gender=1 35     23   1806     841      NA
   \item Most common expression has the form of
     $$ \omega_i = \left\{\hat{S}(t_{(i)})\right\}^\rho, \mbox{ for }\rho \in [0, 1],$$
     where $\hat{S}(t)$ is the survival estimator from the combined sample, ignoring group.
-  \item This is called the Fleming-Harrington $G(\rho)$ test \citep[e.g.][]{cox1984analysis, fleming1987supremum}.
+  \item This is called the Fleming-Harrington $G(\rho)$ test \citep[e.g.][]{cox1984analysis, harrington1982class}.
     \begin{itemize}
     \item $\rho = 0$ gives the log-rank test
     \item $\rho = 1$ gives the Wilcoxon test.
@@ -1355,7 +1355,7 @@ gender=1 35       23     16.4      2.68      3.97
 \begin{frame}
   \frametitle{The log-rank test}
   \begin{itemize}
-  \item Varying $\rho$ shows similar results.
+  \item Varying $\rho$ shows similar results here.
   \item In general, when the tests give different results, then more than one result should be reported.
   \item It is important to also consult the plot to ascertain the directional effect of stratification or treatment.
   \end{itemize}
@@ -1369,6 +1369,18 @@ gender=1 35       23     16.4      2.68      3.97
     \begin{equation*}
       Q^*= \frac{\left[\sum_{i = 1}^D\omega_i\{|d_{1i} - \E(d_{1i})| - 0.5\}\right]^2}{\sum_{i = 1}^D\omega_i^2\Var(d_{1i})}.
       \end{equation*}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The log-rank test}
+  \begin{itemize}
+  \item A problem can occur if the estimated survival (hazard) functions cross one another. 
+  \item This is similar to the proportional hazard assumption in the Cox models.
+  \item In \code{whas100} data, the two survival curves (by gener) crossed one another at early $t$, 
+    despite being so different in large $t$.
+  \item \citet{fleming1987supremum} proposed supremum versions of the log-rank tests, but have not been implemented in any software packages.
   \end{itemize}
 \end{frame}
 
