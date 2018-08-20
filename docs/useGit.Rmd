@@ -49,7 +49,7 @@ urlcolor: blue
     fatal: Could not read from remote repository.
     ```
 You probably need to generate a new SSH key and add it to your GitHub account.
-Follow the instruction [here](help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/).
+Follow the instruction [here](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/).
 * Basic `Git` commands in terminal:
     - `git status`
     - `git add`
