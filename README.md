@@ -5,3 +5,5 @@
 The repository consists of all source files for STAT 6390.
 
 -   Don't `push`, create `new pull request`.
+
+A very minimum class website is [here](http://www.sychiou.com/stat6390).
