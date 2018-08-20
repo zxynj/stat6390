@@ -3,8 +3,6 @@ title: "![](UTDmono_circle_blk.png){width=55px}STAT 6390"
 output: html_document
 geometry: left = .5in, right = .5in, top = 1in, bottom = .6in
 urlcolor: blue
-project: subpro/
-       useGit.html
 ---
 
 ```{r setup, include=FALSE}
@@ -13,4 +11,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### This site is generated from a R Markdown document. 
 * Syllabus can be found [here](https://www.sychiou.com/pdf/fall2018stat6390.pdf)
-* Some ideas on setting up your machine is [here](subpro/useGit.html)
+* Some ideas on setting up your machine is [here](useGit.html)
