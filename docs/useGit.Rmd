@@ -1,5 +1,5 @@
 ---
-title: "Research essentials"
+title: "Preferred Research tools"
 output:
   html_document:
     toc: true
@@ -36,7 +36,7 @@ urlcolor: blue
     git config --global user.email 'statishard@utdallas.edu'
     ```
     + Check if you edited it successfully.
-    ```{bash see}
+    ```{bash see, eval = FALSE}
     git config --global --list
     ```
     + If you have a favor edictor (e.g., emacs, atom, etc.), do
@@ -50,3 +50,21 @@ urlcolor: blue
     ```
 You probably need to generate a new SSH key and add it to your GitHub account.
 Follow the instruction [here](help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/).
+* Basic `Git` commands in terminal:
+    - `git status`
+    - `git add`
+    - `git commit`
+    - `git push`
+    - `git checkout`
+    - `git branch`
+    - `git log`
+    - `git diff`
+* Other actions
+    - `fork`
+    - `new pull request`
+    
+# `RMarkdown` and `Knitr`
+- A full tutorial can be found [here](www.rmarkdown.rstudio.com/lesson-1.html)
+- A useful reference guide can be found [here](www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf).
+- A short version of the reference guide can be found [here](www.rmarkdown.rstudio.com/lesson-15.html) or [here](www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
+
