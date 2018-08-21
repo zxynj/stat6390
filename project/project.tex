@@ -1,0 +1,156 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{subfigure}
+\usepackage{enumerate}
+
+\title{STAT 6390 - Project information\\\vspace{.5cm}
+\normalsize	Updated on August 20, 2018}
+% \author{Updated on}
+\date{}
+
+\setlength{\textheight}{11in}
+\setlength{\textwidth}{6.9in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\oddsidemargin}{-.2in}
+\setlength{\evensidemargin}{-.2in}
+\setlength{\headsep}{0in}
+
+
+\pagenumbering{gobble} % turn off page #
+
+\begin{document}
+\maketitle
+\section*{Course project topics}
+\paragraph{One person project:}
+\begin{itemize}
+\item \texttt{aftgee} vignettes.
+\item Kernel smoothing on the survival estimation and density estimation.
+\item Estimating tail probabilities on the survival estimation and density estimation.
+\item Kernel smoothing on rank estimating equation for accelerated failure time models.
+\end{itemize}
+\paragraph{Up to two people topics:}
+\begin{itemize}
+\item Investigate bootstrap-based quasi-independence tests. 
+\item Kernel smoothing on rank-based estimating equations.
+\item Develop a parametric based accelerated failure time model under the generalized extreme value distribution and extreme value distribution.
+\item Implement and review the supremum tests of Fleming, Harrington and O'Sullivan (1987).
+\end{itemize}
+
+\newpage
+\section*{Description of components}
+The report should follow the structure of a journal manuscript with the following components: 
+\begin{enumerate}
+\item \textbf{Abstract}
+\newline
+One paragraph to summarize the most important points in the paper.
+
+\item \textbf{Introduction}
+\newline
+The introduction should be approximately one page and can contain references. Background of the dataset and the motivation of the study should be mentioned here. Besides, it should briefly introduce the study system, and it should outline the questions being investigated.
+
+\item \textbf{Methods}
+\newline
+This section should be a detailed description of the statistical methods. 
+If you are using any formula, this is the place to present and explain it.
+The goal is that someone (with little or no statistics background) should be able to understand and repeat the analysis from reading the methods. 
+Do not include any \textbf{R} code in the methods.
+In the case that you need to create your own \textbf{R} functions, 
+you can place the code in an appendix and refer to it here. 
+While you are not discouraged from doing this, please do not feel that you have to come up with a new statistical technique to succeed in this section.
+
+\item \textbf{Results}
+\newline 
+In the results section, you should concisely present and interpret the results of your analyses.
+You should also explain how your findings have addressed your question of interest. 
+Please do this \textit{both} verbally, in paragraph form, and using tables and/or figures. 
+%Text is a good place to state what was found using your analysis.
+%Tables are frequently a good way to present the statistics.
+%The use of figures is also encouraged (for example, boxplot). 
+%Note that table headings go \textit{above} the table and figure captions go \textit{below} the figure. 
+%Do not redundantly place the same information in text, figures, and tables.
+Please avoid unnecessary table and figures as they will likely harm your grade.
+
+\item \textbf{Discussion}
+\newline
+The discussion should be short (usually one to two paragraphs).
+Quickly summarize your finding and its impact to your question of interest. 
+If your results differ from your expectations, explain why that may have happened. 
+If your results agree, then describe the theory that the evidence supported. 
+%It is never appropriate to simply state that the data agreed with expectations, and let it drop at that.
+This is also the place to talk about possible extension. e.g. what can you do to improve the your analysis results?
+\end{enumerate}
+
+
+
+\newpage
+\section*{Final report assessment rubric}
+
+\begin{center}
+\begin{tabular}{p{9cm}p{2cm}p{2cm}p{3cm}}
+\toprule
+\textbf{Category} & \textbf{Possible Points} & \textbf{Points Earned}& \textbf{Comment}\\
+\midrule
+\textbf{Abstract:} &\textbf{5}  \\
+\cmidrule(l){1-3}
+States the problem being investigated& 3\\
+\cmidrule(l){1-3}
+State the main results and applications& 2\\
+\cmidrule(l){1-3}
+&\\
+\textbf{Introduction} & \textbf{15}\\
+\cmidrule(l){1-3}
+Contains references & 3\\
+\cmidrule(l){1-3}
+Background of the methodology or the dataset & 3\\
+\cmidrule(l){1-3}
+Motivation of the study & 3\\
+\cmidrule(l){1-3}
+Briefly introduction of the study system & 3\\
+\cmidrule(l){1-3}
+Outline the approaches& 3\\
+\cmidrule(l){1-3}
+&\\
+\textbf{Methods} & \textbf{25}\\
+\cmidrule(l){1-3}
+Correctly explain the necessary formula& 10\\
+\cmidrule(l){1-3}
+Explain the statistic methods in a way that general audience can understand & 10\\
+\cmidrule(l){1-3}
+Contains no $\textbf{R}$ codes&5\\
+\cmidrule(l){1-3}
+&\\
+\textbf{Result} & \textbf{35}\\
+\cmidrule(l){1-3}
+Concisely present and interpret the results of your analysis & 10\\
+\cmidrule(l){1-3}
+Explain how your findings have addressed your question of interest & 10\\
+\cmidrule(l){1-3}
+Contains tables/figures to help presenting the results& 5\\
+\cmidrule(l){1-3}
+Avoid redundancy in tables/figures&5\\
+\cmidrule(l){1-3}
+Tables/figures are cited/refereed to in the text &5\\
+\cmidrule(l){1-3}
+&\\
+\textbf{Discussion}& \textbf{15}\\
+\cmidrule(l){1-3}
+Length not exceeding two paragraphs & 5\\
+\cmidrule(l){1-3}
+Briefly summarized your finding and its impact & 5\\
+\cmidrule(l){1-3}
+Limitations and possible extensions & 5\\ 
+\cmidrule(l){1-3}
+&\\
+\textbf{Overall Impression/Format} & \textbf{5}\\
+\cmidrule(l){1-3}
+Paper is properly formatted & 5\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+\end{document}
