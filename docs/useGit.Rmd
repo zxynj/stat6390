@@ -16,16 +16,16 @@ urlcolor: blue
     + Install [miktex](https://miktex.org/download).
     + Install [cygwin](https://www.cygwin.com).
     + Install [Git for Windows](https://gitforwindows.org); we will refer this as "Git bash" from now on.
-* Linux machine
+* Linux machine (Debian, Ubuntu, etc.)
     + Install R with `sudo apt-get install r-base r-base-dev`
-    + Install RStudio with 
+    + Install RStudio with
     ```{bash rstudio, eval = FALSE}
       sudo apt-get install gdebi-core
       wget https://download2.rstudio.org/rstudio-server-1.1.453-amd64.deb
       sudo gdebi rstudio-server-1.1.453-amd64.deb
       ```
     + Install Git with `sudo apt-get install git`
-    
+
 # Git up
 * Register an account with [GitHub](https://github.com).
 * Get the [GitHub Student Developer Pack](https://education.github.com/pack) for free.
@@ -62,9 +62,8 @@ Follow the instruction [here](https://help.github.com/articles/generating-a-new-
 * Other actions
     - `fork`
     - `new pull request`
-    
-# `RMarkdown` and `Knitr`
-- A full tutorial can be found [here](www.rmarkdown.rstudio.com/lesson-1.html)
-- A useful reference guide can be found [here](www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf).
-- A short version of the reference guide can be found [here](www.rmarkdown.rstudio.com/lesson-15.html) or [here](www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
 
+# `RMarkdown` and `Knitr`
+- A full tutorial can be found [here](https://rmarkdown.rstudio.com/lesson-1.html)
+- A useful reference guide can be found [here](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf).
+- A short version of the reference guide can be found [here](https://rmarkdown.rstudio.com/lesson-15.html) or [here](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
