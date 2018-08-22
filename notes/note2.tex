@@ -1103,15 +1103,15 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100[81:100,
   \item For nonparametric or semi-parametric methods, 
     we do not need to have a distributional assumption on the censoring time, $C$.
   \item Rather, we will assume independent censoring:
-    $$\p(t \le T_i < t + \dif t, \Delta_i = 1|T_i\ge t, \mbox{past}) = 
-    \p(t\le \tilde{T}_i<t + \dif t|\tilde{T}_i\ge t),$$
-    where $T_i = \min(\tilde{T}_i, C_i)$ and $\Delta_i = \I(\tilde{T}_i < C_i)$, for $i = 1, \ldots, n$.
+    $$\p(t \le \tilde{T}_i < t + \dif t, \Delta_i = 1|\tilde{T}_i\ge t, \mbox{past}) = 
+    \p(t\le T_i<t + \dif t|T_i\ge t),$$
+    where $\tilde{T}_i = \min(T_i, C_i)$ and $\Delta_i = \I(T_i < C_i)$, for $i = 1, \ldots, n$.
   \item In the presense of right censoring, the counting process is specified as
-    $$ N_i(t) = \I\{T_i\le t, \Delta_i = 1\}, i = 1, \ldots, n, $$
+    $$ N_i(t) = \I\{\tilde{T}_i\le t, \Delta_i = 1\}, i = 1, \ldots, n, $$
     and $\lambda_i(t)\dif t = \p(\dif N_i(t) = 1|\mbox{past})$. 
   \item Applying the independent censoring assumption, 
     the intensity process for $N_i(t)$ takes the form $\lambda_i(t) = h_i(t) Y_i(t)$, where
-    $Y_i(t) = \I(T_i\ge t)$ is the at risk indicator for individual $i$.
+    $Y_i(t) = \I(\tilde{T}_i\ge t)$ is the at risk indicator for individual $i$.
   \end{itemize}
 \end{frame} 
 

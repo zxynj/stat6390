@@ -1,0 +1,327 @@
+\documentclass[10pt]{beamer}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, filecolor=blue, anchorcolor=yellow}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\tp}{\hat t_p}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\SE}{\mathrm{SE}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\p}{\mathrm{P}}
+%\newcommand{\ll}{\textit{l}}
+\newcommand{\Ss}{\widehat{S}}
+\newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
+\newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
+\newcommand{\Hna}{\widehat{H}_{\scriptsize{NA}}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\
+  \small{Textbook coverage: Chapter 8}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+
+\end{frame}
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Parametric models}
+
+\begin{frame}
+  \frametitle{Parametric models}
+  \begin{itemize}
+  \item Methods described previously are \empr{non-parametric}; 
+    no distributional assumptions were made.
+  \item Non-parametric (and semi-parametric) methods have the flexibility to accommodate a wide range of applications.
+  \item 
+    If the assumption of a particular probability distribution for the data is valid,
+    inferences based on such an assumption will be more precise. 
+  \item 
+    The validity of the parametric methods depends heavily on the appropriateness of the distributional assumption.
+  \item 
+    Parametric models are often much easier to work with. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Maximum likelihood estimation}
+  \begin{itemize}
+  \item 
+    Suppose \empr{actual survival times} observed for $n$ individuals are $\{t_1, \ldots, t_n\}$.
+  \item 
+    If the probability density function of the random variable associated with theos survival times is $f(t)$, 
+    the likelihood of the $n$ observations is
+    \begin{equation*}
+      \prod_{i = 1}^nf(t_i).
+    \end{equation*}
+  \item If a distributional assumption is made (e.g., $f(t) = \lambda e^{-t\lambda}$.), 
+    the unkonwon parameters ($\lambda$) can be estimated by maximzing the likelihood.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Maximum likelihood estimation}
+  \begin{itemize}
+  \item 
+    Now suppose a the survival data includes (right) censored data.
+  \item 
+    In this case, $n$ pairs of observations are observed $(\tilde{t}_i, \Delta_i), i = 1, \ldots, n$,
+    where $\tilde{T}_i$ is the observed survival time. 
+  \item When $\Delta_i = 0$, $t_i$ is right-censored.
+  \item The likelihood then takes the form
+    \begin{equation}
+      \label{eq:lik}
+      L = \prod_{i = 1}^n\left[f_T(t_i)\right]^{\Delta_i}\cdot \left[S_T(t_i)\right]^{1 - \Delta_i}
+      = \prod_{i = 1}^n\left[h_T(t_i)\right]^{\Delta_i}\cdot S_T(t_i).
+    \end{equation}
+  \item The last equation follows from the property $h(t) = f(t) / S(t)$.
+  \item Note that the derivation of of $L$ does not require a distributional assumption.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Maximum likelihood estimation}
+  \begin{itemize}
+  \item 
+    A more careful derivation of the likelihood function in~\eqref{eq:lik} is to assume
+    the censoring times to be random.
+  \item Let $C_i$ be the random variable associated with the censoring time. 
+  \item Let $\tilde{T}_i$ be the observed survival time, $\tilde{T}_i = \min(C_i, T_i)$.
+  \item We will consider censored and uncensored cases separately.
+  \item For the censored observation: 
+    $$\p(\tilde{T}_i = t, \Delta_i = 0) = \p(C_i = t, T_i > t).$$ % = \p(C_i = t) \p(T_i > t) = f_C(t)S_T(t),$$
+  \item For the uncensored observation: 
+    $$\p(\tilde{T}_i = t, \Delta_i = 1) = \p(T_i = t, C_i > t).$$
+  \item The likelihood is then
+    \begin{equation*}
+      L^* = \prod_{i = 1}^n\left[\p(T_i = t, C_i > t)\right]^{\Delta_i}\cdot\left[\p(C_i = t, T_i > t)\right]^{1 - \Delta_i}.
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Maximum likelihood estimation}
+  \begin{itemize}
+  \item Under the assumption that $C_i$ and $T_i$ are independent, $L^*$ becomes
+    \begin{equation*}
+      L^* = \prod_{i = 1}^n\left[f_T(t_i)S_C(t_i)\right]^{\Delta_i}\cdot\left[f_C(t_i)S_T(t_i)\right]^{1 - \Delta_i}.
+    \end{equation*}
+  \item If the interest is in the parameter estimation in $f_T(\cdot)$, e.g., the $\lambda$ in the exponential assumption,
+    $f_C(\cdot)$ and $S_C(\cdot)$ can be considered as constant in the maximum likelihood estimation and $L^*$ reduces to $L$.
+  \item This construction shows the relevance of the assumption of independent censoring.
+  \end{itemize}  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential model}
+  \begin{itemize}
+  \item If a random variable, $T$, follows an exponential distribution with rate $\lambda$, then
+    $$f(t) = \lambda e^{-\lambda t}, S(t) = e^{-\lambda t}, \mbox{ and } h(t) = \lambda.$$
+  \item If we are willing to assumption $\{t_1, \ldots, t_n\}$ are iid samples from 
+    an exponential distribution with rate $\lambda$, then the likelihood $L(\lambda)$ is 
+    $$ L(\lambda) = \prod_{i = 1}^n\left[\lambda e^{-\lambda t_i} \right]^{\Delta_i} \cdot \left[ e^{-\lambda t_i}\right]^{1 - \Delta_i} = \prod_{i =1 }^n\lambda^{\Delta_i}\cdot e^{-\lambda t_i}.$$
+  \item The log-likelihood is
+    $$\log L(\lambda) = \ell(\lambda)= \log(\lambda)\left(\sum_{i = 1}^n\Delta_i\right) - \lambda\sum_{i = 1}^nt_i.$$
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exponential model}
+  \begin{itemize}
+  \item Solving for
+    $$\frac{\dif \log L(\lambda)}{\dif \lambda} = \ell^\prime(\lambda) = 0 \mbox{ gives } \hat\lambda = \frac{\sum_{i = 1}^n\Delta_i}{\sum_{i = 1}^nt_i}.$$
+  \item The maximum likelihood estimator (MLE), $\hat\lambda$, is the \empr{number of deaths} divides by the total survival time (\empr{number of person-years}).
+  \item The MLE for the average survival time is $1 / \hat\lambda$, 
+    which is the total survival time divides by the number of deaths. 
+  \item With $\hat\lambda$, other quantities like the MLE for median survival times, can be derived. 
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exponential model}
+  \begin{itemize}
+  \item The second derivative of $\ell(\lambda)$ gives the \empr{information}.
+  \item In the exponential model, we have 
+    $$\ell^{\prime\prime}(\lambda) = -\frac{1}{\lambda^2}\sum_{i = 1}^n\Delta_i.$$
+  \item The standard MLE theory implies
+    $$\Var(\hat\lambda) \approx \frac{\hat\lambda^2}{\sum_{i = 1}^n\Delta_i}.$$
+  \item The $100 (1 - \alpha)\%$ confidence interval can be constructed accordingly.
+  \item The Delta method can be applied to obtain standard errors for $g(\lambda)$,
+    e.g., average survival time, median survival time, etc.
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item The simplicity of the exponential distribution makes it attractive for some specialized applications. 
+  \item A more flexibility alternative is modeling with the Weibull distribution.
+  \item If $T$ follows a Weibull distribution with scale parameters $\lambda$ and shape parameter $\gamma$, 
+    then
+    $$ f(t) = \lambda\gamma t^{\gamma-1}e^{-\lambda t^\gamma}, S(t) = e^{-\lambda t^\gamma}, \mbox{ and } h(t) = \lambda \gamma t ^{\gamma - 1}.$$
+  \item It is easy to see that when $\gamma = 1$, Weibull reduces to an exponential distribution with rate $\lambda$.
+  \end{itemize}  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item Following the similar procedure as before, the likelihood $L(\lambda, \gamma)$ is
+    $$\prod_{i = 1}^n\left\{\lambda\gamma t_i^{\gamma - 1}\right\}^{\Delta_i} e^{-\lambda t_i^\gamma}.$$
+  \item Let $\ell(\lambda, \gamma) = \log L(\lambda, \gamma)$, the MLE for $\lambda$ turns out to be
+    $$\hat\lambda = \frac{\sum_{i = 1}^n\Delta_i}{\sum_{i = 1}^nt_i^{\hat\gamma}},$$
+    but there is no close-form solution for $\hat\gamma$.
+  \item Numerical method such as the Newton-Raphson procedure can be used to find the value
+    of $\hat\theta \equiv (\hat\lambda, \hat\gamma)$ that maximize the likelihood function. 
+  \item The basic idea of the Newton-Raphson procedure iterates 
+    $$\hat\theta_{n + 1} = \hat\theta_n + \left(-\frac{\dif^2\ell(\hat\theta_n)}{\dif\theta^2}\right)^{-1} \cdot \frac{\dif\ell(\hat\theta_n)}{\dif\theta}.$$
+  \item The variance-covariance matrix comes as a by-product.
+  \end{itemize}  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item Since parametric models are sensitive to the distributional assumption,
+    it is important to have a diagnostic tool.
+  \item A diagnostic tool for Weibull model is derived from its survival curve. 
+  \item The log-log transformation of the Weibull survival function gives
+    $$\log[-\log S(t)] = \log(\lambda) - \gamma\log(t).$$
+  \item This suggest that if $\log[-\log S(t)]$ is plotted against $\log(t)$, 
+    we would expect to see a straight line if the Weibull assumption is valid. 
+  \item $S(t)$ can be replaced with $\Skm(t)$ or $\Sna(t)$.
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weibull regression}
+  \begin{itemize}
+  \item 
+  \end{itemize}  
+\end{frame}
+
+\end{document}
+
+
+\begin{frame}[fragile]
+  \frametitle{Parametric models}
+
+\end{frame}
