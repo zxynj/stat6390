@@ -12,3 +12,5 @@ knitr::opts_chunk$set(echo = TRUE)
 ### This site is generated from a R Markdown document. 
 * Syllabus can be found [here](https://www.sychiou.com/pdf/fall2018stat6390.pdf)
 * Some ideas on setting up your machine is [here](useGit.html)
+* Tibbles vs. data frames is introduced [here](http://r4ds.had.co.nz/introduction-2.html)
+* Introduction to `tibble` can be found [here](http://r4ds.had.co.nz/tibbles.html)
