@@ -240,14 +240,23 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item Let $\ell(\lambda, \gamma) = \log L(\lambda, \gamma)$, the MLE for $\lambda$ turns out to be
     $$\hat\lambda = \frac{\sum_{i = 1}^n\Delta_i}{\sum_{i = 1}^nt_i^{\hat\gamma}},$$
     but there is no close-form solution for $\hat\gamma$.
-  \item Numerical method such as the Newton-Raphson procedure can be used to find the value
-    of $\hat\theta \equiv (\hat\lambda, \hat\gamma)$ that maximize the likelihood function. 
+  \end{itemize}  
+\end{frame}
+    
+\begin{frame}
+  \frametitle{Weibull model}
+  \begin{itemize}    
+  \item The MLE $\hat\theta\equiv (\hat\lambda, \hat\gamma)$ can be obtained
+    directly implementing the likelihood and optimized with \code{optim}.
+  \item Numerical method like the Newton-Raphson procedure can also be used.
+    % to find the value of $\hat\theta$ that maximize the likelihood function. 
   \item The basic idea of the Newton-Raphson procedure iterates 
-    $$\hat\theta_{n + 1} = \hat\theta_n + \left(-\frac{\dif^2\ell(\hat\theta_n)}{\dif\theta^2}\right)^{-1} \cdot \frac{\dif\ell(\hat\theta_n)}{\dif\theta}.$$
+    $$\hat\theta_{n + 1} = \hat\theta_n +
+    \left(-\frac{\dif^2\ell(\hat\theta_n)}{\dif\theta^2}\right)^{-1} \cdot
+    \frac{\dif\ell(\hat\theta_n)}{\dif\theta}.$$
   \item The variance-covariance matrix comes as a by-product.
   \end{itemize}  
 \end{frame}
-
 
 \begin{frame}
   \frametitle{Weibull model}
@@ -260,6 +269,24 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item This suggest that if $\log[-\log S(t)]$ is plotted against $\log(t)$, 
     we would expect to see a straight line if the Weibull assumption is valid. 
   \item $S(t)$ can be replaced with $\Skm(t)$ or $\Sna(t)$.
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weibull model}
+  \begin{itemize}    
+  \item An alternative way is to select $\lambda$ and $\gamma$ to match the
+    survival data at two specified time points.
+  \item This approach is motivated by the linear relationship between $\log\left[-\log S(t)\right]$
+    and $\log(t)$.
+  \item Suppose we have $(t_1, s_1)$, and $(t_2, s_2)$ that are two time points on 
+    a estimated survival curve (e.g., set $s_i = \Skm(t_i)$ for $i = 1, 2$).
+  \item Then $\hat\lambda$ and $\hat\gamma$ can be obtained by solving the system of equation
+    $$ \left\{\begin{matrix}
+\log\left(-\log s_1\right) = \log(\lambda) - \gamma\log(t_1) \\ 
+\log\left(-\log s_2\right) = \log(\lambda) - \gamma\log(t_2)
+\end{matrix}\right.,$$
+    for $\lambda$ and $\gamma$.
   \end{itemize}  
 \end{frame}
 
