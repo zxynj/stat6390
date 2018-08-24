@@ -290,11 +290,69 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \end{itemize}  
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item The \code{Weibull2} function in the \pkg{Hmisc} package can be
+    used to produce a Weibull function that matches the two points
+    $(t_1, s_1)$, and $(t_2, s_2)$.
+  \item Recall that $\Skm(t)$ for the \code{whas100} can be obtained with
+    the \code{survfit}:
+    <<load, echo = FALSE, message = FALSE>>=
+    library(survival)
+    library(tidyverse)
+    library(Hmisc)
+    load("figure/whas100.RData")
+    whas100 <- as.tibble(whas100)
+    @ 
+    <<km-whas100>>=	
+     km <- survfit(Surv(lenfol, fstat) ~ 1, whas100)
+    @
+\item Suppose we want to find a Weibull distribution that
+  matches the KM estimator at the 1st and the 6th year
+  ($t = 365$ and $t = 2190$).
+  <<km-value>>=
+summary(km, time = c(365, 2190))
+@
+\item The two points are $(365, 0.8)$ and $(2190, 0.505)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item Matching the two points with
+    <<Weibull2>>=
+    weiSurv <- Weibull2(c(365, 2190), c(.8, .505))
+    str(weiSurv)
+    class(weiSurv)
+@
+\item \code{Weibull2} returns a function.
+\item The parameters are $\lambda = 0.006$ and $\gamma = 0.625$.
+\item The ``\code{alpha}'' used in \code{Weibull2} is equivalent to our $\lambda$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item \code{weiSurv} returns survival probability depending on inputs.
+    <<Weibull2-value>>=
+    weiSurv(365)
+    weiSurv(2190)
+    weiSurv(0:13)
+@
+  \end{itemize}\vspace{-.75cm}
+  \begin{center}
+    \includegraphics[scale = .32]{Weibull2}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Weibull regression}
   \begin{itemize}
   \item 
-  \end{itemize}  
+  \end{itemize}
 \end{frame}
 
 \end{document}

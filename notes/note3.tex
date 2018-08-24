@@ -338,11 +338,108 @@
   \end{itemize}  
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item The \code{Weibull2} function in the \pkg{Hmisc} package can be
+    used to produce a Weibull function that matches the two points
+    $(t_1, s_1)$, and $(t_2, s_2)$.
+  \item Recall that $\Skm(t)$ for the \code{whas100} can be obtained with
+    the \code{survfit}:
+
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> } \hlstd{km} \hlkwb{<-} \hlkwd{survfit}\hlstd{(}\hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlnum{1}\hlstd{, whas100)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\item Suppose we want to find a Weibull distribution that
+  matches the KM estimator at the 1st and the 6th year
+  ($t = 365$ and $t = 2190$).
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{summary}\hlstd{(km,} \hlkwc{time} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{365}\hlstd{,} \hlnum{2190}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100)
+
+ time n.risk n.event survival std.err lower 95% CI upper 95% CI
+  365     80      20    0.800  0.0400        0.725        0.882
+ 2190     15      27    0.505  0.0537        0.410        0.622
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\item The two points are $(365, 0.8)$ and $(2190, 0.505)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item Matching the two points with
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{weiSurv} \hlkwb{<-} \hlkwd{Weibull2}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{365}\hlstd{,} \hlnum{2190}\hlstd{),} \hlkwd{c}\hlstd{(}\hlnum{.8}\hlstd{,} \hlnum{.505}\hlstd{))}
+\hlstd{> }\hlkwd{str}\hlstd{(weiSurv)}
+\end{alltt}
+\begin{verbatim}
+function (times = NULL, alpha = 0.00560289516761242, gamma = 0.624507785991088)  
+\end{verbatim}
+\begin{alltt}
+\hlstd{> }\hlkwd{class}\hlstd{(weiSurv)}
+\end{alltt}
+\begin{verbatim}
+[1] "function"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\item \code{Weibull2} returns a function.
+\item The parameters are $\lambda = 0.006$ and $\gamma = 0.625$.
+\item The ``\code{alpha}'' used in \code{Weibull2} is equivalent to our $\lambda$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Weibull model}
+  \begin{itemize}
+  \item \code{weiSurv} returns survival probability depending on inputs.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{weiSurv}\hlstd{(}\hlnum{365}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+[1] 0.8
+\end{verbatim}
+\begin{alltt}
+\hlstd{> }\hlkwd{weiSurv}\hlstd{(}\hlnum{2190}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+[1] 0.505
+\end{verbatim}
+\begin{alltt}
+\hlstd{> }\hlkwd{weiSurv}\hlstd{(}\hlnum{0}\hlopt{:}\hlnum{13}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+ [1] 1.0000000 0.9944128 0.9913993 0.9889347 0.9867714 0.9848084 0.9829920
+ [8] 0.9812894 0.9796788 0.9781448 0.9766759 0.9752633 0.9739001 0.9725807
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+  \end{itemize}\vspace{-.75cm}
+  \begin{center}
+    \includegraphics[scale = .32]{Weibull2}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Weibull regression}
   \begin{itemize}
   \item 
-  \end{itemize}  
+  \end{itemize}
 \end{frame}
 
 \end{document}
