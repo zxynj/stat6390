@@ -8,9 +8,12 @@ urlcolor: blue
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+### TuTh 10:00 am to 11:15 am @ CB 1.214
 
-### This site is generated from a R Markdown document. 
+---
+
+#### This site is generated from a R Markdown document. 
 * Syllabus can be found [here](https://www.sychiou.com/pdf/fall2018stat6390.pdf)
-* Some ideas on setting up your machine is [here](useGit.html)
+* Some ideas on setting up your machine are [here](useGit.html)
 * Introduction to `tibble` can be found [here](http://r4ds.had.co.nz/introduction-2.html) and [here](http://r4ds.had.co.nz/tibbles.html)
-* A nice discussion on `tibble` vs. `data.frame` [here](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/)
+* A nice discussion on `tibble` vs. `data.frame` is [here](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/)
