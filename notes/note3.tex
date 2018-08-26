@@ -435,14 +435,93 @@ function (times = NULL, alpha = 0.00560289516761242, gamma = 0.624507785991088)
   \end{center}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Weibull regression}
+\begin{frame}
+  \frametitle{Exponential regression model}
+  \begin{itemize}
+  \item Recall that if $T$ follows an exponential distribution with rate $\lambda$,
+    $T$ has the hazard function $h(t) = \lambda$.
+  \item If one wants to construct a regression model under the exponential assumption,
+    it is natural to model the exponential parameter $\lambda$.
+  \item Suppose a covariates vector $X = (X_{1}, \ldots, X_{p})^\prime$ is available for an individual.
+  \item The hazard at time $t$ for an individual can be written as
+    $$\lambda(t; x) = \lambda \cdot r(X^\prime\beta),$$
+    where $\beta = (\beta_1, \ldots, \beta_p)^\prime$ is the regression coefficient,
+    $\lambda$ is a constant, and $r(\cdot)$ is a specified functional form.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Exponential regression model}
+  \begin{itemize}
+  \item A few choices of $r(\cdot)$ have been proposed:
+    \begin{enumerate}
+    \item $r(u) = u$
+    \item $r(u) = u^{-1}$
+    \item $r(u) = e^u$
+    \end{enumerate}
+  \item The first two forms suffer from the disadvantage that $\b4ta$ must be restricted
+    to guarantee $r(X^\prime\beta) > 0$ for all possible $X$.
+  \item The third form is commonly considered and will be used here.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exponential regression model}
+  \begin{itemize}
+  \item A few choices of $r(\cdot)$ have been proposed:
+    \begin{enumerate}
+    \item $r(u) = u$
+    \item $r(u) = u^{-1}$
+    \item $r(u) = e^u$
+    \end{enumerate}
+  \item The first two forms suffer from the disadvantage that $\b4ta$ must be restricted
+    to guarantee $r(X^\prime\beta) > 0$ for all possible $X$.
+  \item The third form is commonly considered and will be used here,
+    but we should keep in mind that there may be more appropriate forms in specific settings.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exponential regression model}
+  \begin{itemize}
+  \item Working with model with hazard function
+    \begin{equation}
+      \lambda(t; x) = \lambda e^{X^\prime\beta}.
+      \label{eq:exp}
+    \end{equation}
+  \item This model specifies that log failure rate is a linear function of $X$.
+  \item Setting $Y = \log(T)$, the model~\eqref{eq:exp} implies
+    \begin{equation}
+      \label{eq:exp-aft}
+      Y = \alpha - X^\prime\beta + \epsilon,
+    \end{equation}
+    where $\alpha = -\log(\lambda)$ and $\epsilon$ follows an extreme value distribution.
+  \item The model~\eqref{eq:exp-aft} is a log-linear model.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exponential regression model}
+  \begin{itemize}
+  \item The model~\eqref{eq:exp} also implies
+    $$S(t;x) = \lambda t e^{X^\prime\beta},$$
+    and the conditional density function of $T$ given $X$ is then
+    $$f(t;x) = \lambda e^{X^\prime\beta}\cdot e^{\{- \lambda t e^{X^\prime\beta}\}}.$$
+  \item Parameters can be solved by maximizing the likelihood.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weibull regression model}
   \begin{itemize}
   \item 
   \end{itemize}
 \end{frame}
 
 \end{document}
+
+
 
 
 \begin{frame}[fragile]
