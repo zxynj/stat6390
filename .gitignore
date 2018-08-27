@@ -19,5 +19,6 @@ results/
 *.toc
 *.nav
 *.vrb
+*Store
 
 clean.sh

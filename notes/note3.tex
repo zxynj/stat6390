@@ -71,7 +71,8 @@
 
 \renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
 
-\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, filecolor=blue, anchorcolor=yellow}
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, 
+  filecolor=blue, anchorcolor=yellow}
 
 \graphicspath{{figure/}}
 
@@ -515,6 +516,8 @@ function (times = NULL, alpha = 0.00560289516761242, gamma = 0.624507785991088)
 \begin{frame}
   \frametitle{Weibull regression model}
   \begin{itemize}
+  \item The similar idea can be applied to Weibull assumption. 
+    $$\lambda(t; x) = \lambda\gamma t^{\gamma-1}e^{X^\prime\beta}.$$
   \item 
   \end{itemize}
 \end{frame}

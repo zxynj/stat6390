@@ -21,7 +21,8 @@
 
 \renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
 
-\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, filecolor=blue, anchorcolor=yellow}
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, 
+  filecolor=blue, anchorcolor=yellow}
 
 \graphicspath{{figure/}}
 
@@ -428,6 +429,8 @@ summary(km, time = c(365, 2190))
 \begin{frame}
   \frametitle{Weibull regression model}
   \begin{itemize}
+  \item The similar idea can be applied to Weibull assumption. 
+    $$\lambda(t; x) = \lambda\gamma t^{\gamma-1}e^{X^\prime\beta}.$$
   \item 
   \end{itemize}
 \end{frame}
