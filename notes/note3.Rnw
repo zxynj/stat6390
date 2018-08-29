@@ -430,19 +430,41 @@ summary(km, time = c(365, 2190))
   \frametitle{Weibull regression model}
   \begin{itemize}
   \item The similar idea can be applied to Weibull assumption. 
-    $$\lambda(t; x) = \lambda\gamma t^{\gamma-1}e^{X^\prime\beta}.$$
-  \item 
+    \begin{equation}
+      \lambda(t; x) = \lambda\gamma t^{\gamma-1}e^{X^\prime\beta}.
+      \label{eq:wei}
+    \end{equation}
+  \item Setting $Y = \log(T)$, model~\ref{eq:wei} implies
+    \begin{equation}
+      Y = \alpha - X^\prime\beta^* + \sigma\epsilon,
+      \label{eq:wei-aft}
+    \end{equation}
+    where $\alpha = -\log(\lambda) / \gamma$, $\beta^* = \beta/\gamma$, $\sigma = 1 / \gamma$,
+    and $\epsilon$ is an extreme value distribution.
+  \item The (Weibull) relationship suggests the effect of the covariates
+    \begin{enumerate}
+    \item act multiplicatively on the hazard function.
+    \item act additively on $Y$; the general model has a log-linear models.
+    \end{enumerate}
+  \item The conditional density function and the survival function can be derived for
+    likelihood estimation
   \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item The \code{survreg} function in \pkg{survival} package
+    covers a large family of parametric models.
+   <<survreg, message = FALSE>>=
+   library(survival)
+   args(survreg)
+  @
+\end{itemize}
 \end{frame}
 
 \end{document}
 
 
 
-
-\begin{frame}[fragile]
-  \frametitle{Parametric models}
-  <<library, echo = FALSE, message = FALSE>>=
-  library(tidyverse)
-  @
-\end{frame}
