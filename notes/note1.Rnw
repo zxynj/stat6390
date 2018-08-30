@@ -216,11 +216,11 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item Some datasets are only available in version 0.4.6 or eariler. 
   \item Archived \R package can be installed with
   <<install, eval = FALSE>>=
-  ## install.package("devtools")
+  ## install.packages("devtools")
   library(devtools)
   install_version("survMisc", version = "0.4.6")
   @
-  \item \texttt{install.package()} installs the latest version.
+  \item \texttt{install.packages()} installs the latest version.
   \item \texttt{install\_version()} installs a specified package.
   \end{itemize}
 \end{frame}
@@ -260,7 +260,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item A more effective way to manipulate data frame is through ``\texttt{tibble}''.
   \item Install \pkg{tidyverse} (\url{https://www.tidyverse.org})
     <<Tab1-tib, tidy = FALSE, message = FALSE>>= 
-    ## install.package(tidyverse)
+    ## install.packages(tidyverse)
     library(tidyverse)
     whas100 <- as.tibble(whas100)
     whas100
@@ -273,7 +273,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \begin{itemize}
   \item A transposed version to print \texttt{whas100}:
     <<Tab1-tib2, tidy = FALSE, message = FALSE>>= 
-    ## install.package(tidyverse)
+    ## install.packages(tidyverse)
     glimpse(whas100)
     @
   \item See \url{https://r4ds.had.co.nz/tibbles.html} for details.
