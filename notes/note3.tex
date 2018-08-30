@@ -558,10 +558,94 @@ NULL
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
+  \item Suppose we want to fit a parametric model using the \code{whas100} data with covariates:
+    \begin{itemize}
+    \item gender
+    \item age
+    \item gender-age interaction
+    \item  body mass index (BMI)
+    \end{itemize}
+  \item We can create a \code{Surv} formula as
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{fm} \hlkwb{<-} \hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlstd{(age} \hlopt{+} \hlstd{gender)}\hlopt{^}\hlnum{2} \hlopt{+} \hlstd{bmi}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 \end{itemize}
 \end{frame}
 
+
+
+\begin{frame}[fragile]
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item Exponential regression model:
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{summary}\hlstd{(}\hlkwd{survreg}\hlstd{(fm,} \hlkwc{data} \hlstd{= whas100,} \hlkwc{dist} \hlstd{=} \hlstr{"exp"}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+
+Call:
+survreg(formula = fm, data = whas100, dist = "exp")
+              Value Std. Error     z       p
+(Intercept)  9.2897     1.6200  5.73 9.8e-09
+age         -0.0532     0.0157 -3.39  0.0007
+gender      -3.9324     1.8098 -2.17  0.0298
+bmi          0.0935     0.0376  2.49  0.0128
+age:gender   0.0498     0.0241  2.06  0.0394
+
+Scale fixed at 1 
+
+Exponential distribution
+Loglik(model)= -444.4   Loglik(intercept only)= -458.5
+	Chisq= 28.25 on 4 degrees of freedom, p= 1.1e-05 
+Number of Newton-Raphson Iterations: 5 
+n= 100 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\item The same result is presented in Table 8.2.
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item Weibull regression model:
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{summary}\hlstd{(}\hlkwd{survreg}\hlstd{(fm,} \hlkwc{data} \hlstd{= whas100))}
+\end{alltt}
+\begin{verbatim}
+
+Call:
+survreg(formula = fm, data = whas100)
+              Value Std. Error     z       p
+(Intercept)  9.8727     2.0470  4.82 1.4e-06
+age         -0.0639     0.0206 -3.10  0.0019
+gender      -4.6895     2.2848 -2.05  0.0401
+bmi          0.1055     0.0465  2.27  0.0232
+age:gender   0.0592     0.0304  1.94  0.0518
+Log(scale)   0.2254     0.1242  1.81  0.0695
+
+Scale= 1.25 
+
+Weibull distribution
+Loglik(model)= -442.6   Loglik(intercept only)= -455.3
+	Chisq= 25.36 on 4 degrees of freedom, p= 4.3e-05 
+Number of Newton-Raphson Iterations: 5 
+n= 100 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\item The same result is presented in Table 8.5.
+\end{itemize}
+\end{frame}
 \end{document}
-
-
-

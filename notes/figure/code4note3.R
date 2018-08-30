@@ -27,3 +27,7 @@ lines(0:3000, weiSurv(0:3000), 's', col = 2, lwd = 1.2)
 points(c(365, 2190), c(.8, .505), pch = 16, cex = 1.2)
 legend("topright", c("Kaplan-Meier", "Weibull2"), bty = "n", lwd = 1.2, col = 1:2, lty = 1)
 dev.off()
+
+
+survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100, dist = "exp")
+survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100)

@@ -461,10 +461,43 @@ summary(km, time = c(365, 2190))
    library(survival)
    args(survreg)
   @
+  \item Suppose we want to fit a parametric model using the \code{whas100} data with covariates:
+    \begin{itemize}
+    \item gender
+    \item age
+    \item gender-age interaction
+    \item  body mass index (BMI)
+    \end{itemize}
+  \item We can create a \code{Surv} formula as
+  <<survreg-fm>>=
+  fm <- Surv(lenfol, fstat) ~ (age + gender)^2 + bmi
+@ 
 \end{itemize}
 \end{frame}
 
+
+
+\begin{frame}[fragile]
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item Exponential regression model:
+    <<exp-reg>>=
+    summary(survreg(fm, data = whas100, dist = "exp"))
+@
+\item The same result is presented in Table 8.2.
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item Weibull regression model:
+    <<wei-reg>>=
+    summary(survreg(fm, data = whas100))
+@ 
+\item The same result is presented in Table 8.5.
+\end{itemize}
+\end{frame}
 \end{document}
-
-
-
