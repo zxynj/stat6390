@@ -1,0 +1,65 @@
+---
+title: "Course supplement"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+    toc_float: true
+geometry: left = .5in, right = .5in, top = 1in, bottom = .6in
+urlcolor: blue
+---
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+## options(replace.assign = TRUE, width=80)
+```
+
+This document contains some discussion points from class
+
+# The i386 error message
+Some of you (especially these with Windows machines) ran into error messages along the lines of
+```{}
+*** arch - i386
+ERROR: compilation failed for package 'survMisc'
+```
+Similar issues are reported [here](https://github.com/dmlc/xgboost/issues/2319), [here](https://github.com/tidyverse/dplyr/issues/165), and more.
+A workaround approach is to run the following codes before the command line that produce the error message:
+```{R eval = FALSE}
+library(devtools)
+assignInNamespace("version_info", c(devtools:::version_info, list("3.5" = list(version_min = "3.3.0", version_max = "99.99.99", path = "bin"))), "devtools")
+```
+See [here](https://github.com/r-lib/devtools/issues/1772) for the original discussion.
+This enable `Rtools` package to be used alongside `devtools`.
+However, this is only a temporary fix, and the user might need to run this line everytime `devtools` is loaded. 
+
+A potential reason for this issue is that `Rtools` is not being detected or not installed properly. 
+For this, the user can try to install `Rtools` fro windows from this [link](https://cran.r-project.org/bin/windows/Rtools/).
+
+# Adding a data point 
+In one of the class example, we plotted the empirical survival curve with: 
+```{R load, echo = FALSE, message = FALSE}
+library(tidyverse)
+library(survival)
+load("whas100.RData")
+```
+
+```{R data}
+whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% 
+  ggplot(aes(lenfol, surv)) + geom_step()
+```
+
+The codes can be modified in the following way so that the empirical survival curve starts from $\hat{S}_e(0)= 1$.
+```{R tian}
+whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% 
+  add_row(lenfol = 0, surv = 1,.before = 1) %>% ggplot(aes(lenfol, surv)) + 
+  geom_step() + labs(title = "Codes provided by Tian Jiang")
+```
+
+The following example produces the similar plot without the need to store $\hat{S}_e(t)$ in `surv`.
+```{R easy}
+whas100 %>% filter(fstat > 0) %>% 
+  ggplot(aes(x = lenfol)) + geom_step(aes(y = 1 - ..y..), stat = "ecdf", show.legend = TRUE) +
+  ylab("surv")
+```
+
+Here we have $\hat{S}_e(t) = 1$ for $t < 6$ and $\hat{S}_e(t) = 0$ for $t \ge 2710$.
