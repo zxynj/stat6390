@@ -461,7 +461,7 @@ summary(km, time = c(365, 2190))
    library(survival)
    args(survreg)
   @
-  \item Suppose we want to fit a parametric model using the \code{whas100} data with covariates:
+  \item Suppose we want to fit a parametric model using covariates:
     \begin{itemize}
     \item gender
     \item age
@@ -484,11 +484,28 @@ summary(km, time = c(365, 2190))
     <<exp-reg>>=
     summary(survreg(fm, data = whas100, dist = "exp"))
 @
+\item This is equivalent to the Weibull regression model when $\lambda$ (scale) = 1.
 \item The same result is presented in Table 8.2.
 \end{itemize}
 \end{frame}
 
-
+\begin{frame}[fragile]
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item Since Weibull relationship suggests two kinds of covariates effects (see page 23),
+    the regression coefficient can be interpret in two ways.
+  \item For one unit increase in \code{bmi} ($\hat\beta_{\tiny\mbox{bmi}} = 0.0935$):
+    \begin{itemize}
+    \item the risk of death is expected to increase by $e^{0.0935} = 1.098$ times.
+    \item the log of survival time is expected to decrease by 0.0935 (days).
+    \end{itemize}
+  \item For one unit increase in \code{age} among females (gender = 1):
+    \begin{itemize}
+    \item the risk of death is expected to increase by $e^{-0.0532+0.0498} = 0.997$ times.
+    \item the log of survival time is expected to decrease by $-0.0532+0.0498 = -0.0034$.
+    \end{itemize}    
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Weibull regression model}

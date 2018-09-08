@@ -29,5 +29,8 @@ legend("topright", c("Kaplan-Meier", "Weibull2"), bty = "n", lwd = 1.2, col = 1:
 dev.off()
 
 
-survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100, dist = "exp")
-survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100)
+fit.exp <- survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100, dist = "exp")
+fit.exp$var
+
+
+fit.wei <- survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100)
