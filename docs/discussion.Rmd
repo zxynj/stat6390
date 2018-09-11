@@ -30,10 +30,13 @@ assignInNamespace("version_info", c(devtools:::version_info, list("3.5" = list(v
 ```
 See [here](https://github.com/r-lib/devtools/issues/1772) for the original discussion.
 This enable `Rtools` package to be used alongside `devtools`.
-However, this is only a temporary fix, and the user might need to run this line everytime `devtools` is loaded. 
+However, this is only a temporary fix, and the user might need to run this line every time `devtools` is loaded. 
 
-A potential reason for this issue is that `Rtools` is not being detected or not installed properly. 
-For this, the user can try to install `Rtools` fro windows from this [link](https://cran.r-project.org/bin/windows/Rtools/).
+A possible reason for this issue is that `Rtools` is not being detected or not installed properly. 
+For this, the user can try to install `Rtools` for windows from this [link](https://cran.r-project.org/bin/windows/Rtools/).
+Make sure to check "**add rtools to system PATH**":
+
+![](rtool_path.png)
 
 # Adding a data point 
 In one of the class example, we plotted the empirical survival curve with: 
