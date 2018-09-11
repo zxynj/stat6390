@@ -1,0 +1,25 @@
+---
+title: Homework 1
+author: Steven Chiou
+output: pdf_document
+---
+\centering Due date: Septmber 20
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+
+1. Let $T$ be a positive random variable, show $E(T)=\int_0^\infty S(t) dt$.
+
+2. e
+
+3. Consider a survival time random variable with hazard $\lambda(t) = \frac{1}{10 - x}$ in $[0, 10)$.
+    a. Plot the hazard function.
+    b. Plot the survival function.
+
+4. Consider a survival time random variable with constant hazard $\lambda = 0.1$ in $[0, 5)$, 
+and $\lambda = 0.2$ in $[5, \infty)$. This is known as a piecewise constand hazard. 
+    a. Plot the hazard function.
+    b. Plot the survival function.
+
+5. e
