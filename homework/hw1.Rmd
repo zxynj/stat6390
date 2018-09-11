@@ -3,23 +3,31 @@ title: Homework 1
 author: Steven Chiou
 output: pdf_document
 ---
-\centering Due date: Septmber 20
+
+\centering Due date: September 20
 
 ```{R setup, include = FALSE}
 knitr::opts_chunk$set(comment = NA, prompt = TRUE)
 ```
 
-1. Let $T$ be a positive random variable, show $E(T)=\int_0^\infty S(t) dt$.
+1. **Textbook problem 1.3** The investigator of a large clinical trial would like to assess factors that might be associated with drop-out over the course of the trial. Describe what would be the event and which observations would be considered censored for such a study.
 
-2. e
+2. Let $T$ be a positive random variable, show $E(T)=\int_0^\infty S(t) dt$. \label{est}
 
-3. Consider a survival time random variable with hazard $\lambda(t) = \frac{1}{10 - x}$ in $[0, 10)$.
+3. Question \ref{est} suggests that the area under the survival curve can be interpreted as the expected survival time.
+Consider the following hypothetical dataset with 10 death times. 
+    ```{R death}
+    dat <- c(43, 110, 113, 28, 73, 31, 89, 65, 66, 76)
+    ```
+    a. Plot the empirical survival curve.
+    b. Find the expected survival time for the hypothetical dataset.
+
+4. Consider a survival time random variable with hazard $\lambda(t) = \frac{1}{10 - x}$ in $[0, 10)$.
     a. Plot the hazard function.
     b. Plot the survival function.
 
-4. Consider a survival time random variable with constant hazard $\lambda = 0.1$ in $[0, 5)$, 
-and $\lambda = 0.2$ in $[5, \infty)$. This is known as a piecewise constand hazard. 
+5. Consider a survival time random variable with constant hazard $\lambda = 0.1$ in $[0, 5)$, 
+and $\lambda = 0.2$ in $[5, \infty)$. This is known as a piece-wise constant hazard. 
     a. Plot the hazard function.
     b. Plot the survival function.
 
-5. e
