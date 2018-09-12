@@ -321,6 +321,35 @@
   \end{itemize}  
 \end{frame}
 
+
+\begin{frame}[fragile]
+  \frametitle{Weibull model}
+  \begin{itemize}    
+  \item Recall that $\Skm(t)$ for the \code{whas100} can be obtained with
+    the \code{survfit}:
+
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{km} \hlkwb{<-} \hlkwd{survfit}\hlstd{(}\hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlnum{1}\hlstd{, whas100)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\item We plot $\log[-\log S(t)]$ against $\log(t)$ via the \code{qplot} function of \pkg{ggplot2}:
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{qplot}\hlstd{(}\hlkwd{log}\hlstd{(km}\hlopt{$}\hlstd{time),} \hlkwd{log}\hlstd{(}\hlopt{-}\hlkwd{log}\hlstd{(km}\hlopt{$}\hlstd{surv)))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+  \begin{center}
+    \includegraphics[scale = .3]{weiGOF}
+  \end{center}
+  \item The Weibull assumption might be questionable.
+  \end{itemize}  
+\end{frame}
+
 \begin{frame}
   \frametitle{Weibull model}
   \begin{itemize}    
@@ -345,16 +374,18 @@
   \item The \code{Weibull2} function in the \pkg{Hmisc} package can be
     used to produce a Weibull function that matches the two points
     $(t_1, s_1)$, and $(t_2, s_2)$.
-  \item Recall that $\Skm(t)$ for the \code{whas100} can be obtained with
-    the \code{survfit}:
-
-\begin{knitrout}\scriptsize
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{> } \hlstd{km} \hlkwb{<-} \hlkwd{survfit}\hlstd{(}\hlkwd{Surv}\hlstd{(lenfol, fstat)} \hlopt{~} \hlnum{1}\hlstd{, whas100)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+  % \item Recall that $\Skm(t)$ for the \code{whas100} can be obtained with
+  %   the \code{survfit}:
+  %   <<load, echo = FALSE, message = FALSE>>=
+  %   library(survival)
+  %   library(tidyverse)
+  %   library(Hmisc)
+  %   load("figure/whas100.RData")
+  %   whas100 <- as.tibble(whas100)
+  %   @ 
+  %   <<km-whas100>>=	
+  %    km <- survfit(Surv(lenfol, fstat) ~ 1, whas100)
+  %   @
 \item Suppose we want to find a Weibull distribution that
   matches the KM estimator at the 1st and the 6th year
   ($t = 365$ and $t = 2190$).
@@ -372,7 +403,7 @@ Call: survfit(formula = Surv(lenfol, fstat) ~ 1, data = whas100)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-\item The two points are $(365, 0.8)$ and $(2190, 0.505)$.
+\item The two points we what the Weibull curve to pass through are $(365, 0.8)$ and $(2190, 0.505)$.
 \end{itemize}
 \end{frame}
 
@@ -585,7 +616,8 @@ NULL
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{> }\hlkwd{summary}\hlstd{(}\hlkwd{survreg}\hlstd{(fm,} \hlkwc{data} \hlstd{= whas100,} \hlkwc{dist} \hlstd{=} \hlstr{"exp"}\hlstd{))}
+\hlstd{> }\hlstd{fit.exp} \hlkwb{<-} \hlkwd{survreg}\hlstd{(fm,} \hlkwc{data} \hlstd{= whas100,} \hlkwc{dist} \hlstd{=} \hlstr{"exp"}\hlstd{)}
+\hlstd{> }\hlkwd{summary}\hlstd{(fit.exp)}
 \end{alltt}
 \begin{verbatim}
 
@@ -613,7 +645,7 @@ n= 100
 \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Weibull regression model}
   \begin{itemize}
   \item Since Weibull relationship suggests two kinds of covariates effects (see page 23),
@@ -623,11 +655,57 @@ n= 100
     \item the risk of death is expected to increase by $e^{0.0935} = 1.098$ times.
     \item the log of survival time is expected to decrease by 0.0935 (days).
     \end{itemize}
-  \item For one unit increase in \code{age} among females (gender = 1):
+  \item For one unit increase in \code{age} among females (\code{gender = 1}):
     \begin{itemize}
     \item the risk of death is expected to increase by $e^{-0.0532+0.0498} = 0.997$ times.
     \item the log of survival time is expected to decrease by $-0.0532+0.0498 = -0.0034$.
+    \item The Wald $p$-value of $\hat\beta_{\tiny\mbox{age}} + \hat\beta_{\tiny\mbox{gender}=1}$ can be computed as following
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlstd{name} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"age"}\hlstd{,} \hlstr{"age:gender"}\hlstd{)}
+\hlstd{> }\hlnum{2} \hlopt{-} \hlnum{2} \hlopt{*} \hlkwd{pnorm}\hlstd{(}\hlkwd{abs}\hlstd{(}\hlkwd{sum}\hlstd{(}\hlkwd{coef}\hlstd{(fit.exp)[name]))} \hlopt{/}
+\hlstd{+ }              \hlkwd{sqrt}\hlstd{(}\hlkwd{sum}\hlstd{(fit.exp}\hlopt{$}\hlstd{var[name, name])))}
+\end{alltt}
+\begin{verbatim}
+[1] 0.8584273
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
     \end{itemize}    
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item Since the exponential distribution is a special case of the Weibull distribution,
+    fitting a exponential regression model is equivalent to fitting a Weibull regression model with $\gamma = 1$.
+    % This is noted by \code{Scale fixed at 1}.
+  \item The intercept defines the exponential parameter, $\lambda$.
+  \item The likelihood, \code{Loglik(model)}, is available because we are fitting a parametric model.
+  \item \code{Chisq} is likelihood ratio statistics:
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlnum{2} \hlopt{*} \hlkwd{log}\hlstd{(}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlnum{444.4}\hlstd{)} \hlopt{/} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlnum{458.5}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+[1] 28.2
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\item The likelihood ratio test gives a $p$-value of
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlnum{1} \hlopt{-} \hlkwd{pchisq}\hlstd{(}\hlnum{28.25}\hlstd{,} \hlnum{4}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+[1] 1.109905e-05
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
   \end{itemize}
 \end{frame}
 
@@ -665,4 +743,83 @@ n= 100
 \item The same result is presented in Table 8.5.
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{Weibull regression model}
+  \begin{itemize}
+  \item The interpretation of the regression parameters is similar to that in exponential regression model.
+  \item In addition to the intercept and parameter estimates, \code{survreg} also gives \code{Log(scale)}, which corresponds to $\log(\gamma)$.
+  \item The $p$-value for \code{Log(scale)} is at the borderline of $\alpha = 0.05$,
+    suggesting that adding an extra parameter ($\gamma$) to the model does not improve the overall fit significantly.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Log-normal regression model}
+  \begin{itemize}
+  \item Suppose we have a common form
+    $$ Y = X^\prime\beta + \epsilon,$$
+    different parametric model can be specified through the distribution of $\epsilon$.
+  \item Another common parametric model is when $\epsilon$ follows a standard normal,
+    this also implies the survival times follow a log-normal distribution.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Log-normal regression model}
+  \begin{itemize}
+  \item In the log-normal case, the parameters are not in the form of a proportional hazards model.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{summary}\hlstd{(}\hlkwd{survreg}\hlstd{(fm,} \hlkwc{data} \hlstd{= whas100,} \hlkwc{dist} \hlstd{=} \hlstr{"lognormal"}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+
+Call:
+survreg(formula = fm, data = whas100, dist = "lognormal")
+              Value Std. Error     z       p
+(Intercept) 10.3193     2.2278  4.63 3.6e-06
+age         -0.0737     0.0233 -3.16  0.0016
+gender      -4.9028     2.5880 -1.89  0.0582
+bmi          0.0969     0.0500  1.94  0.0525
+age:gender   0.0626     0.0354  1.77  0.0774
+Log(scale)   0.6871     0.1066  6.44 1.2e-10
+
+Scale= 1.99 
+
+Log Normal distribution
+Loglik(model)= -446.5   Loglik(intercept only)= -457.1
+	Chisq= 21.22 on 4 degrees of freedom, p= 0.00029 
+Number of Newton-Raphson Iterations: 4 
+n= 100 
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Other parametric models}
+  \begin{itemize}
+  \item Here is a list of distributions $\epsilon$ can be specified via \code{survreg.distributions}.
+    \vspace{.1cm}
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{> }\hlkwd{names}\hlstd{(survreg.distributions)}
+\end{alltt}
+\begin{verbatim}
+ [1] "extreme"     "logistic"    "gaussian"    "weibull"     "exponential"
+ [6] "rayleigh"    "loggaussian" "lognormal"   "loglogistic" "t"          
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+  \end{itemize}
+\end{frame}
+
+
 \end{document}
+

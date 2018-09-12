@@ -17,6 +17,9 @@ load("whas100.RData")
 whas100 <- as.tibble(whas100)
 
 km <- survfit(Surv(lenfol, fstat) ~ 1, whas100)
+qplot(log(km$time), log(-log(km$surv)))
+ggsave("weiGOF.pdf")
+
 
 summary(km, time = c(365, 2190))
 weiSurv <- Weibull2(c(365, 2190), c(.8, .505))
@@ -30,7 +33,11 @@ dev.off()
 
 
 fit.exp <- survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100, dist = "exp")
-fit.exp$var
+name <- c("age", "age:gender")
+abs(sum(coef(fit.exp)[name])) / sqrt(sum(fit.exp$var[name, name]))
+2 - 2 * pnorm(abs(sum(coef(fit.exp)[name])) / sqrt(sum(fit.exp$var[name, name])))
 
 
+fit.wei <- survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100)
+fit.ln <- survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100, dist = "lognormal")
 fit.wei <- survreg(Surv(lenfol, fstat) ~ (age + gender)^2 + bmi, data = whas100)
