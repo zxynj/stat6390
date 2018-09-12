@@ -64,6 +64,6 @@ Follow the instruction [here](https://help.github.com/articles/generating-a-new-
     - `new pull request`
 
 # `RMarkdown` and `Knitr`
-- A full tutorial can be found [here](https://rmarkdown.rstudio.com/lesson-1.html)
-- A useful reference guide can be found [here](https://rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf).
-- A short version of the reference guide can be found [here](https://rmarkdown.rstudio.com/lesson-15.html) or [here](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
+- A full tutorial can be found [here](https://rmarkdown.rstudio.com/lesson-1)
+- A useful reference guide/book can be found [here](https://bookdown.org/yihui/rmarkdown/).
+- A short version of the reference guide can be found [here](https://rmarkdown.rstudio.com/lesson-15).
