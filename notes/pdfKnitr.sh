@@ -10,6 +10,7 @@ pdflatex note3.tex
 bibtex note3.aux
 pdflatex note3.tex
 pdflatex note3.tex
+rm note3.tex
 
 rm *log
 rm *out
