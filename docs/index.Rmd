@@ -13,8 +13,23 @@ knitr::opts_chunk$set(echo = TRUE)
 ---
 
 #### This site is generated from a R Markdown document. 
+
+See the class [GitHub page](https://github.com/stc04003/stat6390) for the most up-to-date class materials.
+
+# Homework
+* Homework 1 can be found [here](https://github.com/stc04003/stat6390/blob/master/homework/hw1/hw1.pdf)
+
+# Notes and other class documents
+* Some class discussion points can be found [here](discussion.html)
+* Unannotated notes 1 can be found [here](https://github.com/stc04003/stat6390/blob/master/notes/note1.pdf)
+* Unannotated notes 2 can be found [here](https://github.com/stc04003/stat6390/blob/master/notes/note2.pdf)
+* Unannotated notes 3 can be found [here](https://github.com/stc04003/stat6390/blob/master/notes/note3.pdf)
+* Annotated notes can be found on [eLearning](http://elearning.utdallas.edu/)
 * Syllabus can be found [here](https://www.sychiou.com/pdf/fall2018stat6390.pdf)
+* Project suggestions can be found [here](https://github.com/stc04003/stat6390/blob/master/project/project.pdf)
+
+# Software setup
+* Technical issues brought up during lecture can often be found in the [class discussions](discussion.html)
 * Some ideas on setting up your machine are [here](useGit.html)
 * Introduction to `tibble` can be found [here](http://r4ds.had.co.nz/introduction-2.html) and [here](http://r4ds.had.co.nz/tibbles.html)
 * A nice discussion on `tibble` vs. `data.frame` is [here](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/)
-* Some class discussion points [here](discussion.html)
