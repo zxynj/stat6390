@@ -1,0 +1,5 @@
+---
+output: github_document
+---
+
+This folder consists of documents for [http://www.sychiou.com/stat6390/](http://www.sychiou.com/stat6390/).
