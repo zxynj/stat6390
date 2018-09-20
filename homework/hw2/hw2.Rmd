@@ -1,0 +1,19 @@
+---
+title: Homework 2
+author: Steven Chiou
+output: pdf_document
+---
+
+\centering Due date: Thursday, October 11
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+
+1. 
+
+2. 
+
+3. 
+    a. 
+    b.
