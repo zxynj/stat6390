@@ -3,9 +3,9 @@ title: "assignment 1"
 author: "Norah Alyabs"
 date: "September 12, 2018"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 \centering Due date: Thursday, September 20
 
