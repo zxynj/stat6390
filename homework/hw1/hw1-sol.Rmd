@@ -66,7 +66,8 @@ Consider the following hypothetical data set with 10 death times.**
 \newpage
 5. **Consider a survival time random variable with constant hazard $\lambda = 0.1$ in $[0, 5)$, 
 and $\lambda = 0.2$ in $[5, \infty)$. This is known as a piece-wise constant hazard.**
-    a.** Plot the hazard function.**
+    
+    a.**Plot the hazard function.**
     
     ```{R ecdf5a, fig.width = 4.5, fig.height = 2.7}
     ggplot(tibble(x = c(0, 10)), aes(x)) + 
