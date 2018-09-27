@@ -9,6 +9,8 @@ urlcolor: blue
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ### TuTh 10:00 am to 11:15 am @ CB 1.214
+Instructor: [Steven Chiou](https://www.sychiou.com/)  
+Website maintainer: [Anthony Phung](https://www.utdallas.edu/~anthony.phung/)
 
 ---
 
@@ -18,6 +20,10 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 
 # Homework
 * Homework 1 can be found [here](https://github.com/stc04003/stat6390/blob/master/homework/hw1/hw1.pdf)
+* Homework 2 can be found [here](https://github.com/stc04003/stat6390/blob/master/homework/hw2/hw2.pdf)
+
+# Homework solutions
+* Homework 1 solution can be found [here](https://github.com/antphung/stat6390/blob/master/homework/hw1/hw1-sol.pdf)
 
 # Notes and other class documents
 * Some class discussion points can be found [here](discussion.html)
