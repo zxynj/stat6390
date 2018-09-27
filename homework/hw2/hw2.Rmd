@@ -4,16 +4,30 @@ author: Steven Chiou
 output: pdf_document
 ---
 
-\centering Due date: Thursday, October 11
+\centering Due date: Thursday, October 9
 
 ```{R setup, include = FALSE}
 knitr::opts_chunk$set(comment = NA, prompt = TRUE)
 ```
 
-1. 
+1. Show that (algebraically) in the absence of censoring $\hat S_{{\tiny \mbox{KM}}}(t)=\hat S_{\mbox{e}}(t)$.
 
-2. 
+2. In the absence of censoring, show that the Greenwood Formula (page 30 on note 2) can be reduced to $$\frac{\hat S_{{\tiny \mbox{KM}}}(t) \times \{ 1 - \hat S_{{\tiny \mbox{KM}}}(t)\}}{n}.$$
+You might assume there are no ties among the observations.
 
-3. 
-    a. 
-    b.
+3. Consider the Leukemia data from the `survival` package: \label{aml}
+    ```{r aml}
+    library(survival)
+    head(aml)
+    ```
+    In here, each row represent one patient. `aml` is the observed survival time, `status` is the censoring indicator (1 = event, 0 = censored), and `x` is the treatment indicator. We will ignore the treatment indicator for now.
+    a. Plot the Kaplan-Meier survival curve for the data. \label{aml:surv}
+    b. Add the Nelson-Aalen survival curve to the Kaplan-Meier plot from \eqref{aml:surv}. 
+    
+4. The expected survival time for the Leukemia data in \#\eqref{aml} does not exist because the last observation is a censored event.
+    An alternative is to lookInstead of looking at the expected survival time, an alternative is to look at the restricted mean survival time.
+    Compute $E(T|T<161)$ based on the survival curve in \eqref{aml:surv}.
+    
+5. Let $N_i(t)$ be the number of events over time interval $(0, t]$ for the $i$th patient in \#\eqref{aml}. Let $N(t)=\sum_{i=1}^nN_i(t)$ be the aggregated counting process.
+    a. Plot $N(t)$.
+    b. Plot $M(t)$, where $M(t) = N(t) - \hat H(t)$.
