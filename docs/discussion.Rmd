@@ -67,7 +67,7 @@ whas100 %>% filter(fstat > 0) %>%
 
 Here we have $\hat{S}_e(t) = 1$ for $t < 6$ and $\hat{S}_e(t) = 0$ for $t \ge 2710$.
 
-# Generate $\{1, -1, \ldots, -1, 1\}$ sequence in R
+# Generate $\{1, -1, \ldots, 1\}$ 
 Suppose we want to generate the sequence $\{1, -1, \ldots, -1, 1\}$ with 10 1's and 9 -1's (the vector then has length = 19).
 Here are some possible approaches:
 ```{R sequence}
