@@ -32,8 +32,9 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 * Syllabus can be found [here](https://www.sychiou.com/pdf/fall2018stat6390.pdf)
 * Project suggestions can be found [here](https://github.com/stc04003/stat6390/blob/master/project/project.pdf)
 
-# Software setup
+# Useful links
 * Technical issues brought up during lecture can often be found in the [class discussions](discussion.html)
 * Some ideas on setting up your machine are [here](useGit.html)
 * Introduction to `tibble` can be found [here](http://r4ds.had.co.nz/introduction-2.html) and [here](http://r4ds.had.co.nz/tibbles.html)
 * A nice discussion on `tibble` vs. `data.frame` is [here](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/)
+* Wiki pages for [sign test](https://en.wikipedia.org/wiki/Sign_test) and [Wilcoxon signed-rank test](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test).
