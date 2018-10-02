@@ -1053,7 +1053,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{The log-rank test}
   \begin{itemize}
   \item The hypothesis in~\eqref{eq:lrk} can be view in terms of the hazard functions:
-    $$H_o: \lambda_1(t) = \lambda_0(t) \mbox{ versus } H_a: \lambda_1(t) = \theta\lambda_0(t).$$
+    $$H_o: h_1(t) = h_0(t) \mbox{ versus } H_a: h_1(t) = \theta h_0(t).$$
   \item Either way, we could rewrite the hypothesis test as
     $$H_o: \theta = 1 \mbox{ versus } H_a: \theta> 1, \mbox{ or } \theta < 1, \mbox{ or } \theta\ne 1.$$
   \item One can interpret the results solely based on $\theta$ too. 
