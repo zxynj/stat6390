@@ -38,3 +38,5 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 * Introduction to `tibble` can be found [here](http://r4ds.had.co.nz/introduction-2.html) and [here](http://r4ds.had.co.nz/tibbles.html)
 * A nice discussion on `tibble` vs. `data.frame` is [here](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/)
 * Wiki pages for [sign test](https://en.wikipedia.org/wiki/Sign_test) and [Wilcoxon signed-rank test](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test).
+* Wiki page for [Kolmogorov–Smirnov statistic](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test) that looks at the supremum of the set of distances.
+* [Paper](https://www.jstor.org/stable/2988087?seq=1#metadata_info_tab_contents) on 2 by 2 contingency table, fixed margin tests vs random margin tests.
