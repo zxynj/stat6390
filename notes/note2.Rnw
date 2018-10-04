@@ -966,7 +966,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item Counting processes are non-decreasing.
   \item Martingales associated with $M(t)$ are sub-martingales.
   \item Doob-Meyer decomposition guarantees the relationship 
-    $$ N(t) = h(t)Y(t) + M(t).$$
+    $$ N(t) = \int_0^th(u)Y(u)\,\dif u + M(t).$$
   \item Martingale central limit theorem.
   \end{itemize}
 \end{frame} 
