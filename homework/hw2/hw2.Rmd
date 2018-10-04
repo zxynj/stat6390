@@ -30,4 +30,4 @@ You might assume there are no ties among the observations.
     
 5. Let $N_i(t)$ be the number of events over time interval $(0, t]$ for the $i$th patient in \#\eqref{aml}. Let $N(t)=\sum_{i=1}^nN_i(t)$ be the aggregated counting process.
     a. Plot $N(t)$.
-    b. Plot $M(t)$, where $M(t) = N(t) - \hat H(t)$.
+    b. Plot $M(t)$, where $M(t) = N(t) - \int_0^t\hat h(u)Y(u)\,du$.
