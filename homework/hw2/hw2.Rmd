@@ -30,4 +30,6 @@ You might assume there are no ties among the observations.
     
 5. Let $N_i(t)$ be the number of events over time interval $(0, t]$ for the $i$th patient in \#\eqref{aml}. Let $N(t)=\sum_{i=1}^nN_i(t)$ be the aggregated counting process.
     a. Plot $N(t)$.
-    b. Plot $M(t)$, where $M(t) = N(t) - \hat H(t)$ and $\hat H(t)$ is the Nelson-Aalen estimator for the cumulative hazard function.
+    b. Plot $M(t)$, where $M(t) = N(t) - \hat H(t)$ and $\hat H(t)$ is the Nelson-Aalen estimator for the cumulative hazard function. \label{Mt}
+    
+    * Note on \ref{Mt}: After giving some thought, I think it is more meaningful to plot $dM(t)=dN(t)- \hat h(t)dt$. Both plots will receive full credit for \ref{Mt}.
