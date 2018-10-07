@@ -131,7 +131,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Maximum likelihood estimation}
   \begin{itemize}
   \item 
-    Now suppose a the survival data includes (right) censored data.
+    Now suppose the survival data includes (right) censored data.
   \item 
     In this case, $n$ pairs of observations are observed $(\tilde{t}_i, \Delta_i), i = 1, \ldots, n$,
     where $\tilde{T}_i$ is the observed survival time. 
