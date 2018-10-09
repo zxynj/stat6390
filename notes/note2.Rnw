@@ -898,12 +898,12 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \end{equation*}
   \item Intergrating both side after diving by $Y(t)$ gives
     \begin{equation*}
-      \int_0^t\frac{1}{Y(t)}\dif N(t) - \int_0^th(t) \dif t = \int_0^t\frac{1}{Y(t)}\dif M(t)
+      \int_0^t\frac{1}{Y(s)}\dif N(s) - \int_0^th(s) \dif s = \int_0^t\frac{1}{Y(s)}\dif M(s)
     \end{equation*}
   \item The right-hand side is a stochastic integral with respect to a zero-mean martingale.
   \item The first term in the left-hand side gives $\Hna(t) = \sum_{t_{(i)}\le t}\frac{1}{n_i}$.
-  \item Then $\E\left\{\Hna(t) - \widehat{H}(t)\right\} = 0$ and
-    $\Hna(t)$ is an unbiased estimator of $\widehat{H}(t)$.
+  \item Then $\E\left\{\Hna(t) - H(t)\right\} = 0$ and
+    $\Hna(t)$ is an unbiased estimator of $H(t)$.
   \item The variance estimator can be derived using the \empr{variation processes} or 
     with transformation through the Delta methods.
   \end{itemize}
@@ -966,7 +966,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item Counting processes are non-decreasing.
   \item Martingales associated with $M(t)$ are sub-martingales.
   \item Doob-Meyer decomposition guarantees the relationship 
-    $$ N(t) = h(t)Y(t) + M(t).$$
+    $$ N(t) = \int_0^th(u)Y(u)\,\dif u + M(t).$$
   \item Martingale central limit theorem.
   \end{itemize}
 \end{frame} 
@@ -1053,7 +1053,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{The log-rank test}
   \begin{itemize}
   \item The hypothesis in~\eqref{eq:lrk} can be view in terms of the hazard functions:
-    $$H_o: \lambda_1(t) = \lambda_0(t) \mbox{ versus } H_a: \lambda_1(t) = \theta\lambda_0(t).$$
+    $$H_o: h_1(t) = h_0(t) \mbox{ versus } H_a: h_1(t) = \theta h_0(t).$$
   \item Either way, we could rewrite the hypothesis test as
     $$H_o: \theta = 1 \mbox{ versus } H_a: \theta> 1, \mbox{ or } \theta < 1, \mbox{ or } \theta\ne 1.$$
   \item One can interpret the results solely based on $\theta$ too. 
