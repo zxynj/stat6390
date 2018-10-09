@@ -43,23 +43,24 @@ In one of the class example, we plotted the empirical survival curve with:
 ```{R load, echo = FALSE, message = FALSE}
 library(tidyverse)
 library(survival)
+library(DT)
 load("whas100.RData")
 ```
 
-```{R data}
+```{R data, cache = TRUE}
 whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% 
   ggplot(aes(lenfol, surv)) + geom_step()
 ```
 
 The codes can be modified in the following way so that the empirical survival curve starts from $\hat{S}_e(0)= 1$.
-```{R tian}
+```{R tian, cache = TRUE}
 whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% 
   add_row(lenfol = 0, surv = 1,.before = 1) %>% ggplot(aes(lenfol, surv)) + 
   geom_step() + labs(title = "Codes provided by Tian Jiang")
 ```
 
 The following example produces the similar plot without the need to store $\hat{S}_e(t)$ in `surv`.
-```{R easy}
+```{R easy, cache = TRUE}
 whas100 %>% filter(fstat > 0) %>% 
   ggplot(aes(x = lenfol)) + geom_step(aes(y = 1 - ..y..), stat = "ecdf", show.legend = TRUE) +
   ylab("surv")
@@ -70,10 +71,46 @@ Here we have $\hat{S}_e(t) = 1$ for $t < 6$ and $\hat{S}_e(t) = 0$ for $t \ge 27
 # Generate $\{1, -1, \ldots, 1\}$ 
 Suppose we want to generate the sequence $\{1, -1, \ldots, -1, 1\}$ with 10 1's and 9 -1's (the vector then has length = 19).
 Here are some possible approaches:
-```{R sequence}
+```{R sequence, cache = TRUE}
 (-1)^(0:18)
 diff(0:19 %% 2)
 diff(rep(0:1, 10))
 rep(c(1, -1), 10)[1:19]
 ifelse(1:19 %% 2, 1, -1)
 ```
+
+# Selecting subset for `lm`
+Suppose we want to fit a linear regression with `y` as the outcome variable and $\{$`X`, `Z`$\}$ as the covariates, 
+where `X` is a family of covariates $\{$`x1`, `x2`, ..., `x100`$\}$ generated from standard unifrom and 
+`Z` is a family of covariates $\{$`z1`, `z2`, ..., `z100`$\}$ generated from standard normal.
+The data frame is observed in a way that the `X`'s and `Z`'s are placed in no particular order.
+For example, consider the following `dat`.
+```{R subset2, echo = FALSE}
+set.seed(1)
+X <- matrix(runif(5e4), 500)
+Z <- matrix(rnorm(5e4), 500)
+colnames(X) <- paste("x", 1:100, sep = "")
+colnames(Z) <- paste("z", 1:100, sep = "")
+dat <- cbind(y = c(X %*% (-1)^(1:100)) + rnorm(500, sd = .5), X, Z)
+dat <- as.tibble(dat[,c(1, sample(2:201))])
+```
+
+```{R subset-mat}
+## fake data
+datatable(dat, options = list(pageLength = 10, scrollX=TRUE)) %>% formatRound(1:201, 3)
+```
+
+This fits all 200 covariates:
+```{R lm-all}
+head(coef(lm(y ~ ., dat)), 10)
+length(coef(lm(y ~ ., dat)))
+```
+This fits linear regression with only the `X`'s:
+```{R lm-x}
+head(coef(lm(y ~ ., dat[,grep("x|y", names(dat))])))
+length(coef(lm(y ~ ., dat[,grep("x|y", names(dat))])))
+```
+
+    
+    
+    
