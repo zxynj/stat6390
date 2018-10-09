@@ -111,6 +111,49 @@ head(coef(lm(y ~ ., dat[,grep("x|y", names(dat))])))
 length(coef(lm(y ~ ., dat[,grep("x|y", names(dat))])))
 ```
 
-    
-    
-    
+# Homework 2, \# 5b
+From the lecture note, we have
+\begin{align}
+M_i(t) = N_i(t) - \int_0^t\lambda(u)\,du = N_i(t) - \int_0^th(u)Y_i(u)\,du = N_i(t) - \int_0^{\min(t, \tilde{T}_i)}h(u)\,du
+\end{align}
+for the $i$th individual.
+The "residual" for the $i$th individual at his/her follow-up time is 
+\begin{align}
+\hat M_i(t_i) = \Delta_i - \hat H(t_i),
+\end{align}
+where, like most regression models, $\sum_{i=1}^n M_i(t_i)=0$.
+Consider a simulated dataset where we generated the true survival time from a standard exponential and the censoring time from a uniform distribution.
+```{R simu}
+n <- 100
+set.seed(1)
+sim <- tibble(cenTime = runif(n, 0, 5), time = pmin(rexp(n), cenTime), 
+              status = 1 * (time < cenTime)) %>% 
+  select(-cenTime)
+```
+The following codes can be used to create a new dataset containing variables like $d_i$, $n_i$, etc.
+```{R sim2}
+dat <- sim %>% arrange(time) %>% group_by(time) %>% 
+  summarize(di = sum(status), ni = length(status)) %>% 
+  mutate(Nt = cumsum(di), ni = 100:1)
+dat
+```
+The individual martingales can be computed with
+```{R marg}
+dat <- dat %>% mutate(hi = di / ni, Hi = cumsum(hi), Mi = di - Hi)
+dat
+```
+Checking the Nelson-Aalen's estimator. 
+```{R haz-check}
+qplot(time, Hi, data = dat, geom = "step") + 
+  geom_abline(intercept = 0, slope = 1, col = 2) + ylab("H(t)")
+```
+
+In this case, the sum of the martingale residuals is `sum(dat$Mi)=``r sum(dat$Mi)`, close to 0 as expected.
+
+In the `aml` dataset, the sum of the martingale residuals is
+```{R aml}
+dat <- aml %>% arrange(time) %>% select(-x) %>% group_by(time) %>% 
+  summarize(di = sum(status), ni = length(status)) %>% 
+  mutate(Nt = cumsum(di), ni = rev(cumsum(rev(ni))))
+with(dat, sum(di - cumsum(di/ni)))
+```
