@@ -151,9 +151,9 @@ qplot(time, Hi, data = dat, geom = "step") +
 In this case, the sum of the martingale residuals is `sum(dat$Mi)=``r sum(dat$Mi)`, close to 0 as expected.
 
 In the `aml` dataset, the sum of the martingale residuals is
-```{R aml}
+```{R aml, message = FALSE}
 dat <- aml %>% arrange(time) %>% select(-x) %>% group_by(time) %>% 
   summarize(di = sum(status), ni = length(status)) %>% 
-  mutate(Nt = cumsum(di), ni = rev(cumsum(rev(ni))))
-with(dat, sum(di - cumsum(di/ni)))
+  mutate(Nt = cumsum(di), ni = rev(cumsum(rev(ni))), Na = cumsum(di/ni)) %>% right_join(aml)
+with(dat, sum(status - Na))
 ```

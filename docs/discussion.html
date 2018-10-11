@@ -361,9 +361,9 @@ for the <span class="math inline">\(i\)</span>th individual. The “residual” 
 <p>In the <code>aml</code> dataset, the sum of the martingale residuals is</p>
 <pre class="r"><code>&gt; dat &lt;- aml %&gt;% arrange(time) %&gt;% select(-x) %&gt;% group_by(time) %&gt;% 
 +   summarize(di = sum(status), ni = length(status)) %&gt;% 
-+   mutate(Nt = cumsum(di), ni = rev(cumsum(rev(ni))))
-&gt; with(dat, sum(di - cumsum(di/ni)))</code></pre>
-<pre><code>[1] 2.85386</code></pre>
++   mutate(Nt = cumsum(di), ni = rev(cumsum(rev(ni))), Na = cumsum(di/ni)) %&gt;% right_join(aml)
+&gt; with(dat, sum(status - Na))</code></pre>
+<pre><code>[1] 3.330669e-16</code></pre>
 </div>
 
 
