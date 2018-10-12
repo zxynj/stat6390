@@ -63,8 +63,10 @@ You might assume there are no ties among the observations.
     An alternative is to lookInstead of looking at the expected survival time, an alternative is to look at the restricted mean survival time.
     Compute $E(T|T<161)$ based on the survival curve in \eqref{aml:surv}.
 
+    $E(T|T<a)=\int_{0}^{a} t\frac{f_{T}(t)}{1-S_{T}(a)}dt+\int_{a}^{\infty} tf_{T|T<a}(t)dt=\frac{1}{1-S_{T}(a)}\int_{0}^{a} tf_{T}(t)dt+0=\frac{1}{1-S_{T}(a)}\int_0^a S_{T}(t)dt$
+
     ```{r q4}
-    matrix(c(km$time,km$surv),nrow=length(km$time),
+    matrix(c(km$time,(km$surv-tail(km$surv, n=1))/(1-tail(km$surv, n=1))),nrow=length(km$time),
     dimnames = list(NULL, c("death_time","km_surv"))) %>%
     as.data.frame() %>%
     add_row(death_time = 0, km_surv = 1,.before = 1) %>%
@@ -73,7 +75,7 @@ You might assume there are no ties among the observations.
     filter(death_time<161) %>%
     summarise(expected_lifetime=sum(time_diff*km_surv))
     ```
-    The expected lifetime is 36.36439.
+    The conditional expected lifetime is 25.11061.
 
 5. Let $N_i(t)$ be the number of events over time interval $(0, t]$ for the $i$th patient in \#\eqref{aml}. Let $N(t)=\sum_{i=1}^nN_i(t)$ be the aggregated counting process.
     a. Plot $N(t)$.
