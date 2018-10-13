@@ -1,0 +1,13 @@
+---
+title: Exam 1
+author: Steven Chiou
+output: pdf_document
+---
+
+\centering Due date: 
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+
+1. 
