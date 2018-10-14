@@ -22,6 +22,9 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 * Homework 1: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw1/hw1.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw1/hw1-sol.pdf)
 * Homework 2: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw2/hw2.pdf)
 
+# Exam 
+* Exam 1: [assignment](https://github.com/stc04003/stat6390/blob/master/exam/exam1/exam1.pdf)
+
 # Notes and other class documents
 * Some class discussion points can be found [here](discussion.html)
 * Unannotated class notes:
