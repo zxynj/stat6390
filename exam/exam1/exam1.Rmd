@@ -19,10 +19,10 @@ knitr::opts_chunk$set(comment = NA, prompt = TRUE)
       \flushleft Using these data, compute the following **without a software package**:
 
     a. (4 pts) The Kaplan-Meier estimate of the survival function for each gender. \label{km-whas}
-    b. (4 pts) Pointwise 95 percent confidence intervals for the survival functions estimated in problem \eqref{km-whas}. \label{km-whas2}
-    c. (4 pts) Pointwise 95 percent confidence interval estimates of the 50th percentile of the survival time distribution for each gender. 
+    b. (4 pts) Pointwise 95 \% confidence intervals for the survival functions estimated in problem \eqref{km-whas}. \label{km-whas2}
+    c. (4 pts) Pointwise 95 \% confidence interval estimates of the 50th percentile of the survival time distribution for each gender. 
     d. (4 pts) The estimated mean survival time for each gender using all available times, upto 7.1.
-    e. (4 pts) A graph of the estimated survival functions for each gender computed in problem \eqref{km-whas} along with the point wise and overall 95 percent limits computed in problem \eqref{km-whas2}.
+    e. (4 pts) A graph of the estimated survival functions for each gender computed in problem \eqref{km-whas} along with the point wise and overall 95 \% limits computed in problem \eqref{km-whas2}.
 
 \newpage
 2. Use the complete *WHAS100* dataset and gender as the group indicator, 
@@ -42,7 +42,7 @@ Here are some:
     d. The difference between the mean survival times:
     $$D_4 = \int_0^{t_{(n)}} \{S_1(u) - S_0(u)\}\,du,$$ where $t_{(n)}$ is the maximum observed survival time.
     
-    \flushleft Compute each of the above statistic for the $WHAS100$ dataset (5$\times4$ pts).
+    \flushleft Compute each of the above statistic for the $WHAS100$ dataset (5 pts $\times4$).
 
 \newpage   
 4. The statistics computed in \eqref{stats} do not provide meaningful interpretations when standing along. 
@@ -61,10 +61,10 @@ then one can randomly shuffle the group indicator to generate different permutat
 \newline
 
     \flushleft
-    a. (5$\times4$ pts) Generate 5000 permutation and, for each of the permutation, compute the four statistics presented in \eqref{stats}.
+    a. (5 pts$\times4$) Generate 5000 permutation and, for each of the permutation, compute the four statistics presented in \eqref{stats}.
     We will call the permutated statistics $D_{1i}^*$, $D^*_{2i}$, $D^*_{3i}$ and $D^*_{4i}$ for $i = 1, \ldots, 5000$.
     \flushleft
-    b. (5$\times4$ pts) Compute the $p$-value based on these statistics by 
+    b. (5 pts$\times4$) Compute the $p$-value based on these statistics by 
     $$p = 2\cdot\frac{\min(N_1, N_2)}{5000}, $$
     where $N_1 = \#\{D \ge D^*\}$, $N_2 = \#\{D\le D^*\}$, and $\#$ means the "number of", e.g., $N_1$ is the number of these permutated statistics less than or equal to the observed statistic.
 
@@ -79,7 +79,7 @@ Suppose we have two groups of uncensored survival times:
 The sign test looks at the statistic
 $$ U = \sum_{i = 1}^{n_0}\sum_{j = 1}^{n_1}\mbox{sgn}(x_i - y_j),$$
 where $\mbox{sgn}(\cdot)$ is the sign function. 
-In the presense of right censoring, survival times can not be compared directly and a modified version of $U = \sum_{i = 1}^{n_0}\sum_{j = 1}^{n_1}U_{ij}$ is considered, where
+In the pretense of right censoring, survival times can not be compared directly and a modified version of $U = \sum_{i = 1}^{n_0}\sum_{j = 1}^{n_1}U_{ij}$ is considered, where
 $$U_{ij}=\left\{\begin{matrix}
 1 & \mbox{if } x_i > y_j, y_j \mbox{ is uncersored.}\\
 -1 & \mbox{if } x_i < y_j, x_i \mbox{ is uncersored.}\\ 
