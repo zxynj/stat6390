@@ -4,34 +4,29 @@ author: Steven Chiou
 output: pdf_document
 ---
 
-\centering Due date: 
-
 ```{R setup, include = FALSE}
 knitr::opts_chunk$set(comment = NA, prompt = TRUE)
 ```
+**Instructions**
 
-1. **Textbook problem 2.1** Listed below are values of survival time in  years for 6 males and 6 females from the *WHAS100* study.
-   Right-censored times are denoted by a "+" as a superscript. \label{text2.1}
+  * Due date: **Tuesday, November 13**.
+  * This is a open resource exam, but you are not allowed to ask post exam questions online.
+  * You are not allowed to collaborate with classmates and/or people outside of class.
+  * Please circle or highlight your final answer. 
+  * The toal possible point is 80.
+  
+Violation of this agreement will result in an **F** on this exam and it will be averaged in as a 0\%.
+  
+  
+---
 
-      \flushleft Males: 1.2, 3.4, $5.0^+$, 5.1, 6.1, 7.1 
-      \flushleft Females: 0.4, 1.2, 4.3, 4.9, 5.0, $5.1^+$
-
-      \flushleft Using these data, compute the following **without a software package**:
-
-    a. (4 pts) The Kaplan-Meier estimate of the survival function for each gender. \label{km-whas}
-    b. (4 pts) Pointwise 95 \% confidence intervals for the survival functions estimated in problem \eqref{km-whas}. \label{km-whas2}
-    c. (4 pts) Pointwise 95 \% confidence interval estimates of the 50th percentile of the survival time distribution for each gender. 
-    d. (4 pts) The estimated mean survival time for each gender using all available times, upto 7.1.
-    e. (4 pts) A graph of the estimated survival functions for each gender computed in problem \eqref{km-whas} along with the point wise and overall 95 \% limits computed in problem \eqref{km-whas2}.
-
-\newpage
-2. Use the complete *WHAS100* dataset and gender as the group indicator, 
+1. Use the complete *WHAS100* dataset and gender as the group indicator, 
 compute the log-rank statistic, $Q$, presented as Equation (9) on page 60 of note 2 with $\omega_i = 1$.
 Use $Q$ to compute a $p$-value to test the null hypothesis of $H_o: S_0(t) = S_1(t)$.
 Do this **without a software package** (6 pts), and verify the calculation with `survdiff` (4 pts).
 
 \newpage
-3. There are many ways to form a basis for survival curve comparison. \label{stats}
+2. There are many ways to form a basis for survival curve comparison. \label{stats}
 Here are some:
     a. The numerator term in $Q$ without the square:
     $$D_1 = \sum_{i = 1}^D\{d_{1i} - E(d_{1i})\}.$$
@@ -45,7 +40,7 @@ Here are some:
     \flushleft Compute each of the above statistic for the $WHAS100$ dataset (5 pts $\times4$).
 
 \newpage   
-4. The statistics computed in \eqref{stats} do not provide meaningful interpretations when standing along. 
+3. The statistics computed in \eqref{stats} do not provide meaningful interpretations when standing along. 
 We will use a permutation approach to test for the null hypothesis of $H_o: S_0(t) = S_1(t)$ based on these statistics.
 The idea of a permutation test is simple. The general procedure can be summarized into the following steps:
     i. Compute the desired statistic based on the observed data; we will call this the observed statistic.
@@ -63,13 +58,14 @@ then one can randomly shuffle the group indicator to generate different permutat
     \flushleft
     a. (5 pts$\times4$) Generate 5000 permutation and, for each of the permutation, compute the four statistics presented in \eqref{stats}.
     We will call the permutated statistics $D_{1i}^*$, $D^*_{2i}$, $D^*_{3i}$ and $D^*_{4i}$ for $i = 1, \ldots, 5000$.
+    Create a histgram for these permutated statistics and print the `summary`.
     \flushleft
     b. (5 pts$\times4$) Compute the $p$-value based on these statistics by 
     $$p = 2\cdot\frac{\min(N_1, N_2)}{5000}, $$
     where $N_1 = \#\{D \ge D^*\}$, $N_2 = \#\{D\le D^*\}$, and $\#$ means the "number of", e.g., $N_1$ is the number of these permutated statistics less than or equal to the observed statistic.
 
 \newpage   
-5. Another method to compare two survival curves is to consider a sign test. 
+4. Another method to compare two survival curves is to consider a sign test. 
 Suppose we have two groups of uncensored survival times:
 
       \flushleft Males: $x_1, x_2, \ldots, x_{n_0}$.
@@ -87,4 +83,4 @@ $$U_{ij}=\left\{\begin{matrix}
 \end{matrix}\right.$$
 
     a. (5 pts) Compute $U$ for the WHAS100 dataset.
-    b. (5 pts) Obtain a permutation $p$-value based on 5000 permutations.
+    b. (5 pts) Create a histgram for these permutated statistics and print the `summary`. Obtain a permutation $p$-value based on 5000 permutations.
