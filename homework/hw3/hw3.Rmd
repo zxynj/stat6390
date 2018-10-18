@@ -1,0 +1,25 @@
+---
+title: Homework 3
+author: Steven Chiou
+output: pdf_document
+---
+
+\centering Due date: Tuesday, November 13
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+1. **Textbook problem 2.1** Listed below are values of survival time in  years for 6 males and 6 females from the *WHAS100* study.
+   Right-censored times are denoted by a "+" as a superscript. \label{text2.1}
+
+      \flushleft Males: 1.2, 3.4, $5.0^+$, 5.1, 6.1, 7.1 
+      \flushleft Females: 0.4, 1.2, 4.3, 4.9, 5.0, $5.1^+$
+
+      \flushleft Using these data, compute the following **without a software package**:
+
+    a. (2 pts) The Kaplan-Meier estimate of the survival function for each gender. \label{km-whas}
+    b. (2 pts) Pointwise 95 \% confidence intervals for the survival functions estimated in problem \eqref{km-whas}. \label{km-whas2}
+    c. (2 pts) Pointwise 95 \% confidence interval estimates of the 50th percentile of the survival time distribution for each gender. 
+    d. (2 pts) The estimated mean survival time for each gender using all available times, upto 7.1.
+    e. (2 pts) A graph of the estimated survival functions for each gender computed in problem \eqref{km-whas} along with the point wise and overall 95 \% limits computed in problem \eqref{km-whas2}.
+
