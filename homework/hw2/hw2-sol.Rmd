@@ -1,0 +1,80 @@
+---
+title: Homework 2
+author: Steven Chiou
+output: pdf_document
+---
+
+\centering Due date: Thursday, October 11
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+
+1. **Show that (algebraically) in the absence of censoring $\hat S_{{\tiny \mbox{KM}}}(t)=\hat S_{\mbox{e}}(t)$.** \label{Q1}
+
+
+    Without loss of generality, we assume $t_1 < t_2 < \ldots < t_n$ and $\Delta_i = 1$ for $i = 1, \ldots, n$.
+Under the assumption of no ties, we have $d_1 = \ldots = d_n = 1$ and $n_1 = n$, $n_2 = n - 1, \ldots, n_i = n - i - 1$.
+$$
+\begin{aligned}
+ \hat S_{km}(t) &= \prod_{i:t_i le t}\left(1 - \frac{d_i}{n_i}\right) = \prod_{i:t_i < t}\left(\frac{n_i - d_i}{n_i}\right)\\
+ &= \frac{n-1}{n} \times \frac{n-2}{n-1}\times\ldots\times\frac{n - i}{n - i - 1} \\
+ &= \frac{n - i}{n},
+\end{aligned}
+$$
+which is the expression for the empirical survival estimator, $\hat S_{\mbox{e}}(t)$.
+
+
+2. **In the absence of censoring, show that the Greenwood Formula (page 30 on note 2) can be reduced to $$\frac{\hat S_{{\tiny \mbox{KM}}}(t) \times \{ 1 - \hat S_{{\tiny \mbox{KM}}}(t)\}}{n}.$$
+You might assume there are no ties among the observations.**
+
+    Continue with the assumption outlined in \#\ref{Q1}, we can simplify the Greenwood formula as follows.
+$$
+\begin{aligned}
+ \hat S^2_{km}(t)\cdot\sum_{i:t_i\le t}\frac{d_i}{n_i(n_i - d_i)} &= \left(\frac{n - i}{n}\right)^2\cdot \left(\frac{1}{n(n-1)} - \frac{1}{(n-1)(n-2)} - \ldots - \frac{1}{(n-i-1)(n-i)}\right)\\
+ &=\left(\frac{n - i}{n}\right)^2\cdot \left(\frac{1}{n-i} - \frac{1}{n}\right)\\
+ &=\left(\frac{n - i}{n}\right)^2\cdot \frac{i}{n(n-i)} = \frac{i(n - i)}{n^3} = \frac{\hat S_{{\tiny \mbox{KM}}}(t) \times \{ 1 - \hat S_{{\tiny \mbox{KM}}}(t)\}}{n}.
+\end{aligned}
+$$
+\newpage
+3. **Consider the Leukemia data from the `survival` package: \label{aml}**
+    ```{r aml}
+    library(survival)
+    head(aml)
+    ```
+    **In here, each row represent one patient. `aml` is the observed survival time, `status` is the censoring indicator (1 = event, 0 = censored), and `x` is the treatment indicator. We will ignore the treatment indicator for now.**
+    a. **Plot the Kaplan-Meier survival curve for the data. \label{aml:surv}**
+    b. **Add the Nelson-Aalen survival curve to the Kaplan-Meier plot from \eqref{aml:surv}.**
+
+
+    Load libraries:
+    ```{r lib, message = FALSE}
+    library(tidyverse)
+    library(survival)
+    ```
+  
+    The following gives both the Kaplan-Meier survival curve (black) and the Nelson-Aalen survival curve (red).
+    ```{r aml2}
+    dat <- aml %>% arrange(time) %>% select(-x) %>% group_by(time) %>% 
+      summarize(di = sum(status), ni = length(status)) %>% 
+      mutate(ni = rev(cumsum(rev(ni))), KM = cumprod(1 - di / ni), Na = cumsum(di / ni))
+    ggplot(data = dat, aes(x = time)) + 
+      geom_step(aes(y = KM), show.legend = TRUE) + 
+      geom_step(aes(y = exp(-Na)), col = 2) + ylab("Survival probability")
+    ```
+
+4. **The expected survival time for the Leukemia data in \#\eqref{aml} does not exist because the last observation is a censored event.
+    An alternative is to lookInstead of looking at the expected survival time, an alternative is to look at the restricted mean survival time.
+    Compute $E(T|T<161)$ based on the survival curve in \eqref{aml:surv}.**
+
+    ```{R rmst}
+    sum(diff(c(0, dat$time)) * c(1, dat$KM[-18]))
+    ```
+    
+    
+5. **Let $N_i(t)$ be the number of events over time interval $(0, t]$ for the $i$th patient in \#\eqref{aml}. Let $N(t)=\sum_{i=1}^nN_i(t)$ be the aggregated counting process.**
+    a. **Plot $N(t)$.**
+    b. **Plot $M(t)$, where $M(t) = N(t) - \hat H(t)$ and $\hat H(t)$ is the Nelson-Aalen estimator for the cumulative hazard function.** \label{Mt}
+    
+    
+    Omit.
