@@ -17,7 +17,7 @@ knitr::opts_chunk$set(comment = NA, prompt = TRUE)
 Under the assumption of no ties, we have $d_1 = \ldots = d_n = 1$ and $n_1 = n$, $n_2 = n - 1, \ldots, n_i = n - i - 1$.
 $$
 \begin{aligned}
- \hat S_{km}(t) &= \prod_{i:t_i le t}\left(1 - \frac{d_i}{n_i}\right) = \prod_{i:t_i < t}\left(\frac{n_i - d_i}{n_i}\right)\\
+ \hat S_{km}(t) &= \prod_{i:t_i \le t}\left(1 - \frac{d_i}{n_i}\right) = \prod_{i:t_i \le t}\left(\frac{n_i - d_i}{n_i}\right)\\
  &= \frac{n-1}{n} \times \frac{n-2}{n-1}\times\ldots\times\frac{n - i}{n - i - 1} \\
  &= \frac{n - i}{n},
 \end{aligned}
