@@ -43,3 +43,4 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 * Wiki pages for [sign test](https://en.wikipedia.org/wiki/Sign_test) and [Wilcoxon signed-rank test](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test).
 * Wiki page for [Kolmogorov–Smirnov statistic](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test) that looks at the supremum of the set of distances.
 * [Paper](https://www.jstor.org/stable/2988087?seq=1#metadata_info_tab_contents) on 2 by 2 contingency table, fixed margin tests vs random margin tests.
+* [Article](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3546387/) on generating survival times to simulate Cox proportional hazards models with time-varying covariates.
