@@ -47,20 +47,20 @@ library(DT)
 load("whas100.RData")
 ```
 
-```{R data, cache = TRUE}
+```{R data}
 whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% 
   ggplot(aes(lenfol, surv)) + geom_step()
 ```
 
 The codes can be modified in the following way so that the empirical survival curve starts from $\hat{S}_e(0)= 1$.
-```{R tian, cache = TRUE}
+```{R tian}
 whas100 %>% filter(fstat > 0) %>% mutate(surv = 1 - ecdf(lenfol)(lenfol)) %>% 
   add_row(lenfol = 0, surv = 1,.before = 1) %>% ggplot(aes(lenfol, surv)) + 
   geom_step() + labs(title = "Codes provided by Tian Jiang")
 ```
 
 The following example produces the similar plot without the need to store $\hat{S}_e(t)$ in `surv`.
-```{R easy, cache = TRUE}
+```{R easy}
 whas100 %>% filter(fstat > 0) %>% 
   ggplot(aes(x = lenfol)) + geom_step(aes(y = 1 - ..y..), stat = "ecdf", show.legend = TRUE) +
   ylab("surv")
@@ -71,7 +71,7 @@ Here we have $\hat{S}_e(t) = 1$ for $t < 6$ and $\hat{S}_e(t) = 0$ for $t \ge 27
 # Generate $\{1, -1, \ldots, 1\}$ 
 Suppose we want to generate the sequence $\{1, -1, \ldots, -1, 1\}$ with 10 1's and 9 -1's (the vector then has length = 19).
 Here are some possible approaches:
-```{R sequence, cache = TRUE}
+```{R sequence}
 (-1)^(0:18)
 diff(0:19 %% 2)
 diff(rep(0:1, 10))
