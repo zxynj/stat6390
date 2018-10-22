@@ -1,4 +1,4 @@
 theme: jekyll-theme-slate
 exclude:
-  - discussion_cache
-  - discussion_files
+  - discussion_cache/
+  - discussion_files/
