@@ -219,7 +219,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 
 \section{Estimating $\beta$ in the Cox model}
 \begin{frame}
-  \frametitle{Likelihood approach}
+  \frametitle{Complete likelihood}
   \begin{itemize}
   \item Recall the likelihood we derived in note 3:
     \begin{equation}
@@ -239,7 +239,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Partial likelihood approach}
+  \frametitle{Partial likelihood}
   \begin{itemize}
   \item Consider the \empr{conditional probability} the $i$th individual fails at $t_i$,
     given the risk set at $t_i$:
@@ -258,7 +258,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Partial likelihood approach}
+  \frametitle{Partial likelihood}
   \begin{itemize}
   \item The expression in~\eqref{eq:pl} assumes no ties and excludes terms with $\Delta_i = 0$.
   \item A different approach to derive~\eqref{eq:pl} is to consider the complete likelihood~\eqref{eq:lik}, 
@@ -275,7 +275,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Partial likelihood approach}
+  \frametitle{Partial likelihood}
   \begin{itemize}
   \item \citet{cox1975partial} argues that $L_1$ carries ``most'' of the information about $\beta$.
   \item \citet{cox1975partial} also argues that $L_2$ and $L_3$ carry information about $\lambda_0(t)$.
@@ -287,7 +287,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Partial likelihood approach}
+  \frametitle{Partial likelihood}
   \begin{itemize}
   \item Suppose (for now) that we only have one type of covariate, e.g, $p = 1$.
   \item For the ease of notation, we will right $j\in R(t_i)$ instead of $j: t_j \ge t_i$ to denote the index $j$ is from the risk set.
@@ -297,14 +297,14 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \end{equation*}
   \item The first derivative gives the \empr{score function}:
     \begin{equation}
-      \frac{\dif\ell_p}{\dif\beta} =  \sum_{i = 1}^n\Delta_i\left[X_i  - \left\{\frac{\sum_{j\in R(t_i)} X_je^{X_j\beta}}{\sum_{j\in R(t_i)} e^{X_j\beta}}\right\}\right].
+	\frac{\dif\ell_p}{\dif\beta} =  \sum_{i = 1}^n\Delta_i\left[X_i  - \left\{\frac{\sum_{j\in R(t_i)} X_je^{X_j\beta}}{\sum_{j\in R(t_i)} e^{X_j\beta}}\right\}\right].
       \label{eq:score}
     \end{equation}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Partial likelihood approach}
+  \frametitle{Partial likelihood}
   \begin{itemize}
   \item Notice that the fraction in the summation can be expressed as
     \begin{equation*}
@@ -313,15 +313,18 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
     \end{equation*}
     where $\omega_{ij}(\beta) = \frac{e^{X_j\beta}}{\sum_{k\in R(t_i)} e^{X_k\beta}}$.
   \item  $\omega_{ij}(\beta)$ can be seem as the conditional probability of death at $t_j$.
-  \item This implies $\bar X = \sum_{j\in R(t_i)}X_j\cdot\omega_{ij}(\beta)$ is like a weighted average of $X$ over all the individuals in the risk set at $t_i$.
-  \item This further reduced~\eqref{eq:score} to 
-    $$\sum_{i = 1}^n\Delta_i (X_i - \bar X), $$
+  \item This implies $\bar X_i = \sum_{j\in R(t_i)}X_j\cdot\omega_{ij}(\beta)$ is like a weighted average of $X$ over all the individuals in the risk set at $t_i$.
+  \item This further reduced~\eqref{eq:score} to
+    \begin{equation}
+      \label{eq:oe}
+      \sum_{i = 1}^n\Delta_i (X_i - \bar X_i),
+    \end{equation}
     a familiar $\sum(O_i - E_i)$ form! 
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Partial likelihood approach}
+  \frametitle{Partial likelihood}
   \begin{itemize}
   \item The second derivative is
     \begin{equation*}
@@ -330,6 +333,68 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item Then $\hat\Var(\hat\beta) = I(\hat\beta)^{-1}$, where $I(\beta) = -\frac{\dif^2\ell_p}{\dif\beta^2}$.
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Link to counting process}
+  \begin{itemize}
+  \item To emphasize $\bar X_i$ in~\eqref{eq:oe} depends on $\beta$ and time (e.g., $t_i$), 
+    we use the notation$\bar X_i(\beta, t)$.
+  \item Equation~\eqref{eq:oe} can be expressed in the form of a stochastic integral with respect to  $\dif N_i(t)$:
+    \begin{equation}
+      \label{eq:oe-count}
+      U(\beta, t) = \sum_{i = 1}^n\Delta_i\left\{X_i - \bar X_i(\beta, t)\right\} = 
+      \sum_{i = 1}^n\int_0^t\left\{X_i - \bar X_i(\beta, u)\right\}\,\dif N_i(u)
+    \end{equation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Link to counting process}
+  \begin{itemize}
+  \item Recall that when we study counting process for survival data, we have defined the zero-mean martingale
+    \begin{equation*}
+      M_i(t) = N_i(t) - \Lambda_i(t) = N_i(t) - \int_0^t\lambda_i(u)\,\dif u,
+    \end{equation*}
+    where the intensity function has the form $\lambda_i(u) = h_i(u)Y_i(u)$ and $Y_i(u) = I(\tilde T_i \ge u)$.
+  \item We also stated that
+    \begin{equation*}
+      \dif M_i(t) = \dif N_i(t) - \dif \Lambda_i(t)
+    \end{equation*}
+    has conditional expectation zero.
+  \item Under the Cox model assumption, we have $h_i(u) = h_0(u) e^{X_i\beta}$ and $M_i(t)$ is
+    \begin{equation*}
+      M_i(t) = N_i(t) - \int_0^tY_i(u)h_0(u)e^{X_i\beta}\,\dif u.
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Link to counting process}
+  \begin{itemize}
+  \item Under the Cox assumption, we have
+    \begin{equation*}
+      \sum_{i=1}^n\int_0^t\left\{X_i-\bar X_i(\beta, u)\right\}\,\dif \Lambda(u) = 0.
+    \end{equation*}
+  \item Thus, we can rewrite~\eqref{eq:oe-count} as
+    \begin{equation*}
+      U(\beta, t) = \sum_{i = 1}^n\int_0^t\left\{X_i - \bar X_i(\beta, u)\right\}\,\dif M_i(u),
+    \end{equation*}
+    which is a sum of stochastic integral of predictable vector process.
+  \item This also implies $U(\beta, t)$ is  a zero-mean martingale.
+  \item Asymptotic properties for $\hat\beta$ can then be derived using martingale theories.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimating $\Lambda_0(t)$}
+  \begin{itemize}
+  \item The Nelson-Aalen estimator for $\Lambda_0(t)$ is then
+    \begin{equation*}
+      \hat\Lambda_0(\beta, t) = \sum_{i; t_i \ge t}\frac{\dif N(t_i)}{\sum_{j = 1}^nY_j(t) e^{X_j\beta}}
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
 
 \section{Reference}
 \begin{frame}[shrink = 25]
