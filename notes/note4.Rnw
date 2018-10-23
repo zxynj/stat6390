@@ -391,46 +391,46 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item The Nelson-Aalen estimator for $\Lambda_0(t)$ is then
     \begin{equation}
       \hat H_0(\beta, t) = \sum_{i; t_i \le t}\frac{\dif N(t_i)}{\sum_{j = 1}^nY_j(t) e^{X_j\beta}}
-\label{eq:na}
+      \label{eq:na}
     \end{equation}
-    \item The Nelson-Aalen estimator can also be derived by fixing $\beta$ in the complete likelihood~\eqref{eq:lik}.
-    \item Under the Cox assumption, we have
+  \item The Nelson-Aalen estimator can also be derived by fixing $\beta$ in the complete likelihood~\eqref{eq:lik}.
+  \item Under the Cox assumption, we have
     \begin{align}
-    \nonumber
-L(h;\beta) &= \prod_{i = 1}^n\left\{h_T(t_i)\right\}^{\Delta_i}\cdot S_T(t_i) \\
-\label{eq:lik2}
-&= \prod_{i = 1}^n \left\{h_0(t_i)e^{X_i\beta}\right\}^{\Delta_i}\cdot\exp\left\{-H_0(t_i)e^{X_i\beta}\right\}.
-\end{align}
+      \nonumber
+      L(h;\beta) &= \prod_{i = 1}^n\left\{h_T(t_i)\right\}^{\Delta_i}\cdot S_T(t_i) \\
+      \label{eq:lik2}
+                 &= \prod_{i = 1}^n \left\{h_0(t_i)e^{X_i\beta}\right\}^{\Delta_i}\cdot\exp\left\{-H_0(t_i)e^{X_i\beta}\right\}.
+    \end{align}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Estimating $H_0(t)$}
   \begin{itemize}
-\item The likelihood~\eqref{eq:lik2} is maximized at $h_0(t)$ at event times, e.g., $h_0(t_{(1)}), \ldots, h_0(t_{(n)})$.
-\item Suppose there is a total of $D$ events, and let $h_{0i} = h_0(t_{(i)})$, for $i = 1, \ldots, D$.
-\item Then $H_0(t) = \sum_{i: t_{(i)} \le t}h_0(t_{(i)}) = \sum_{i: t_{(i)} \le t} h_{0i}$, and
-\begin{equation*}
-L(h;\beta) = \left[\prod_{i = 1}^Dh_{0i}e^{X_i\beta}\right]\cdot\exp\left\{\sum_{i=1}^ne^{X_i\beta}\sum_{j:t_{(j)}\le t_i}h_{0j}\right\}.
-\end{equation*}
-\item The likelihood~\eqref{eq:lik2} is proportional to 
-\begin{equation*}
-L(h;\beta) \propto \prod_{i = 1}^Dh_{0i}\cdot\exp\left\{-h_{0i}\sum_{j\in R(t_{(i)})}e^{X_j\beta}\right\}
-\end{equation*}
-\end{itemize}
+  \item The likelihood~\eqref{eq:lik2} is maximized at $h_0(t)$ at event times, e.g., $h_0(t_{(1)}), \ldots, h_0(t_{(n)})$.
+  \item Suppose there is a total of $D$ events, and let $h_{0i} = h_0(t_{(i)})$, for $i = 1, \ldots, D$.
+  \item Then $H_0(t) = \sum_{i: t_{(i)} \le t}h_0(t_{(i)}) = \sum_{i: t_{(i)} \le t} h_{0i}$, and
+    \begin{equation*}
+      L(h;\beta) = \left[\prod_{i = 1}^Dh_{0i}e^{X_i\beta}\right]\cdot\exp\left\{\sum_{i=1}^ne^{X_i\beta}\sum_{j:t_{(j)}\le t_i}h_{0j}\right\}.
+    \end{equation*}
+  \item The likelihood~\eqref{eq:lik2} is proportional to 
+    \begin{equation*}
+      L(h;\beta) \propto \prod_{i = 1}^Dh_{0i}\cdot\exp\left\{-h_{0i}\sum_{j\in R(t_{(i)})}e^{X_j\beta}\right\}
+    \end{equation*}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Estimating $H_0(t)$}
   \begin{itemize}
-\item Maximizing the log of $L(h;\beta)$ yields
-\begin{align*}
-\hat h_{0i} &= \frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},\mbox{ and }\\
-\hat H(t) &= \sum_{i; t_i \le t}\frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},
-\end{align*}
-which is equivalent to \eqref{eq:na} when there is no tie.
-\item Of more interesting is that when plugging $\hat H(t)$ into~\eqref{eq:lik2} gives the partial likelihood of~\eqref{eq:pl}.
-\end{itemize}
+  \item Maximizing the log of $L(h;\beta)$ yields
+    \begin{align*}
+      \hat h_{0i} &= \frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},\mbox{ and }\\
+      \hat H(t) &= \sum_{i; t_i \le t}\frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},
+    \end{align*}
+    which is equivalent to \eqref{eq:na} when there is no tie.
+  \item Of more interesting is that when plugging $\hat H(t)$ into~\eqref{eq:lik2} gives the partial likelihood of~\eqref{eq:pl}.
+  \end{itemize}
 \end{frame}
 
 \section{Reference}
