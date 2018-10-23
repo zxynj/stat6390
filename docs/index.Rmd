@@ -27,7 +27,6 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 * Exam 1: [assignment](https://github.com/stc04003/stat6390/blob/master/exam/exam1/exam1.pdf)
 
 # Notes and other class documents
-* Some class discussion points can be found [here](discussion.html)
 * Unannotated class notes:
     * [Note 1](https://github.com/stc04003/stat6390/blob/master/notes/note1.pdf): Introduction to survival data
     * [Note 2](https://github.com/stc04003/stat6390/blob/master/notes/note2.pdf): Descriptive methods for survival data
