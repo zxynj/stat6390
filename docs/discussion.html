@@ -281,7 +281,7 @@ ERROR: compilation failed for package 'survMisc'</code></pre>
 </div>
 <div id="selecting-subset-for-lm" class="section level1">
 <h1><span class="header-section-number">4</span> Selecting subset for <code>lm</code></h1>
-<p>Suppose we want to fit a linear regression with <code>y</code> as the outcome variable and <span class="math inline">\(\{\)</span><code>X</code>, <code>Z</code><span class="math inline">\(\}\)</span> as the covariates, where <code>X</code> is a family of covariates <span class="math inline">\(\{\)</span><code>x1</code>, <code>x2</code>, …, <code>x100</code><span class="math inline">\(\}\)</span> generated from standard unifrom and <code>Z</code> is a family of covariates <span class="math inline">\(\{\)</span><code>z1</code>, <code>z2</code>, …, <code>z100</code><span class="math inline">\(\}\)</span> generated from standard normal. The data frame is observed in a way that the <code>X</code>’s and <code>Z</code>’s are placed in no particular order. For example, consider the following <code>dat</code>.</p>
+<p>Suppose we want to fit a linear regression with <code>y</code> as the outcome variable and <span class="math inline">\(\{\)</span><code>X</code>, <code>Z</code><span class="math inline">\(\}\)</span> as the covariates, where <code>X</code> is a family of covariates <span class="math inline">\(\{\)</span><code>x1</code>, <code>x2</code>, …, <code>x100</code><span class="math inline">\(\}\)</span> generated from standard uniform and <code>Z</code> is a family of covariates <span class="math inline">\(\{\)</span><code>z1</code>, <code>z2</code>, …, <code>z100</code><span class="math inline">\(\}\)</span> generated from standard normal. The data frame is observed in a way that the <code>X</code>’s and <code>Z</code>’s are placed in no particular order. For example, consider the following <code>dat</code>.</p>
 <pre class="r"><code>&gt; ## fake data
 &gt; datatable(dat, options = list(pageLength = 10, scrollX=TRUE)) %&gt;% formatRound(1:201, 3)</code></pre>
 <div id="htmlwidget-327373b90eecef86adce" style="width:100%;height:auto;" class="datatables html-widget"></div>
@@ -364,6 +364,28 @@ for the <span class="math inline">\(i\)</span>th individual. The “residual” 
 +   mutate(Nt = cumsum(di), ni = rev(cumsum(rev(ni))), Na = cumsum(di/ni)) %&gt;% right_join(aml)
 &gt; with(dat, sum(status - Na))</code></pre>
 <pre><code>[1] 3.330669e-16</code></pre>
+</div>
+<div id="brief-history-on-cox-model" class="section level1">
+<h1><span class="header-section-number">6</span> Brief history on Cox model</h1>
+<p>“Cox described the proportional hazards model in <span class="citation">Cox (1972)</span>, in what is now the most quoted statistical papers in history. He also outlined in this paper the method for estimation which he referred to as using conditional likelihood. It was pointed out to him in the literature that what he proposed was not a conditional likelihood and that there may be some flaws in his logic. <span class="citation">Cox (1975)</span> was able to recast his method of estimation through what he called ‘partial likelihood’ and published this in Biometrika. This approach seemed to be based on sound inferential principles. Rigorous proofs showing the consistency and asymptotic normality were not published until 1981 when <span class="citation">Tsiatis and others (1981)</span> demonstrated these large sample properties. In 1982, <span class="citation">Andersen and Gill (1982)</span> simplified and generalized these results through the use of counting processes.”</p>
+<p>Origin of this historial note can be found <a href="https://www4.stat.ncsu.edu/~dzhang2/st745/chap6.pdf">here</a>.</p>
+</div>
+<div id="reference" class="section level1 unnumbered">
+<h1>Reference</h1>
+<div id="refs" class="references">
+<div id="ref-andersen1982cox">
+<p>Andersen, Per Kragh, and Richard David Gill. 1982. “Cox’s Regression Model for Counting Processes: A Large Sample Study.” <em>The Annals of Statistics</em>. JSTOR, 1100–1120.</p>
+</div>
+<div id="ref-cox1972regression">
+<p>Cox, David R. 1972. “Regression Models and Life-Tables.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 34 (2): 87–22.</p>
+</div>
+<div id="ref-cox1975partial">
+<p>———. 1975. “Partial Likelihood.” <em>Biometrika</em> 62 (2). Oxford University Press: 269–76.</p>
+</div>
+<div id="ref-tsiatis1981large">
+<p>Tsiatis, Anastasios A, and others. 1981. “A Large Sample Study of Cox’s Regression Model.” <em>The Annals of Statistics</em> 9 (1). Institute of Mathematical Statistics: 93–108.</p>
+</div>
+</div>
 </div>
 
 

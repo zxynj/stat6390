@@ -5,6 +5,7 @@ output:
     toc: true
     number_sections: true
     toc_float: true
+bibliography: dist.bib
 geometry: left = .5in, right = .5in, top = 1in, bottom = .6in
 urlcolor: blue
 ---
@@ -81,7 +82,7 @@ ifelse(1:19 %% 2, 1, -1)
 
 # Selecting subset for `lm`
 Suppose we want to fit a linear regression with `y` as the outcome variable and $\{$`X`, `Z`$\}$ as the covariates, 
-where `X` is a family of covariates $\{$`x1`, `x2`, ..., `x100`$\}$ generated from standard unifrom and 
+where `X` is a family of covariates $\{$`x1`, `x2`, ..., `x100`$\}$ generated from standard uniform and 
 `Z` is a family of covariates $\{$`z1`, `z2`, ..., `z100`$\}$ generated from standard normal.
 The data frame is observed in a way that the `X`'s and `Z`'s are placed in no particular order.
 For example, consider the following `dat`.
@@ -157,3 +158,10 @@ dat <- aml %>% arrange(time) %>% select(-x) %>% group_by(time) %>%
   mutate(Nt = cumsum(di), ni = rev(cumsum(rev(ni))), Na = cumsum(di/ni)) %>% right_join(aml)
 with(dat, sum(status - Na))
 ```
+
+# Brief history on Cox model
+"Cox described the proportional hazards model in @cox1972regression, in what is now the most quoted statistical papers in history. He also outlined in this paper the method for estimation which he referred to as using conditional likelihood. It was pointed out to him in the literature that what he proposed was not a conditional likelihood and that there may be some flaws in his logic. @cox1975partial was able to recast his method of estimation through what he called 'partial likelihood' and published this in Biometrika. This approach seemed to be based on sound inferential principles. Rigorous proofs showing the consistency and asymptotic normality were not published until 1981 when @tsiatis1981large demonstrated these large sample properties. In 1982, @andersen1982cox simplified and generalized these results through the use of counting processes."
+
+Origin of this historial note can be found [here](https://www4.stat.ncsu.edu/~dzhang2/st745/chap6.pdf).
+
+# Reference
