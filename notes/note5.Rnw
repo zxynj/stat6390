@@ -1,0 +1,149 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, 
+  filecolor=blue, anchorcolor=yellow}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\tp}{\hat t_p}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\SE}{\mathrm{SE}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\HR}{\mathrm{HR}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\p}{\mathrm{P}}
+%\newcommand{\ll}{\textit{l}}
+\newcommand{\Ss}{\widehat{S}}
+\newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
+\newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
+\newcommand{\Hna}{\widehat{H}_{\scriptsize{NA}}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\
+  \small{Textbook coverage: Chapter 3}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  << setup, echo= FALSE, results='asis'>>=
+knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = "scriptsize")
+@ 
+\end{frame}
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Cox proportional hazards model}
+\begin{frame}
+\frametitle{Cox proportional hazards model}
+  \begin{itemize}
+  \item The Cox model is expressed by the hazard function.
+  \item The hazard function can be (loosely) interpreted as the risk of dying at time $t$.
+  \item The Cox model has the form:
+    \begin{equation*}
+      h(t) = h_0(t) \cdot \exp\{\beta_1x_1 + \beta_2x_2 + \ldots \beta_px_p\},
+    \end{equation*}
+    where
+    \begin{itemize}
+    \item $t$ is the survival time.
+    \item $\{x_1, \ldots, x_p\}$ is a set of $p$ covariates.
+    \item $\{\beta_1, \dots, \beta_p\}$ is the regression parameters; effect of covariates.
+    \item $h_0(t)$ is the baseline hazard. It is the value of the hazard when all $x$'s are 0.
+    \item No need to specify an ``intercept'' term as it gets absorb to $h_0(t)$.
+  \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Cox proportional hazards model}
+\begin{itemize}
+\item The quantity $e^{\beta_i}$ is interpreted as the hazard ratio (HR).
+\begin{itemize}
+\item $\beta_i > 0\rightarrow \mbox{ HR }> 1\rightarrow \mbox{hazard increases} \rightarrow \mbox{survival time decreases.}$
+\item $\beta_i = 0\rightarrow \mbox{ HR }= 1\rightarrow \mbox{no change in hazard} \rightarrow \mbox{no change in survival time.}$
+\item $\beta_i < 0\rightarrow \mbox{ HR }< 1\rightarrow \mbox{hazard decreases} \rightarrow \mbox{survival time increases.}$
+\end{itemize}
+\item HR (and hazard) is  negatively associated with the length of survival.
+\item The Cox model assumes the hazard curves among different patients should be proportional and cannot cross.
+\end{itemize}
+\end{frame}
+
+\section{Fitting Cox model in \texttt{R}}
+\begin{frame}
+\frametitle{Fitting Cox model in \texttt{R}}
+
+\end{frame}
+
+% \section{Reference}
+% \begin{frame}[shrink = 25]
+%   \frametitle{Reference}
+%   \begin{center}
+%     \scriptsize
+%     \bibliographystyle{biom}
+%     \bibliography{stat6390}
+%   \end{center}
+% \end{frame}
+
+\end{document}
+
