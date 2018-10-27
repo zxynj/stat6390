@@ -129,11 +129,51 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \end{itemize}
 \end{frame}
 
-\section{Fitting Cox model in \texttt{R}}
-\begin{frame}
-\frametitle{Fitting Cox model in \texttt{R}}
-
+\section{Fitting the Cox model in \texttt{R}}
+\begin{frame}[fragile]
+\frametitle{Fitting the Cox model in \texttt{R}}
+\begin{itemize}
+\item We have used \code{coxph} to compute the Nelson--Aalen estimator.
+\item The usage of \code{coxph} is similar to that of \code{survreg}.
+<<load, echo = FALSE, message = FALSE>>=
+library(survival)
+library(tidyverse)
+load("whas100.RData")
+whas100 <- as.tibble(whas100)
+@
+<<whas100>>=
+fm <- Surv(lenfol, fstat) ~ (age + gender)^2 + bmi
+fit.cox <- coxph(fm, data = whas100)
+fit.aft <- survreg(fm, data = whas100)
+@
+\item The coefficients are in opposite directions.
+<<whas100-coef>>=
+coef(fit.cox)
+coef(fit.aft)
+@
+\end{itemize}
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Fitting the Cox model in \texttt{R}}
+\begin{itemize}
+\item The \code{summary} gives:
+<<whas100-cox-summary>>=
+summary(fit.cox)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Fitting the Cox model in \texttt{R}}
+\begin{itemize}
+\item As in the result from \code{survreg}, the \code{z} column gives the \empr{Wald statistic} computed from \code{coef}/\code{se(coef)}.
+\item The Wald statistic tests the hypothesis $H_0:\beta = 0$.
+\item In this case, all covariate effects are significant at $\alpha = 0.05$.
+\item 
+\end{itemize}
+\end{frame}
+
 
 % \section{Reference}
 % \begin{frame}[shrink = 25]
