@@ -170,7 +170,8 @@ summary(fit.cox)
 \item As in the result from \code{survreg}, the \code{z} column gives the \empr{Wald statistic} computed from \code{coef}/\code{se(coef)}.
 \item The Wald statistic tests the hypothesis $H_0:\beta = 0$.
 \item In this case, all covariate effects are significant at $\alpha = 0.05$.
-\item 
+\item The $\hat\beta$ for \code{age} is positive indicating older patients have higher risk of death.
+\item The $\hat\beta$ for \code{bmi} is negative indicating patients with higher BMI have lower risk of death.
 \end{itemize}
 \end{frame}
 
