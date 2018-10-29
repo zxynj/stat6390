@@ -135,6 +135,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
 \begin{itemize}
 \item We have used \code{coxph} to compute the Nelson--Aalen estimator.
 \item The usage of \code{coxph} is similar to that of \code{survreg}.
+\item We will start with one covariate, \code{gender}.
 <<load, echo = FALSE, message = FALSE>>=
 library(survival)
 library(tidyverse)
@@ -142,7 +143,7 @@ load("whas100.RData")
 whas100 <- as.tibble(whas100)
 @
 <<whas100>>=
-fm <- Surv(lenfol, fstat) ~ (age + gender)^2 + bmi
+fm <- Surv(lenfol, fstat) ~ gender
 fit.cox <- coxph(fm, data = whas100)
 fit.aft <- survreg(fm, data = whas100)
 @
@@ -151,6 +152,8 @@ fit.aft <- survreg(fm, data = whas100)
 coef(fit.cox)
 coef(fit.aft)
 @
+\item \code{fit.cox} does not have an intercept term.
+\item The two parameter estimates have opposite signs.
 \end{itemize}
 \end{frame}
 
@@ -161,17 +164,109 @@ coef(fit.aft)
 <<whas100-cox-summary>>=
 summary(fit.cox)
 @
+\item The $\hat\beta$ is positive indicating that male patients ($\code{gender} = 1$) have higher risk of death.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Fitting the Cox model in \texttt{R}}
 \begin{itemize}
-\item As in the result from \code{survreg}, the \code{z} column gives the \empr{Wald statistic} computed from \code{coef}/\code{se(coef)}.
-\item The Wald statistic tests the hypothesis $H_0:\beta = 0$.
-\item In this case, all covariate effects are significant at $\alpha = 0.05$.
-\item The $\hat\beta$ for \code{age} is positive indicating older patients have higher risk of death.
-\item The $\hat\beta$ for \code{bmi} is negative indicating patients with higher BMI have lower risk of death.
+\item Three related tests to assess the significance of the coefficient, e.g., testing $H_0:\beta = 0$.
+\begin{itemize}
+\item Partial likelihood ratio test
+\item Wald test
+\item score test
+\end{itemize}
+\item These three tests are also indicated in the bottom of the \code{summary}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Partial likelihood ratio test}
+\begin{itemize}
+\item The partial likelihood ratio test is calculated as twice the difference between 
+the log-partial likelihood of the 
+\begin{itemize}
+\item ``full model'' , denoted by $\ell_p(\hat\beta)$.
+\item ``reduced model'', denoted by $\ell_p(0)$.
+\end{itemize}
+\item The log-partial likelihood ratio is then defined as
+\begin{equation*}
+ G = 2\cdot\{\ell_p(\hat\beta) - \ell_p(0)\},
+ \end{equation*}
+where 
+\begin{align*}
+\ell_p(\hat\beta) &= \sum_{i = 1}^n\Delta_i\left[X_i\hat\beta - \log\left\{\sum_{j\in R(t_i)} e^{X_j\hat\beta}\right\}\right],\\
+\ell_p(0) &= -\sum_{i = 1}^n\Delta_i\log(n_i), \mbox{ and }n_i\mbox{ is the number of risk at }t_i.
+\end{align*}
+\item The test statistic, $G$, follows approximately a chi-square distribution with \empr{one} degree of freedom under null.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Partial likelihood ratio test}
+\begin{itemize}
+\item The log-partial likelihood are stored in the \code{coxph} object as \code{loglik}:
+<<cox-partial>>= 
+fit.cox$loglik
+@
+\item The two log-partial likelihoods are $\ell_p(0)$ and $\ell_p(\hat\beta)$ respectively.
+\item $\ell_p(0)$ can be computed only with \code{survfit}, e.g., 
+<<cox-partial-surv>>=
+fit.surv <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100)
+with(fit.surv, -sum(n.event * log(n.risk)))
+@
+\item The test statistic, $G$, and its $p$-value can be computed  as follow
+<<cox-partial2>>=
+2 * diff(fit.cox$loglik) 
+1 - pchisq(2 * diff(fit.cox$loglik), 1)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Partial likelihood ratio test}
+\begin{itemize}
+\item Two useful statistics are by-product of the log-partial likelihood. 
+\item The \code{Rsquare} is the (generalized) $R^2$ statistic, defined as
+\begin{equation*}
+R^2 = 1 - \left\{\frac{L_p(0)}{L_p(\hat\beta)}\right\}^{2 / n} = 1 - \left\{e^{\ell_p{(0)} - \ell_p(\hat\beta)}\right\}^{2/ n}.
+\end{equation*}
+\item The following code verifies this in \texttt{R}.
+<<<cox-R2>>=
+1 - exp(-diff(fit.cox$loglik))^.02
+@
+\item Note that the message \code{max possible} gives the most extreme possible value the $R^2$ can be achieved given the observed data. 
+\item In this case \code{max possible = 0.985}, so 0.985 represents the ``prefect fit'' for the dataset. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Partial likelihood ratio test}
+\begin{itemize}
+\item The other useful measure is the \empr{concordance}.
+\item The concordance gives the fraction of pairs in the sample (\code{gender = 1} and \code{gender = 0}), 
+where the observations with the higher survival time has the higher probability of survival predicted by the model.
+\item The concordance is robust to monotone transformation of the predictor.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Wald test}
+\begin{itemize}
+\item The ratio of the estimated coefficient to its estimated standard error is commonly referred to as a \empr{Wald statistic}. 
+\item The Wald statistic (\code{z}) and its $p$-value are reported in \code{summary}.
+\item The Wald statistic follows a standard normal distribution under null.
+\item The Wald statistic and the two-sided $p$-value can be computed as follow:
+<<cox-wald>>=
+z <- coef(fit.cox) / sqrt(vcov(fit.cox))
+2 - 2 * pnorm(abs(z))
+@
+\item The \code{Wald statistic} displayed below is the chi-square version of it. 
+<<cox-wald2>>=
+z^2
+1 - pchisq(z^2, 1)
+@
 \end{itemize}
 \end{frame}
 
@@ -187,4 +282,14 @@ summary(fit.cox)
 % \end{frame}
 
 \end{document}
+
+
+\begin{frame}
+\frametitle{Fitting the Cox model in \texttt{R}}
+\begin{itemize}
+\item As in the result from \code{survreg}, the \code{z} column gives the \empr{Wald statistic} computed from \code{coef}/\code{se(coef)}.
+\item In this case, the gender effects is significant at $\alpha = 0.05$.
+\item The $\hat\beta$ is positive indicating that male patients ($\code{gender} = 1$) have higher risk of death.
+\end{itemize}
+\end{frame}
 
