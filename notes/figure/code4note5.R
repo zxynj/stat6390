@@ -23,3 +23,11 @@ fit.surv <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100)
 with(fit.surv, -sum(n.event * log(n.risk)))
 
 1 - exp(-diff(fit.cox$loglik)) ^ (2 / 100)
+
+fit.cox2 <- update(fit.cox, ~ . + bmi)
+1 - pchisq(2 * sum(fit.cox2$loglik - fit.cox$loglik), 1)
+
+coef(fit.cox2) %*% solve(vcov(fit.cox2)) %*% coef(fit.cox2)
+
+fit.cox3 <- update(fit.cox2, ~ . + I(bmi^2))
+summary(fit.cox3)
