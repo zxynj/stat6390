@@ -176,7 +176,7 @@ summary(fit.cox)
   \item Like in interpreting the odds-ratio estimator in logistic regression, 
     the end-points of a 95\% confidence interval for the hazard ratio is
     \begin{equation*}
-      \exp\left[\hat\beta\pm1.96\hat{(\mbox{SE})}\hat\beta\right] = \exp\left[0.5548\pm1.96\cdot0.2824\right] \approx[1.001, 3.029].
+      \exp\left[\hat\beta\pm1.96\cdot\widehat{\mbox{SE}}(\hat\beta)\right] = \exp\left[0.5548\pm1.96\cdot0.2824\right] \approx[1.001, 3.029].
     \end{equation*}
   \item The 95\% confidence interval lies entirely above 1, echoing the significance of $\hat\beta$ at $\alpha = 0.05$.
   \end{itemize}
@@ -484,6 +484,29 @@ summary(fit.cox3)
 \begin{frame}[fragile]
   \frametitle{Multiple covariates model}
   \begin{itemize}
+  \item The partial likelihood ratio test can be used to test whether we should delete \code{gender}
+    (backward selection).
+  \item First we fit a reduced model without the \code{gender} term.
+    <<cox-mult-nogender>>=
+    fit.cox4 <- update(fit.cox3, ~ . - gender)
+    fit.cox4
+    @
+\item The partial likelihoods are
+  <<cox-mult-pl-nogender0>>=
+    fit.cox4$loglik
+    fit.cox3$loglik
+    @
+\item The test statistic and the corresponding $p$-value can be computed with
+  <<cox-mult-pl-nogender>>=
+    1 - pchisq(2 * sum(fit.cox3$loglik - fit.cox4$loglik), 1)
+@ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Multiple covariates model}
+  \begin{itemize}
+  \item Back to the model with \code{gender} and \code{bmi}.
   \item The partial likelihood ratio test statistic can be computed similarly, but the Wald test statistics needs to be computed accounting for covariances.
     <<cox-mult-Z>>=
 coef(fit.cox2) %*% solve(vcov(fit.cox2)) %*% coef(fit.cox2)
@@ -494,7 +517,6 @@ coef(fit.cox2) %*% solve(vcov(fit.cox2)) %*% coef(fit.cox2)
 @
 \end{itemize}
 \end{frame}
-
 
 
 % \section{Reference}
@@ -511,13 +533,4 @@ coef(fit.cox2) %*% solve(vcov(fit.cox2)) %*% coef(fit.cox2)
 
 the likelihood ratio and score tests assume independence of
 observations within a cluster, the Wald and robust score tests do not
-
-\begin{frame}
-  \frametitle{Fitting the Cox model in \texttt{R}}
-  \begin{itemize}
-  \item As in the result from \code{survreg}, the \code{z} column gives the \empr{Wald statistic} computed from \code{coef}/\code{se(coef)}.
-  \item In this case, the gender effects is significant at $\alpha = 0.05$.
-  \item The $\hat\beta$ is positive indicating that male patients ($\code{gender} = 1$) have higher risk of death.
-  \end{itemize}
-\end{frame}
 

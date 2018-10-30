@@ -31,3 +31,6 @@ coef(fit.cox2) %*% solve(vcov(fit.cox2)) %*% coef(fit.cox2)
 
 fit.cox3 <- update(fit.cox2, ~ . + I(bmi^2))
 summary(fit.cox3)
+
+fit.cox4 <- update(fit.cox3, ~ . - gender)
+1 - pchisq(2 * sum(fit.cox3$loglik - fit.cox4$loglik), 1)
