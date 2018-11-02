@@ -18,6 +18,10 @@ Website maintainer: [Anthony Phung](https://www.utdallas.edu/~anthony.phung/)
 
 See the class [GitHub page](https://github.com/stc04003/stat6390) for the most up-to-date class materials.
 
+# Announcement
+* Exam 1 and Homework 3 are due on Novermber 13
+* [ASA travel course](https://github.com/stc04003/stat6390/blob/master/docs/ASA_TravelingCourse_2018_Nov8_Announcement.pdf) on Network Meta-Analysis is thison November 8, 2018
+
 # Homework
 * Homework 1: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw1/hw1.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw1/hw1-sol.pdf)
 * Homework 2: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw2/hw2.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw2/hw2-sol.pdf)
