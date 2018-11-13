@@ -1,0 +1,94 @@
+---
+title: Homework 3
+author: Steven Chiou
+output: pdf_document
+---
+
+\centering Due date: Tuesday, November 13
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+
+1. **Textbook problem 2.1** Listed below are values of survival time in  years for 6 males and 6 females from the *WHAS100* study.
+   Right-censored times are denoted by a "+" as a superscript. \label{text2.1}
+
+      \flushleft Males: 1.2, 3.4, $5.0^+$, 5.1, 6.1, 7.1 
+      \flushleft Females: 0.4, 1.2, 4.3, 4.9, 5.0, $5.1^+$
+
+      \flushleft Using these data, compute the following **without a software (survival) package**:
+
+    a. (2 pts) The Kaplan-Meier estimate of the survival function for each gender. \label{km-whas}
+    b. (2 pts) Pointwise 95 \% confidence intervals for the survival functions estimated in problem \eqref{km-whas}. \label{km-whas2}
+    c. (2 pts) Pointwise 95 \% confidence interval estimates of the 50th percentile of the survival time distribution for each gender. 
+    d. (2 pts) The estimated mean survival time for each gender using all available times, upto 7.1.
+    e. (2 pts) A graph of the estimated survival functions for each gender computed in problem \eqref{km-whas} along with the point wise and overall 95 \% limits computed in problem \eqref{km-whas2}.
+
+---
+
+## Solution
+\flushleft
+First prepare the data:
+```{R load, message = FALSE}
+library(tidyverse)
+library(survival)
+dat <- tibble(Time = c(1.2, 3.4, 5, 5.1, 6.1, 7.1, 0.4, 1.2, 4.3, 4.9, 5, 5.1), 
+              cen = c(1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0),
+              gender = gl(2, 6, labels = c("male", "female")))
+dat
+```
+\newpage
+a. 
+There are no ties in each group, so the Kaplan-Meier estimates are easy to obtain. 
+```{R km}
+dat1 <- subset(dat, gender == "male") %>% mutate(km = cumprod((6:1 - cen) / 6:1))
+dat2 <- subset(dat, gender == "female") %>% mutate(km = cumprod((6:1 - cen) / 6:1))
+```
+We will display the result in the next part. 
+b. First, compute the standard error, construct the confidence intervals endpoints on log-scale then transform the endpoints back.
+```{R ci}
+dat1 <- dat1 %>% mutate(se = km * sqrt(cumsum(cen / 6:1 / (6:1 - cen))), 
+                        lower = pmax(0, exp(log(km) - qnorm(.975) * se / km)), 
+                        upper = pmin(1, exp(log(km) + qnorm(.975) * se / km)))
+dat2 <- dat2 %>% mutate(se = km * sqrt(cumsum(cen / 6:1 / (6:1 - cen))), 
+                        lower = pmax(0, exp(log(km) - qnorm(.975) * se / km)), 
+                        upper = pmin(1, exp(log(km) + qnorm(.975) * se / km)))
+```
+
+Check with `survfit`
+```{R km-plot}
+dat1 %>% filter(cen > 0) %>% as.data.frame()
+dat2 %>% filter(cen > 0) %>% as.data.frame()
+summary(survfit(Surv(Time, cen) ~ gender, data = dat))
+```
+c. The median survival times and the corresponding 95\% confidence intervals are 5.1 (3.4, NA) and 4.3 (1.2, NA) for males and females, respectively. 
+\newpage
+d. The estimated mean survival times for the two groups are
+
+Male:
+```{R rmst-male}
+with(dat1, integrate(f = approxfun(Time, km, "constant", yleft = 1, yright = min(km)), 0, 7.1))
+```
+Female:
+```{R rmst-female}
+with(dat2, integrate(f = approxfun(Time, km, "constant", yleft = 1, yright = min(km)), 0, 7.1))
+```
+
+e.
+
+```{R ci1}
+p1 <- dat1 %>% add_row(Time = 0, km = 1, lower = 1, upper = 1) %>%  
+      ggplot(aes(Time, km)) + 
+      geom_step() + 
+      geom_step(aes(Time, lower, lty = I(2))) + 
+      geom_step(aes(Time, upper, lty = I(2))) + 
+      ggtitle("Male")
+p2 <- dat2 %>% add_row(Time = 0, km = 1, lower = 1, upper = 1) %>%  
+      ggplot(aes(Time, km)) + 
+      geom_step() + 
+      geom_step(aes(Time, lower, lty = I(2))) + 
+      geom_step(aes(Time, upper, lty = I(2))) + 
+      ggtitle("Female")
+gridExtra::grid.arrange(p1, p2)
+```
+
