@@ -24,3 +24,4 @@ results/
 clean.sh
 notes/pdfKnitr.sh
 docs/discussion_*
+.gitignore
