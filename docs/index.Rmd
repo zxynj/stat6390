@@ -25,7 +25,8 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 # Homework
 * Homework 1: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw1/hw1.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw1/hw1-sol.pdf)
 * Homework 2: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw2/hw2.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw2/hw2-sol.pdf)
-* Homework 3: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw3/hw3.pdf) 
+* Homework 3: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw3/hw3.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw3/hw3-sol.pdf)
+* Homework 4: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw4/hw4.pdf) 
 
 # Exam 
 * Exam 1: [assignment](https://github.com/stc04003/stat6390/blob/master/exam/exam1/exam1.pdf)
