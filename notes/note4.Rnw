@@ -1,0 +1,447 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, 
+  filecolor=blue, anchorcolor=yellow}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\tp}{\hat t_p}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\SE}{\mathrm{SE}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\HR}{\mathrm{HR}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\p}{\mathrm{P}}
+%\newcommand{\ll}{\textit{l}}
+\newcommand{\Ss}{\widehat{S}}
+\newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
+\newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
+\newcommand{\Hna}{\widehat{H}_{\scriptsize{NA}}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\
+  \small{Textbook coverage: Chapter 3}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  << setup, echo= FALSE, results='asis'>>=
+knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = "scriptsize")
+@ 
+\end{frame}
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Regression models }
+\begin{frame}
+  \frametitle{Parametric regression models}
+  \begin{itemize}
+  \item Previously, we learned to fit parametric regression model with the form 
+    \begin{equation}
+      Y = \log(T) = \alpha + X^\prime\beta + \epsilon,
+    \end{equation}
+    with \code{survreg}.
+  \item The following table gives some of the common distributions in \code{survreg}.
+    \begin{center}
+      \begin{tabular}{lll}
+        \toprule
+        \code{dist} in \code{survreg} & Distribution of $T$ & Distribution of $\epsilon$\\
+        \midrule
+        \code{exponential} & exponential & extreme values\\
+        \code{weibull} & Weibull & extreme values\\
+        \code{loglogistic} & log-logistic & logistic \\
+        \code{lognormal} & log-normal & normal \\
+        \bottomrule
+      \end{tabular}
+    \end{center}
+  \item Here, models are named for the distribution of $T$, not $\epsilon$.
+  \item Different distributions assume different shapes for the hazard function. 
+  \item See Chapter 2.2 of \citet{kalbfleisch2011statistical} for more comprehensive discussion.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The proportional hazards model}
+  \begin{itemize}
+  \item In the previous note, we note that the hazard at time $t$ for an individual can be written as
+    \begin{equation*}
+      \lambda(t; x) = \lambda \cdot r(X^\prime\beta)
+    \end{equation*}
+    under the exponential assumption.
+  \item To generalize this, we could consider modeling the hazard function 
+    \begin{equation}
+      \label{eq:phm}
+      h(t;x) = h_0(t) r(X^\prime\beta),
+    \end{equation}
+    where $h_0(t)$ is an unspecified function. 
+  \item We assume $X$ is time independent.
+  \item In~\eqref{eq:phm} is the product of two functions:
+    \begin{itemize}
+    \item  $h_0(t)$ characterizes how the hazard function changes as a function of time 
+    \item $r(X^\prime\beta)$ characterizes how the hazard function changes as a function of subject covariates. 
+    \end{itemize}
+  \item $h_0(t)$ is referred to as the \empr{baseline hazard function} when $r(X^\prime\beta)$ is parameterized such that $r(0) = 1$.
+    % \item Under \eqref{eq:phm}, h(t; x = 0) = h_0(t).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hazard ratio}
+  \begin{itemize}
+  \item Under the model~\eqref{eq:phm}, the ratio of the hazard function for two subject with covariate $x_1$ and $x_0$ is
+    \begin{equation}
+      \label{eq:hr}
+      \HR(t; x_1, x_0) = \frac{h(t; x_1)}{h(t; x_0)}=\frac{r(x_1^\prime\beta)}{r(x_0^\prime\beta)}.
+    \end{equation}
+  \item This implies that the hazard ratio ($\HR$) depends only on the function $r(X^\prime\beta)$ and does not require the actual form of $h_0(t)$.
+  \item This gives the \empr{proportional hazard} assumption.
+    % \item The model~\eqref{eq:phm} 
+  \end{itemize}
+\end{frame}
+
+\section{The Cox model}
+\begin{frame}
+  \frametitle{The Cox model}
+  \begin{itemize}
+  \item \citet{cox1992regression} is the first to propose model~\eqref{eq:phm} with $r(X^\prime\beta) = e^{X^\prime\beta}$.
+  \item With $r(X^\prime\beta) = e^{X^\prime\beta}$, \eqref{eq:phm} reduces to 
+    \begin{equation}
+      \label{eq:cox}
+      h(t;x) = h_0(t) e^{X^\prime\beta},
+    \end{equation}
+    and the hazard ratio $\HR(t; x_1, x_0)$ becomes $e^{(x_1 - x_0)^\prime\beta}$.
+  \item Equivalently, the log hazard ratio is $(x_1 - x_0)^\prime\beta$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{The Cox model}
+  \begin{itemize}
+  \item Suppose we have a ``continuous'' covariate $x_k$, which corresponds to $\beta_k$.
+  \item Holding other covariate values at constant,  then the log hazard ratio 
+    \begin{equation*}
+      \log\left\{ \HR(t, x_k + 1, x_k) \right\} = \log\{h(t, x_k + 1)\} - \log\{h(t, x_k)\} = \beta_k.
+    \end{equation*}
+  \item $\beta_k$ is the increase in log-hazard with one unit increase in $x_k$ at any time.
+  \item $e^{\beta_k}$ is the hazard ratio associated with one unit increase in $x_k$.
+  \item If $x_k$ is a ``categorical'' covariate and can only takes on two possible values, 0 and 1, 
+    then $\beta_k$ is the difference in log-hazard between the two groups.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Cox model}
+  \begin{itemize}
+  \item From the definition of hazard function, we have 
+    \begin{equation*}
+      \p(t \le T < t + \dif t|T\ge t, x) \approx h(t|x)\dif t.
+    \end{equation*}
+  \item This implies
+    \begin{equation*}
+      \frac{\p(t \le T < t + \dif t|T\ge t, x_k + 1)}{\p(t \le T < t + \dif t|T\ge t, x_k)}\approx e^{\beta_k}.
+    \end{equation*}
+  \item Thus, $e^{\beta_k}$ can be loosely interpreted in terms of conditional probabilities of dying.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Cox model}
+  \begin{itemize}
+  \item Since $\beta$ characterizes the covariate effect, 
+    the main focus of the inference procedure is to estimate $\beta$ and test $H_0: \beta = 0$.
+  \item As in many other regression model, we will also diagnostics procedure. 
+  \item The baseline hazard function, $h_0(t)$, can be treated as a nuisance parameter.
+  \end{itemize}
+\end{frame}
+
+\section{Estimating $\beta$ in the Cox model}
+\begin{frame}
+  \frametitle{Complete likelihood}
+  \begin{itemize}
+  \item Recall the likelihood we derived in note 3:
+    \begin{equation}
+      \label{eq:lik}
+      L = \prod_{i = 1}^n\left\{f_T(t_i)\right\}^{\Delta_i} \cdot\left\{S_T(t_i)\right\}^{1 - \Delta_i} = \prod_{i = 1}^n\left\{h_T(t_i)\right\}^{\Delta_i}\cdot S_T(t_i).
+    \end{equation}
+  \item If $T$ has hazard function~\eqref{eq:cox}, then 
+    \begin{equation*}
+      h_T(t) = h_0(t) e^{X^\prime\beta} \mbox{ and }	S_T(t) = \exp\left\{-H_0(t) e^{X^\prime\beta} \right\},
+    \end{equation*}
+    where $H_0(t) = \int_0^t h_0(u)\,\dif u$.
+  \item The complete likelihood can be obtained by plugging the above into~\eqref{eq:lik}.
+  \item The maximization of the likelihood would requires solving for the unknown parameter $\beta$ 
+    and unspecified baseline hazard at $t_i$'s. 
+    % \item The MLE for $\beta$ can be obtained 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood}
+  \begin{itemize}
+  \item Consider the \empr{conditional probability} the $i$th individual fails at $t_i$,
+    given the risk set at $t_i$:
+    \begin{align*}
+      \p(\mbox{the }&i\mbox{th individual dies} | \mbox{one death at } t_i) \\
+                    &= \frac{\p(\mbox{the }i\mbox{th individual dies } | \mbox{survival to }t_i)}{\p(\mbox{one death at }t_i | \mbox{survival to }t_i)}\\
+                    &= \frac{h_i(t; x)}{\sum_{j: t_j\ge t_i}^nh_j(t;x)} = \frac{e^{X_i^\prime\beta}}{\sum_{j: t_j\ge t_i}^ne^{X_j^\prime\beta}},
+    \end{align*}
+    where the last equality follows from the Cox model assumption.
+  \item The \empr{partial likelihood} is formed by multiplying these conditional probabilities:
+    \begin{equation}
+      \label{eq:pl}
+      L_p(\beta) = \prod_{i = 1}^n\left(\frac{e^{X_i^\prime\beta}}{\sum_{j: t_j\ge t_i}^ne^{X_j^\prime\beta}}\right)^{\Delta_i}
+    \end{equation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood}
+  \begin{itemize}
+  \item The expression in~\eqref{eq:pl} assumes no ties and excludes terms with $\Delta_i = 0$.
+  \item A different approach to derive~\eqref{eq:pl} is to consider the complete likelihood~\eqref{eq:lik}, 
+    and decompose it to
+    \begin{align*}
+      L &= \prod_{i = 1}^n\left\{h_T(t_i)\right\}^{\Delta_i}\cdot S_T(t_i) \\
+        &= \prod_{i = 1}^n\left(\frac{h_i(t_i)}{\sum_{j: t_j \ge t_i}^nh_j(t_i)}\right)^{\Delta_i}\cdot\left(\sum_{j: t_j \ge t_i}^nh_j(t_i)\right)^{\Delta_i}\cdot S_T(t_i)\\
+        &:= \prod_{i = 1}^nL_1\cdot L_2\cdot L_3,
+        % \prod_{i = 1}^n\left(\frac{e^{X_i^\prime\beta}}{\sum_{j: t_j\ge t_i}^ne^{X_j^\prime\beta}}\right)^{\Delta_i}\cdot 
+        % \left(\sum_{j: t_j\ge t_i}^ne^{X_j^\prime\beta}\right)^{\Delta_i} \cdot S_T(t_i)
+    \end{align*}
+    where $L_1$ reduces to the partial likelihood in~\eqref{eq:pl}. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood}
+  \begin{itemize}
+  \item \citet{cox1975partial} argues that $L_1$ carries ``most'' of the information about $\beta$.
+  \item \citet{cox1975partial} also argues that $L_2$ and $L_3$ carry information about $\lambda_0(t)$.
+  \item \citet{cox1975partial} suggested treating $L_p(\beta)$ as a regular likelihood function and 
+    making inference on $\beta$ accordingly. 
+  \item The maximum partial likelihood estimator (MPLE) of $\beta$ gives an unbiased estimator for $\beta$. 
+  \item The information matrix based on $L_p(\beta)$ can be used to derive standard error for the MPLE.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood}
+  \begin{itemize}
+  \item Suppose (for now) that we only have one type of covariate, e.g, $p = 1$.
+  \item For the ease of notation, we will right $j\in R(t_i)$ instead of $j: t_j \ge t_i$ to denote the index $j$ is from the risk set.
+  \item The log of the partial likelihood, $\log\{L_p(\beta)\}$ has the form 
+    \begin{equation*}
+      \ell_p(\beta) = \sum_{i = 1}^n\Delta_i\left[X_i \beta - \log\left\{\sum_{j\in R(t_i)} e^{X_j\beta}\right\}\right].
+    \end{equation*}
+  \item The first derivative gives the \empr{score function}:
+    \begin{equation}
+	\frac{\dif\ell_p}{\dif\beta} =  \sum_{i = 1}^n\Delta_i\left[X_i  - \left\{\frac{\sum_{j\in R(t_i)} X_je^{X_j\beta}}{\sum_{j\in R(t_i)} e^{X_j\beta}}\right\}\right].
+      \label{eq:score}
+    \end{equation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood}
+  \begin{itemize}
+  \item Notice that the fraction in the summation can be expressed as
+    \begin{equation*}
+      \frac{\sum_{j\in R(t_i)} X_je^{X_j\beta}}{\sum_{j\in R(t_i)} e^{X_j\beta}} = \sum_{j\in R(t_i)}\frac{ X_je^{X_j\beta}}{\sum_{k\in R(t_i)} e^{X_k\beta}} = 
+      \sum_{j\in R(t_i)}X_j \cdot\omega_{ij}(\beta), 
+    \end{equation*}
+    where $\omega_{ij}(\beta) = \frac{e^{X_j\beta}}{\sum_{k\in R(t_i)} e^{X_k\beta}}$.
+  \item  $\omega_{ij}(\beta)$ can be seem as the conditional probability of death at $t_j$.
+  \item This implies $\bar X_i = \sum_{j\in R(t_i)}X_j\cdot\omega_{ij}(\beta)$ is like a weighted average of $X$ over all the individuals in the risk set at $t_i$.
+  \item This further reduced~\eqref{eq:score} to
+    \begin{equation}
+      \label{eq:oe}
+      \sum_{i = 1}^n\Delta_i (X_i - \bar X_i),
+    \end{equation}
+    a familiar $\sum(O_i - E_i)$ form! 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood}
+  \begin{itemize}
+  \item The second derivative is
+    \begin{equation*}
+      \frac{\dif^2\ell_p}{\dif\beta^2} = -\sum_{i = 1}^n\Delta_i\sum_{j\in R(t_i)}w_{ij}(\beta)\cdot\left(X_j - \bar X\right)^2.
+    \end{equation*}
+  \item Then $\hat\Var(\hat\beta) = I(\hat\beta)^{-1}$, where $I(\beta) = -\frac{\dif^2\ell_p}{\dif\beta^2}$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Link to counting process}
+  \begin{itemize}
+  \item To emphasize $\bar X_i$ in~\eqref{eq:oe} depends on $\beta$ and time (e.g., $t_i$), 
+    we use the notation$\bar X_i(\beta, t)$.
+  \item Equation~\eqref{eq:oe} can be expressed in the form of a stochastic integral with respect to  $\dif N_i(t)$:
+    \begin{equation}
+      \label{eq:oe-count}
+      U(\beta, t) = \sum_{i = 1}^n\Delta_i\left\{X_i - \bar X_i(\beta, t)\right\} = 
+      \sum_{i = 1}^n\int_0^t\left\{X_i - \bar X_i(\beta, u)\right\}\,\dif N_i(u)
+    \end{equation}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Link to counting process}
+  \begin{itemize}
+  \item Recall that when we study counting process for survival data, we have defined the zero-mean martingale
+    \begin{equation*}
+      M_i(t) = N_i(t) - \Lambda_i(t) = N_i(t) - \int_0^t\lambda_i(u)\,\dif u,
+    \end{equation*}
+    where the intensity function has the form $\lambda_i(u) = h_i(u)Y_i(u)$ and $Y_i(u) = I(\tilde T_i \ge u)$.
+  \item We also stated that
+    \begin{equation*}
+      \dif M_i(t) = \dif N_i(t) - \dif \Lambda_i(t)
+    \end{equation*}
+    has conditional expectation zero.
+  \item Under the Cox model assumption, we have $h_i(u) = h_0(u) e^{X_i\beta}$ and $M_i(t)$ is
+    \begin{equation*}
+      M_i(t) = N_i(t) - \int_0^tY_i(u)h_0(u)e^{X_i\beta}\,\dif u.
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Link to counting process}
+  \begin{itemize}
+  \item Under the Cox assumption, we have
+    \begin{equation*}
+      \sum_{i=1}^n\int_0^t\left\{X_i-\bar X_i(\beta, u)\right\}\,\dif \Lambda(u) = 0.
+    \end{equation*}
+  \item Thus, we can rewrite~\eqref{eq:oe-count} as
+    \begin{equation*}
+      U(\beta, t) = \sum_{i = 1}^n\int_0^t\left\{X_i - \bar X_i(\beta, u)\right\}\,\dif M_i(u),
+    \end{equation*}
+    which is a sum of stochastic integral of predictable vector process.
+  \item This also implies $U(\beta, t)$ is  a zero-mean martingale.
+  \item Asymptotic properties for $\hat\beta$ can then be derived using martingale theories.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimating $H_0(t)$}
+  \begin{itemize}
+  \item The Nelson-Aalen estimator for $\Lambda_0(t)$ is then
+    \begin{equation}
+      \hat H_0(\beta, t) = \sum_{i; t_i \le t}\frac{\dif N(t_i)}{\sum_{j = 1}^nY_j(t) e^{X_j\beta}}
+      \label{eq:na}
+    \end{equation}
+  \item The Nelson-Aalen estimator can also be derived by fixing $\beta$ in the complete likelihood~\eqref{eq:lik}.
+  \item Under the Cox assumption, we have
+    \begin{align}
+      \nonumber
+      L(h;\beta) &= \prod_{i = 1}^n\left\{h_T(t_i)\right\}^{\Delta_i}\cdot S_T(t_i) \\
+      \label{eq:lik2}
+                 &= \prod_{i = 1}^n \left\{h_0(t_i)e^{X_i\beta}\right\}^{\Delta_i}\cdot\exp\left\{-H_0(t_i)e^{X_i\beta}\right\}.
+    \end{align}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimating $H_0(t)$}
+  \begin{itemize}
+  \item The likelihood~\eqref{eq:lik2} is maximized at $h_0(t)$ at event times, e.g., $h_0(t_{(1)}), \ldots, h_0(t_{(n)})$.
+  \item Suppose there is a total of $D$ events, and let $h_{0i} = h_0(t_{(i)})$, for $i = 1, \ldots, D$.
+  \item Then $H_0(t) = \sum_{i: t_{(i)} \le t}h_0(t_{(i)}) = \sum_{i: t_{(i)} \le t} h_{0i}$, and
+    \begin{equation*}
+      L(h;\beta) = \left[\prod_{i = 1}^Dh_{0i}e^{X_i\beta}\right]\cdot\exp\left\{\sum_{i=1}^ne^{X_i\beta}\sum_{j:t_{(j)}\le t_i}h_{0j}\right\}.
+    \end{equation*}
+  \item The likelihood~\eqref{eq:lik2} is proportional to 
+    \begin{equation*}
+      L(h;\beta) \propto \prod_{i = 1}^Dh_{0i}\cdot\exp\left\{-h_{0i}\sum_{j\in R(t_{(i)})}e^{X_j\beta}\right\}
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimating $H_0(t)$}
+  \begin{itemize}
+  \item Maximizing the log of $L(h;\beta)$ yields
+    \begin{align*}
+      \hat h_{0i} &= \frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},\mbox{ and }\\
+      \hat H(t) &= \sum_{i; t_i \le t}\frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},
+    \end{align*}
+    which is equivalent to \eqref{eq:na} when there is no tie.
+  \item Of more interesting is that when plugging $\hat H(t)$ into~\eqref{eq:lik2} gives the partial likelihood of~\eqref{eq:pl}.
+  \end{itemize}
+\end{frame}
+
+\section{Reference}
+\begin{frame}[shrink = 25]
+  \frametitle{Reference}
+  \begin{center}
+    \scriptsize
+    \bibliographystyle{biom}
+    \bibliography{stat6390}
+  \end{center}
+\end{frame}
+
+\end{document}
+

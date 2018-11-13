@@ -1,0 +1,386 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, 
+  filecolor=blue, anchorcolor=yellow}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\tp}{\hat t_p}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\SE}{\mathrm{SE}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\HR}{\mathrm{HR}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\p}{\mathrm{P}}
+% \newcommand{\ll}{\textit{l}}
+\newcommand{\Ss}{\widehat{S}}
+\newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
+\newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
+\newcommand{\Hna}{\widehat{H}_{\scriptsize{NA}}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\
+  \small{Textbook coverage: Chapter 6}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+      << setup, echo= FALSE, results='asis'>>=
+knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = "scriptsize")
+@ 
+\end{frame}
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Model selection}
+\begin{frame}
+  \frametitle{The Akaike Information Criterion}
+      <<load, echo = FALSE, message = FALSE>>=
+library(survival)
+library(tidyverse)
+load("whas100.RData")
+whas100 <- as.tibble(whas100)
+@
+\begin{itemize}
+\item One way to compare nested models is to use the partial likelihood ratio tests.
+\item One way to compare non-nested models is to use quantity like the \empr{Akaike Information Criterion} (AIC):
+  \begin{equation*}
+    \mbox{AIC} = -2 \cdot \ell(\hat\beta) + 2\cdot p,
+  \end{equation*}
+  where $\ell(\cdot)$ can be replaced with the log-partial likelihood obtained from the Cox model.
+\item The AIC has two components; a ``good'' model should 
+  \begin{itemize}
+  \item fits the data well $\rightarrow$ small value of $-2 \cdot \ell(\hat\beta)$ 
+  \item has few parameters $\rightarrow$ small $2\cdot p$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Akaike Information Criterion}
+  \begin{itemize}
+  \item Consider the model:
+    <<fit>>=
+fit <- coxph(Surv(lenfol, fstat) ~ age + gender + bmi, data = whas100)
+fit
+@
+\item AIC can be called with \code{AIC} function:
+  <<AIC>>=
+AIC(fit)
+@
+\item or \code{extractAIC} (3 degrees of freedom), 
+  <<extractAIC>>=
+extractAIC(fit)
+@
+\item osr be computed directly with \code{loglik}.
+  <<check-AIC>>=
+-2 * fit$loglik[2] + 2 * 3
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Akaike Information Criterion}
+  \begin{itemize}
+  \item An exhaust search can be carried out with \code{step} or \code{stepAIC} from \pkg{MASS}
+  \end{itemize}
+  <<step>>=
+step(fit)
+@
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Akaike Information Criterion}
+  \begin{itemize}
+  \item An alternative to the AIC is the \empr{Bayesian Information Criterion}, BIC, given by
+    \begin{equation*}
+      \mbox{BIC}=-2\cdot\ell(\hat\beta) + p \log(n).
+    \end{equation*}
+  \item The key difference is in the penalty term; BIC penalizes the number of parameters by $\log(n)$,
+    where ``$n$'' corresponds to the number of events.
+  \item The BIC can be computed with
+    <<BIC>>=
+extractAIC(fit, k = log(fit$nevent))
+-2 * fit$loglik[2] + log(fit$nevent) * 3
+@
+\item The \code{step} function can be modified for stepwise selection with BIC:
+  <<BIC2, eval = FALSE>>=
+step(fit, k = log(fit$nevent))
+@
+\item As a result, using the BIC in the model selection will tend to result in models with fewer parameters as compared to AIC.
+\end{itemize}
+\end{frame}
+
+\section{Assessment of Model Adequacy}
+\begin{frame}
+  \frametitle{Schoenfeld residuals}
+  \begin{itemize}
+  \item The use of residuals for modeling checking has been well-developed in linear regression theory.
+  \item Recall the score function,
+    \begin{equation*}
+      S_n(\beta) = \frac{\dif\ell_p}{\dif\beta} =  \sum_{i = 1}^n\Delta_i\left[X_i  - \left\{\frac{\sum_{j\in R(t_i)} X_je^{X_j\beta}}{\sum_{j\in R(t_i)} e^{X_j\beta}}\right\}\right].
+    \end{equation*}
+  \item The estimator of the Schoenfeld residual for the $i$th subject is defined as
+    \begin{equation*}
+      r_i = \Delta_i\left[X_i- \left\{\frac{\sum_{j\in R(t_i)} X_je^{X_j\hat\beta}}{\sum_{j\in R(t_i)} e^{X_j\hat\beta}}\right\}\right]. 	
+    \end{equation*}
+  \item Since $S_n(\hat\beta) = 0$, the sum of the Schoenfeld residuals is zero.
+  \item Note that $r_i$ is a $p$ dimensional vector. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Schoenfeld residuals}
+  \begin{itemize}
+  \item The Schoenfeld residuals are equal to zero for all censored subjects and thus contain no information about the fit of the model.
+  \item The Schoenfeld residuals can be computed as follows:
+    <<sch-res>>=
+res <- resid(fit, type = "schoenfeld")
+head(res)
+dim(res)
+fit$nevent
+colSums(res)
+@
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Schoenfeld residuals}
+  \begin{itemize}
+  \item Plotting these residuals versus the covariate will yield a pattern of points centered around 0.
+  \end{itemize}
+  <<sch-res-plot, fig.show = 'hide', tidy = TRUE>>=
+res <- as.tibble(res) %>% mutate(Time = as.numeric(rownames(res)))
+ggplot(data = reshape2::melt(res, id = "Time")) + 
+	geom_boxplot(aes(x = variable, y = value))
+qplot(Time, age, data = res) + geom_hline(yintercept = 0)
+@
+\begin{center}
+  \includegraphics[scale = .3]{sch-resid-boxplot.pdf}
+  \includegraphics[scale = .3]{sch-resid-age.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scaled Schoenfeld residuals}
+  \begin{itemize}
+  \item \citet{grambsch1994proportional} proposed scaling each residual by an estimate of its variance.
+  \item The scaled residual can be approximated as follows:
+    \begin{equation*}
+      r_i^\ast=r_i \left[\widehat{\mbox{Var}}(r_i)\right]^{-1}\approx r_i \cdot\Var(\hat\beta)\cdot n,
+    \end{equation*}
+    where $n$ is the number of death.
+    <<sch-stdres>>=
+stdres <- as.tibble(resid(fit, type = "schoenfeld") %*% fit$var * fit$nevent)
+names(stdres) <- c("age", "bmi", "gender")
+stdres$Time <- res$Time
+stdres %>% print(n = 7)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scaled Schoenfeld residuals}
+  \begin{itemize}
+  \item The scaled Schoenfeld residuals can be plotted with
+    <<sch-stdres-plot, eval = FALSE, tidy = FALSE>>=
+qplot(Time, age, data = stdres) + geom_hline(yintercept = 0)
+ggplot(data = reshape2::melt(stdres, id = "Time")) + 
+	geom_boxplot(aes(x = variable, y = value))
+@
+\end{itemize}
+\begin{center}
+  \includegraphics[scale = .3]{sch-stdresid-boxplot.pdf}
+  \includegraphics[scale = .3]{sch-stdresid-age.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Scaled Schoenfeld residuals}
+  \begin{itemize}
+    % \item Recall that  the Cox model has a log-hazard function of the form
+    %   \begin{equation*}
+    %     \log\left[ h(t) \right] = \log\left[h_0(t)\right] + X^\top\beta.
+    %   \end{equation*}
+  \item Recall that the proportional hazard assumption implies
+    \begin{equation}
+      \widehat{\mbox{HR}} = e^{(X_i - X_j)\hat\beta},
+      \label{hr}
+    \end{equation}
+    that is free of time.
+  \item There are number of ways to yield non-proportional hazard ratios.
+  \item \citet{grambsch1994proportional} considered an alternative to allow covariate effect to change over time
+    by
+    \begin{equation*}
+      \beta(t) = \beta + \rho g(t) \approx\beta + \E(r^\ast),
+    \end{equation*}
+    where $g(t)$ is a function of time.
+  \item This suggests that plotting $\beta(t)$ against time gives a visual assessment of the proportional hazard assumption.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scaled Schoenfeld residuals}
+  \begin{itemize}
+  \item The $\beta(t)$ in \eqref{hr} can be conveniently computed with the \code{cox.zph} function.
+    <<coxzph>>=
+zph <- cox.zph(fit)
+head(zph$y)
+@
+\item This can be confirmed with
+  <<coxzph2>>=
+head(stdres$age + coef(fit)["age"])
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scaled Schoenfeld residuals}
+  \begin{itemize}
+  \item Several functions of $g(t)$ have been suggested:
+    <<coxzph-t>>=
+args(cox.zph)
+@
+\end{itemize}
+\begin{center}
+  \includegraphics[scale = .5]{coxzph}
+\end{center}
+\begin{itemize}
+\item The hypothesis of $H_o:\rho = 0$ can be tested via the partial likelihood ratio test, score test, or Wald test.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Scaled Schoenfeld residuals}
+  \begin{itemize}
+  \item We can plot the residual with \code{plot};
+    <<coxph-plot, eval = FALSE>>=
+plot(zph[1]); plot(zph[2]); plot(zph[3])
+@
+\end{itemize} 
+\begin{center}
+  \includegraphics[scale = .23, trim = 0 .5cm 0 2cm, clip]{zph-age.pdf}
+  \includegraphics[scale = .23, trim = 0 .5cm 0 2cm, clip]{zph-bmi.pdf}
+  \includegraphics[scale = .23, trim = 0 .5cm 0 2cm, clip]{zph-gender.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Scaled Schoenfeld residuals}
+  \begin{itemize}
+  \item The plots also include a 95\% confidence band for the smooth curve.
+  \item For our dataset, there is no warning signs of violation of the proportional assumption.
+    <<coxph-res>>=
+zph
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Martingale residuals}
+  \begin{itemize}
+  \item The next collection of residuals comes from the counting process formulation of a time-to-event regression model.
+  \item The basic formation is 
+    \begin{equation*}
+      M_i(t)=N_i(t) - \Lambda_i(t).
+    \end{equation*}
+  \item Under our setting, we have the martingale residuals
+    \begin{equation*}
+      m_i = \Delta_i - \hat{H}_0(t_i)e^{X_i^\prime\hat\beta}.
+    \end{equation*}
+  \item The residual is the difference between the observed value ($\Delta_i$) of the censoring indicator and its expected value. 
+  \item Also called the Cox-Snell or modified Cox-Snell residual.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Martingale residuals}
+  \begin{itemize}
+  \item The martingale residuals sum to 0, but range from $-\infty$ to 1.
+  \item The sum of squares of martingale residuals can not be used as a measure of goodness of fit.
+  \item Transformations to achieve a more symmetric distribution are helpful.
+  \item One such transformation is the \empr{deviance residuals}:
+    \begin{equation*}
+      d_i = \mbox{sign}(m_i) \sqrt{-2\cdot[m_i + \Delta_i \log(\Delta - m_i)]}.
+    \end{equation*}
+  \item These deviances are symmetrically distributed with expected value 0 (if the fitted model is correct).
+  \item The sum of squares of these residuals is the value of the likelihood ratio test in generalized linear model theory.
+  \end{itemize}
+\end{frame}
+
+
+\section{Reference}
+\begin{frame}[shrink = 25]
+  \frametitle{Reference}
+  \begin{center}
+    \scriptsize
+    \bibliographystyle{biom}
+    \bibliography{stat6390}
+  \end{center}
+\end{frame}
+
+\end{document}

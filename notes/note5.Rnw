@@ -1,0 +1,536 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, 
+  filecolor=blue, anchorcolor=yellow}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\tp}{\hat t_p}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\SE}{\mathrm{SE}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\HR}{\mathrm{HR}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\p}{\mathrm{P}}
+%\newcommand{\ll}{\textit{l}}
+\newcommand{\Ss}{\widehat{S}}
+\newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
+\newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
+\newcommand{\Hna}{\widehat{H}_{\scriptsize{NA}}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\
+  \small{Textbook coverage: Chapter 3}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+    << setup, echo= FALSE, results='asis'>>=
+knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = "scriptsize")
+@ 
+\end{frame}
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Cox proportional hazards model}
+\begin{frame}
+  \frametitle{Cox proportional hazards model}
+  \begin{itemize}
+  \item The Cox model is expressed by the hazard function.
+  \item The hazard function can be (loosely) interpreted as the risk of dying at time $t$.
+  \item The Cox model has the form:
+    \begin{equation*}
+      h(t) = h_0(t) \cdot \exp\{\beta_1x_1 + \beta_2x_2 + \ldots \beta_px_p\},
+    \end{equation*}
+    where
+    \begin{itemize}
+    \item $t$ is the survival time.
+    \item $\{x_1, \ldots, x_p\}$ is a set of $p$ covariates.
+    \item $\{\beta_1, \dots, \beta_p\}$ is the regression parameters; effect of covariates.
+    \item $h_0(t)$ is the baseline hazard. It is the value of the hazard when all $x$'s are 0.
+    \item No need to specify an ``intercept'' term as it gets absorb to $h_0(t)$.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Cox proportional hazards model}
+  \begin{itemize}
+  \item The quantity $e^{\beta_i}$ is interpreted as the hazard ratio (HR).
+    \begin{itemize}
+    \item $\beta_i > 0\rightarrow \mbox{ HR }> 1\rightarrow \mbox{hazard increases} \rightarrow \mbox{survival time decreases.}$
+    \item $\beta_i = 0\rightarrow \mbox{ HR }= 1\rightarrow \mbox{no change in hazard} \rightarrow \mbox{no change in survival time.}$
+    \item $\beta_i < 0\rightarrow \mbox{ HR }< 1\rightarrow \mbox{hazard decreases} \rightarrow \mbox{survival time increases.}$
+    \end{itemize}
+  \item HR (and hazard) is  negatively associated with the length of survival.
+  \item The Cox model assumes the hazard curves among different patients should be proportional and cannot cross.
+  \end{itemize}
+\end{frame}
+
+\section{Fitting the Cox model in \texttt{R}}
+\begin{frame}[fragile]
+  \frametitle{Fitting the Cox model in \texttt{R}}
+  \begin{itemize}
+  \item We have used \code{coxph} to compute the Nelson--Aalen estimator.
+  \item The usage of \code{coxph} is similar to that of \code{survreg}.
+  \item We will start with one covariate, \code{gender}.
+    <<load, echo = FALSE, message = FALSE>>=
+library(survival)
+library(tidyverse)
+load("whas100.RData")
+whas100 <- as.tibble(whas100)
+@
+<<whas100>>=
+fm <- Surv(lenfol, fstat) ~ gender
+fit.cox <- coxph(fm, data = whas100)
+fit.aft <- survreg(fm, data = whas100)
+@
+\item The coefficients are in opposite directions.
+  <<whas100-coef>>=
+coef(fit.cox)
+coef(fit.aft)
+@
+\item \code{fit.cox} does not have an intercept term.
+\item The two parameter estimates have opposite signs.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Fitting the Cox model in \texttt{R}}
+  \begin{itemize}
+  \item The \code{summary} gives:
+        <<whas100-cox-summary>>=
+summary(fit.cox)
+@
+\item The $\hat\beta$ is positive indicating that male patients ($\code{gender} = 1$) have higher risk of death.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fitting the Cox model in \texttt{R}}
+  \begin{itemize}
+  \item The hazard ratio in this example is $e^{0.5548}\approx1.7416$. 
+  \item This implies males (\code{gender = 1}) die at about 1.74 times (74\% higher) the rate of females.
+  \item Like in interpreting the odds-ratio estimator in logistic regression, 
+    the end-points of a 95\% confidence interval for the hazard ratio is
+    \begin{equation*}
+      \exp\left[\hat\beta\pm1.96\cdot\widehat{\mbox{SE}}(\hat\beta)\right] = \exp\left[0.5548\pm1.96\cdot0.2824\right] \approx[1.001, 3.029].
+    \end{equation*}
+  \item The 95\% confidence interval lies entirely above 1, echoing the significance of $\hat\beta$ at $\alpha = 0.05$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fitting the Cox model in \texttt{R}}
+  \begin{itemize}
+  \item Three related tests to assess the significance of the model.
+    \begin{itemize}
+    \item Partial likelihood ratio test
+    \item Wald test
+    \item score test
+    \end{itemize}
+  \item These three tests are also indicated in the bottom of the \code{summary}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood ratio test}
+  \begin{itemize}
+  \item The partial likelihood ratio test is calculated as twice the difference between 
+    the log-partial likelihood of the 
+    \begin{itemize}
+    \item ``full model'' , denoted by $\ell_p(\hat\beta)$.
+    \item ``reduced model'', denoted by $\ell_p(0)$.
+    \end{itemize}
+  \item The log-partial likelihood ratio is then defined as
+    \begin{equation*}
+      G = 2\cdot\{\ell_p(\hat\beta) - \ell_p(0)\},
+    \end{equation*}
+    where 
+    \begin{align*}
+      \ell_p(\hat\beta) &= \sum_{i = 1}^n\Delta_i\left[X_i\hat\beta - \log\left\{\sum_{j\in R(t_i)} e^{X_j\hat\beta}\right\}\right],\\
+      \ell_p(0) &= -\sum_{i = 1}^n\Delta_i\log(n_i), \mbox{ and }n_i\mbox{ is the number of risk at }t_i.
+    \end{align*}
+  \item The test statistic, $G$, follows approximately a chi-square distribution with \empr{one} degree of freedom under null.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Partial likelihood ratio test}
+  \begin{itemize}
+  \item The log-partial likelihood are stored in the \code{coxph} object as \code{loglik}:
+    <<cox-partial>>= 
+fit.cox$loglik
+@
+\item The two log-partial likelihoods are $\ell_p(0)$ and $\ell_p(\hat\beta)$ respectively.
+\item $\ell_p(0)$ can be computed only with \code{survfit}, e.g., 
+  <<cox-partial-surv>>=
+fit.surv <- survfit(Surv(lenfol, fstat) ~ 1, data = whas100)
+with(fit.surv, -sum(n.event * log(n.risk)))
+@
+\item The test statistic, $G$, and its $p$-value can be computed  as follow
+  <<cox-partial2>>=
+2 * diff(fit.cox$loglik) 
+1 - pchisq(2 * diff(fit.cox$loglik), 1)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Partial likelihood ratio test}
+  \begin{itemize}
+  \item Two useful statistics are by-product of the log-partial likelihood. 
+  \item The \code{Rsquare} is the (generalized) $R^2$ statistic, defined as
+    \begin{equation*}
+      R^2 = 1 - \left\{\frac{L_p(0)}{L_p(\hat\beta)}\right\}^{2 / n} = 1 - \left\{e^{\ell_p{(0)} - \ell_p(\hat\beta)}\right\}^{2/ n}.
+    \end{equation*}
+  \item The following code verifies this in \texttt{R}.
+    <<<cox-R2>>=
+1 - exp(-diff(fit.cox$loglik))^.02
+@
+\item Note that the message \code{max possible} gives the most extreme possible value the $R^2$ can be achieved given the observed data. 
+\item In this case \code{max possible = 0.985}, so 0.985 represents the ``prefect fit'' for the dataset. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Partial likelihood ratio test}
+  \begin{itemize}
+  \item The other useful measure is the \empr{concordance}.
+  \item The concordance gives the fraction of pairs in the sample (\code{gender = 1} and \code{gender = 0}), 
+    where the observations with the higher survival time has the higher probability of survival predicted by the model.
+  \item The concordance is robust to monotone transformation of the predictor.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Wald test}
+  \begin{itemize}
+  \item The ratio of the estimated coefficient to its estimated standard error is commonly referred to as a \empr{Wald statistic}. 
+  \item The Wald statistic (\code{z}) and its $p$-value are reported in \code{summary}.
+  \item The Wald statistic follows a standard normal distribution under null.
+  \item The Wald statistic and the two-sided $p$-value can be computed as follow:
+    <<cox-wald>>=
+z <- coef(fit.cox) / sqrt(vcov(fit.cox))
+2 - 2 * pnorm(abs(z))
+@
+\item The \code{Wald statistic} displayed below is the chi-square version of it. 
+  <<cox-wald2>>=
+z^2
+1 - pchisq(z^2, 1)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Score test}
+  \begin{itemize}
+  \item The test statistic for the score test is the ratio of the derivative of the log-partial likelihood to the square root of the observed information at $\beta = 0$.
+  \item The test statistic, $(z^*)^2$, is evaluated based on the score function 
+    \begin{equation*}
+      z^* = \left.\frac{\dif \ell_p(\beta)}{\dif \beta}\cdot \frac{1}{\sqrt{I(\beta)}}\right|_{\beta = 0},
+    \end{equation*}
+    where $I(\cdot)$ is the observed information.
+  \item The score test is equivalent to the log-rank test.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Score test}
+  \begin{itemize}
+  \item Recall that the score function has the form
+    \begin{equation*}
+      \frac{\dif\ell_p}{\dif\beta} =  \sum_{i = 1}^n\Delta_i\left[X_i  - \left\{\frac{\sum_{j\in R(t_i)} X_je^{X_j\beta}}{\sum_{j\in R(t_i)} e^{X_j\beta}}\right\}\right].
+    \end{equation*}
+  \item Suppose $X_i$ is a categorical variable that takes values 0 and 1. 
+  \item When $\beta = 0$, 
+    \begin{itemize}
+    \item $\sum_{j\in R(t_i)} e^{X_j\beta}$ is the total number in the risk set at $t_i$.
+    \item $\sum_{j\in R(t_i)} X_je^{X_j\beta}$ is the number of individual from group 1 in the risk set at $t_i$.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Score test}
+  \begin{itemize}
+  \item Recall the 2 by 2 table we used to construct the log-rank statistic:
+    \renewcommand{\arraystretch}{1.3}
+    \begin{center}
+      \begin{tabular}{cccc}
+        &Group 1&Group 0& Total\\
+        \cline{2-3}
+        Failure &\multicolumn{1}{|c|}{$d_{1i}$}&\multicolumn{1}{|c|}{$d_{0i}$}&$d_i$\\
+        \cline{2-3}
+        Non-failure &\multicolumn{1}{|c|}{$n_{1i}-d_{1i}$}&\multicolumn{1}{|c|}{$n_{0i}-d_{0i}$}&$n_i-d_i$\\
+        \cline{2-3}
+        At risk & $n_{1i}$ &  $n_{0i}$ & $n_i$\\
+      \end{tabular}
+    \end{center}
+  \item Using the table notations, 
+    \begin{equation*}
+      \sum_{j\in R(t_i)} e^{X_j\beta} = n_i\mbox{ and }\sum_{j\in R(t_i)} X_je^{X_j\beta} = n_{1i}.
+    \end{equation*}
+  \item We also used $\E(d_{1i}) = \frac{n_{1i} \cdot d_i}{n_i}$. 
+  \item The score function reduced to 
+    \begin{equation*}
+      \frac{\dif\ell_p}{\dif\beta} =  \sum_{i = 1}^n\Delta_i\left[X_i - \frac{n_{1i}}{n_i}\right] = \sum_{i = 1}^D\{d_{1i} - \E(d_{1i})\}
+    \end{equation*}
+    under the assumption of no ties.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Score test}
+  \begin{itemize}
+  \item Now recall the observed information based on the score function is
+    \begin{align*}
+      I(\beta) &= -\frac{\dif^2\ell_p}{\dif\beta^2}  =\sum_{i = 1}^n\Delta_i\sum_{j\in R(t_i)}(\beta)\cdot\left(X_j - \bar X\right)^2 \\
+               &= \sum_{i = 1}^n\Delta_i\sum_{j\in R(t_i)}\left(X_j^2 - 2X_j\bar X + \bar X^2\right)
+    \end{align*}
+  \item With the table notations,
+    \begin{itemize}
+    \item $\sum_{j\in R(t_i)}X_j^2 = \sum_{j\in R(t_i)}X_j = n_{1i}$
+    \item $\sum_{j\in R(t_i)}2X_j\bar X = 2 \cdot n_{1i}\cdot \frac{n_{1i}}{n_i}$
+    \item $\sum_{j\in R(t_i)}\bar X^2 = n_i\cdot\left(\frac{n_{1i}}{n_i}\right)^2$
+    \end{itemize}
+  \item Simple algebra shows
+    \begin{equation*}
+      I(\beta) = \sum_{i = 1}^m\Var(d_{1i}).
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Score test}
+  \begin{itemize}
+  \item The following confirms the relationship between \code{survdiff} and the score test. 
+    <<cox-score>>=
+survdiff(fm, data = whas100)
+fit.cox$score
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fitting the Cox model in \texttt{R}}
+  \begin{itemize}
+  \item In general, the numeric values of the three test statistics are usually similar, and thus lead to the same conclusion.
+  \item In situations where there is disagreement, the partial likelihood ratio test is the preferred test$^\ast$.
+  \item The partial likelihood ratio test is also useful when comparing nested models.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model selection with partial likelihood ratio tests}
+  \begin{itemize}
+  \item Suppose we want to test whether the addition of \code{bmi} is statistically significant, 
+    we can fit a new Cox model with both \code{bmi} and \code{gender}:
+    <<<cox-bmi-gender>>=
+fit.cox2 <- update(fit.cox, ~. + bmi)
+summary(fit.cox2)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Model selection with partial likelihood ratio tests}
+  \begin{itemize}
+  \item The corresponding partial likelihoods are.
+    <<cox-bmi-gender-pl>>=
+fit.cox$loglik
+fit.cox2$loglik
+@
+\item Note that they share the same $\ell_p(0)$.
+\item The partial likelihood ratio test can be performed as follow:
+  <<cox-bmi-gender-pl2>>=
+G <- 2 * sum(fit.cox2$loglik - fit.cox$loglik)
+1 - pchisq(G, 1)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Baseline cumulative hazard}
+  \begin{itemize}
+  \item The function \code{basehaz} function computes the cumulative baseline hazard function, $H_0(t)$.
+  \item The only argument besides the \code{fit} is \code{centered}, which specifies the covariate value used in the plot.
+    <<cox-basehaz>>=
+args(basehaz)
+@
+\item The default is \code{centered = TRUE} estimate at the mean of the covariates.
+\item Setting \code{centered = TRUE} does not always make sense, particularly for categorical covariates. 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Baseline cumulative hazard}
+  \begin{itemize}
+  \item The red curve gives the baseline cumulative hazard for \code{gender = 0}.
+  \item The black curve gives the cumulative hazard at \code{gender = 0.5} (mean). 
+  \item The two curves are parallel to each other. 
+    <<cox-basehaz2, eval = FALSE>>=
+ggplot(data = basehaz(fit.cox), aes(x = time, y = hazard)) + geom_step() +
+    geom_step(data = basehaz(fit.cox, center = FALSE), aes(x = time, y = hazard), col = 2)
+@
+\begin{center}
+  \includegraphics[scale = .3]{basehaz.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+
+\section{Multiple covariates model}
+
+\begin{frame}[fragile]
+  \frametitle{Multiple covariates model}
+  \begin{itemize}
+  \item The inference remains the same when multiple covariates are involved in the model.
+  \item Recall the Cox model with both \code{gender} and \code{bmi}:
+    <<cox-mult>>=
+summary(fit.cox2)
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Multiple covariates model}
+  \begin{itemize}
+  \item The hazard ratio can be interpreted jointly or separately while holding the other covariate constant. 
+  \item The regression paramter for \code{bmi} is negative. 
+  \item This indicates patients with higher \code{bmi} have lower risk of death. 
+  \item For every one unit increase in \code{bmi} the risk of death decrease by 10\%.
+  \item This result does not make (medical) sense and is possible due to non-linear effect in \code{bmi}
+    <<cox-mult-bmi2>>=
+fit.cox3 <- update(fit.cox2, ~ . + I(bmi^2))
+@
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Multiple covariates model}
+  \begin{itemize}
+  \item The summary with \code{bmi}$^2$ is
+    <<cox-mult-bmi22>>=
+summary(fit.cox3)
+@
+\item Note that the inclusion of \code{bmi} (and \code{bmi}$^2$) makes \code{gender} less significant. 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Multiple covariates model}
+  \begin{itemize}
+  \item The partial likelihood ratio test can be used to test whether we should delete \code{gender}
+    (backward selection).
+  \item First we fit a reduced model without the \code{gender} term.
+    <<cox-mult-nogender>>=
+    fit.cox4 <- update(fit.cox3, ~ . - gender)
+    fit.cox4
+    @
+\item The partial likelihoods are
+  <<cox-mult-pl-nogender0>>=
+    fit.cox4$loglik
+    fit.cox3$loglik
+    @
+\item The test statistic and the corresponding $p$-value can be computed with
+  <<cox-mult-pl-nogender>>=
+    1 - pchisq(2 * sum(fit.cox3$loglik - fit.cox4$loglik), 1)
+@ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Multiple covariates model}
+  \begin{itemize}
+  \item Back to the model with \code{gender} and \code{bmi}.
+  \item The partial likelihood ratio test statistic can be computed similarly, but the Wald test statistics needs to be computed accounting for covariances.
+    <<cox-mult-Z>>=
+coef(fit.cox2) %*% solve(vcov(fit.cox2)) %*% coef(fit.cox2)
+@
+\item The degrees of freedom is 2 because we now have 2 covariates in the model.
+  <<cox-mult-pval>>=
+1 - pchisq(coef(fit.cox2) %*% solve(vcov(fit.cox2)) %*% coef(fit.cox2), 2)
+@
+\end{itemize}
+\end{frame}
+
+
+% \section{Reference}
+% \begin{frame}[shrink = 25]
+%   \frametitle{Reference}
+%   \begin{center}
+%     \scriptsize
+%     \bibliographystyle{biom}
+%     \bibliography{stat6390}
+%   \end{center}
+% \end{frame}
+
+\end{document}
+
+the likelihood ratio and score tests assume independence of
+observations within a cluster, the Wald and robust score tests do not
+

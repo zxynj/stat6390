@@ -131,7 +131,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \frametitle{Maximum likelihood estimation}
   \begin{itemize}
   \item 
-    Now suppose a the survival data includes (right) censored data.
+    Now suppose the survival data includes (right) censored data.
   \item 
     In this case, $n$ pairs of observations are observed $(\tilde{t}_i, \Delta_i), i = 1, \ldots, n$,
     where $\tilde{T}_i$ is the observed survival time. 
@@ -356,7 +356,7 @@ summary(km, time = c(365, 2190))
     class(weiSurv)
 @
 \item \code{Weibull2} returns a function.
-\item The parameters are $\lambda = 0.006$ and $\gamma = 0.625$.
+\item The parameters are $\hat\lambda = 0.006$ and $\hat\gamma = 0.625$.
 \item The ``\code{alpha}'' used in \code{Weibull2} is equivalent to our $\lambda$.
 \end{itemize}
 \end{frame}
@@ -391,7 +391,6 @@ summary(km, time = c(365, 2190))
   \end{itemize}
 \end{frame}
 
-
 \begin{frame}
   \frametitle{Exponential regression model}
   \begin{itemize}
@@ -401,22 +400,7 @@ summary(km, time = c(365, 2190))
     \item $r(u) = u^{-1}$
     \item $r(u) = e^u$
     \end{enumerate}
-  \item The first two forms suffer from the disadvantage that $\b4ta$ must be restricted
-    to guarantee $r(X^\prime\beta) > 0$ for all possible $X$.
-  \item The third form is commonly considered and will be used here.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Exponential regression model}
-  \begin{itemize}
-  \item A few choices of $r(\cdot)$ have been proposed:
-    \begin{enumerate}
-    \item $r(u) = u$
-    \item $r(u) = u^{-1}$
-    \item $r(u) = e^u$
-    \end{enumerate}
-  \item The first two forms suffer from the disadvantage that $\b4ta$ must be restricted
+  \item The first two forms suffer from the disadvantage that $\beta$ must be restricted
     to guarantee $r(X^\prime\beta) > 0$ for all possible $X$.
   \item The third form is commonly considered and will be used here,
     but we should keep in mind that there may be more appropriate forms in specific settings.

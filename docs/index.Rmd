@@ -18,16 +18,34 @@ Website maintainer: [Anthony Phung](https://www.utdallas.edu/~anthony.phung/)
 
 See the class [GitHub page](https://github.com/stc04003/stat6390) for the most up-to-date class materials.
 
+# Announcement
+* Exam 1 and Homework 3 are due on Novermber 13
+* [ASA travel course](https://github.com/stc04003/stat6390/blob/master/docs/ASA_TravelingCourse_2018_Nov8_Announcement.pdf) on Network Meta-Analysis is thison November 8, 2018
+
 # Homework
 * Homework 1: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw1/hw1.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw1/hw1-sol.pdf)
+<<<<<<< HEAD
 * Homework 2: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw2/hw2.pdf)
 
 # Notes and other class documents
 * Some class discussion points can be found [here](discussion.html)
+=======
+* Homework 2: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw2/hw2.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw2/hw2-sol.pdf)
+* Homework 3: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw3/hw3.pdf) 
+
+# Exam 
+* Exam 1: [assignment](https://github.com/stc04003/stat6390/blob/master/exam/exam1/exam1.pdf)
+
+# Notes and other class documents
+>>>>>>> e2c8136d4854ff9384fceb00437a00cc60452ee7
 * Unannotated class notes:
     * [Note 1](https://github.com/stc04003/stat6390/blob/master/notes/note1.pdf): Introduction to survival data
     * [Note 2](https://github.com/stc04003/stat6390/blob/master/notes/note2.pdf): Descriptive methods for survival data
     * [Note 3](https://github.com/stc04003/stat6390/blob/master/notes/note3.pdf): Parametric methods
+<<<<<<< HEAD
+=======
+    * [Note 4](https://github.com/stc04003/stat6390/blob/master/notes/note4.pdf): Proportional hazards regression model
+>>>>>>> e2c8136d4854ff9384fceb00437a00cc60452ee7
 * Annotated notes can be found on [eLearning](http://elearning.utdallas.edu/)
 * Syllabus can be found [here](https://www.sychiou.com/pdf/fall2018stat6390.pdf)
 * Project suggestions can be found [here](https://github.com/stc04003/stat6390/blob/master/project/project.pdf)
@@ -39,4 +57,9 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 * A nice discussion on `tibble` vs. `data.frame` is [here](https://www.jumpingrivers.com/blog/the-trouble-with-tibbles/)
 * Wiki pages for [sign test](https://en.wikipedia.org/wiki/Sign_test) and [Wilcoxon signed-rank test](https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test).
 * Wiki page for [Kolmogorov–Smirnov statistic](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test) that looks at the supremum of the set of distances.
+<<<<<<< HEAD
 * [Paper](https://www.jstor.org/stable/2988087?seq=1#metadata_info_tab_contents) on 2 by 2 contingency table, fixed margin tests vs random margin tests.
+=======
+* A [paper](https://www.jstor.org/stable/2988087?seq=1#metadata_info_tab_contents) on 2 by 2 contingency table, fixed margin tests vs random margin tests.
+* A [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3546387/) on generating survival times to simulate Cox proportional hazards models with time-varying covariates.
+>>>>>>> e2c8136d4854ff9384fceb00437a00cc60452ee7
