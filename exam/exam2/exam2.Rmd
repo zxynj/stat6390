@@ -1,0 +1,23 @@
+---
+title: Exam 2
+author: Steven Chiou
+output: pdf_document
+---
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+**Instructions**
+
+  * Due date: **Tuesday, December 12**.
+  * This is a open resource exam, but you are not allowed to ask post exam questions online.
+  * You are not allowed to collaborate with classmates and/or people outside of class.
+  * Please circle or highlight your final answer. 
+  * The toal possible point is xx.
+  
+Violation of this agreement will result in an **F** on this exam and it will be averaged in as a 0\%.
+  
+  
+---
+
+1. 
