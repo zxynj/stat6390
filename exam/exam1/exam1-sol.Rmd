@@ -211,5 +211,6 @@ permU <- replicate(5000, with(whas100, getU(lenfol, fstat, sample(gender))))
 summary(permU)
 
 2 * min(sum(U0 < permU), sum(U0 > permU)) / 5000
-ggplot() + aes(permU) + geom_histogram(alpha = .5, bins = 20) + geom_vline(aes(xintercept = U0), lty = I(2))
+ggplot() + aes(permU) + geom_histogram(alpha = .5, bins = 20) + 
+  geom_vline(aes(xintercept = U0), lty = I(2))
 ```
