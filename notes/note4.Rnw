@@ -426,7 +426,7 @@ knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = 
   \item Maximizing the log of $L(h;\beta)$ yields
     \begin{align*}
       \hat h_{0i} &= \frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},\mbox{ and }\\
-      \hat H(t) &= \sum_{i; t_i \le t}\frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},
+      \hat H(t) &= \sum_{i; t_{(i)} \le t}\frac{1}{\sum_{j\in R(t_{(i)})}e^{X_j\beta}},
     \end{align*}
     which is equivalent to \eqref{eq:na} when there is no tie.
   \item Of more interesting is that when plugging $\hat H(t)$ into~\eqref{eq:lik2} gives the partial likelihood of~\eqref{eq:pl}.
