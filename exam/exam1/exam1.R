@@ -85,7 +85,7 @@ getU <- function(obs, event, x) {
     d1 <- event[x > 0]
     t0 <- obs[x == 0]
     d0 <- event[x == 0]
-    sum(t(outer(t0, t1, ">")) * d1) - sum(outer(t0, t1, "<") * d0)    
+    sum(outer(t0, t1[d1 > 0], ">")) - sum(outer(t0[d0 > 0], t1, "<"))
 }
 
 #' a
