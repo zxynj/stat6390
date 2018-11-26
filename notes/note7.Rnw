@@ -1,0 +1,289 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{graphicx, color}
+\usepackage{alltt}
+\usepackage{booktabs, calc, rotating}
+\usepackage[round]{natbib}
+\usepackage{pdfpages, subfigure}
+\usepackage{multicol}
+\usepackage{amsmath, amsbsy, amssymb, amsthm, graphicx}
+\usepackage[english]{babel}
+\usepackage{xkeyval} 
+\usepackage{xfrac}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+\usepackage{multirow, fancyvrb} 
+\usepackage{tikz, geometry, tkz-graph, xcolor}
+\usepackage{listings}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\renewenvironment{knitrout}{\setlength{\topsep}{-.2mm}}{}
+
+\hypersetup{colorlinks, citecolor=blue, linkcolor=., menucolor=white, 
+  filecolor=blue, anchorcolor=yellow}
+
+\graphicspath{{figure/}}
+
+\newcommand{\cov}{\mathrm{cov}}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\bigbrk}{\vspace*{2in}}
+\newcommand{\smallbrk}{\vspace*{.1in}}
+\newcommand{\midbrk}{\vspace*{1in}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\empr}[1]{{\emph{\color{red}#1}}}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\green}[1]{{\color{green}#1}}
+\newcommand{\pkg}[1]{{\textbf{\texttt{#1}}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\calc}[1]{{\fbox{\mbox{#1}}}}
+\newcommand{\tp}{\widehat t_p}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\SE}{\mathrm{SE}}
+\newcommand{\var}{\mathrm{var}}
+\newcommand{\HR}{\mathrm{HR}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\p}{\mathrm{P}}
+% \newcommand{\ll}{\textit{l}}
+\newcommand{\Ss}{\widehat{S}}
+\newcommand{\Skm}{\widehat{S}_{\scriptsize{KM}}}
+\newcommand{\Sna}{\widehat{S}_{\scriptsize{NA}}}
+\newcommand{\Hkm}{\widehat{H}_{\scriptsize{KM}}}
+\newcommand{\Hna}{\widehat{H}_{\scriptsize{NA}}}
+\newcommand{\V}{\mathrm{V}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\mode<presentation> {
+  \usetheme{UTD}
+  \usecolortheme[RGB={200,0,0}]{structure}
+  \setbeamercovered{transparent}
+}
+
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+\newcommand*{\mybox}[1]{\framebox{#1}}
+
+\title[STAT 6390]{STAT 6390: Analysis of Survival Data\\}
+%  \small{Textbook coverage: Chapter 6}\\}
+\author[Steven Chiou]{Steven Chiou}
+\institute[UTD]{Department of Mathematical Sciences, \\ University of Texas at Dallas}
+\date{}
+
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+      << setup, echo= FALSE, results='asis'>>=
+knitr::opts_chunk$set(fig.path = "figure/", prompt = TRUE, comment = NA, size = "scriptsize")
+@ 
+\end{frame}
+
+
+\setbeamercolor*{item}{fg=red}
+\bgroup
+\usebackgroundtemplate{%
+  \tikz[overlay,remember picture] \node[opacity=0.05, at=(current page.center)] {
+    \includegraphics[height=\paperheight,width=\paperwidth]{UTDbg}};}
+
+\section{Semiparametric AFT model}
+\begin{frame}
+\frametitle{Accelerated Failure Time Model}
+\begin{itemize}
+\item Regression models for survival data we studied so far:
+\begin{itemize}
+\item Parametric models (Weibull model, exponential model).
+\item Proportional hazards rate model (Cox model).
+\end{itemize}
+\item Parametric AFT models have the common form
+\begin{equation}
+Y = \log(T) = X^\prime\beta + \epsilon,
+\label{eq:aft}
+\end{equation}
+where different parametric model can be specified through the distribution of $\epsilon$.
+\item The semiparametric approach relaxes the assumption on $\epsilon$. 
+\item Last resort in the industrial testing, but the models of choice in medical research.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Semiparametric AFT model}
+\begin{itemize}
+\item The parametric part of~\eqref{eq:aft} is $X^\prime \beta$.
+\item The non-parametric part of~\eqref{eq:aft} is absence of a parametric assumption on $\epsilon$.
+\item Still need to assume that $\epsilon_i$ are independent and identically distributed. 
+\item For identifiability, the model does not contain an intercept.
+\item Carry out inference concerning $\beta$ without deciding on a specific distribution on $\epsilon$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Least Squares Approach}
+\begin{itemize}
+\item When there is no censoring ($T_i$'s are completely observed, and all $\Delta_i = 1$)., 
+the classical least-squares estimator of $\beta$ is obtained by minimizing 
+\begin{equation*}
+\sum_{i = 1}^n(Y_i - X_i^\prime\beta)^2
+\end{equation*}
+in terms of $\beta$. 
+\item The minimizer is the solution to the equation
+\begin{equation*}
+\sum_{i = 1}^n(X_i -\bar  X)(Y_i- X_i^\prime\beta) = 0,
+\end{equation*}
+where $\bar X = n^{-1}\sum_{i = 1}^nX_i$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Least Squares Approach}
+\begin{itemize}
+\item In the presence of censoring, 
+the classical least-squares can not be used directly. 
+\item \citet{buckley1979linear} proposed to replace $Y_i$ with 
+\begin{equation}
+\widehat Y_i(\beta) = \Delta_i \log(T_i) + (1 - \Delta_i) \left\{\frac{\int_{e_i(\beta)}^\infty u\dif \widehat S_\beta\{e_i(\beta)}{1 - \widehat S_\beta\{e_i(\beta)\}} + X_i^\prime\beta\right\},
+\label{eq:EY}
+\end{equation}
+where $\widehat S_\beta(t)$ is the Kaplan-Meier estimator based on $\{e_i(\beta), \Delta_i\}$.
+\item The substitution~\eqref{eq:EY} is a mean imputation.
+\item The resulting Buckly-James estimator is the solution to the following equation:
+\begin{equation}
+\sum_{i = 1}^n(X_i -\bar  X)(\widehat Y_i (\beta)- X_i^\prime\beta) = 0.
+\label{eq:bj}
+\end{equation}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Least Squares Approach}
+\begin{itemize}
+\item The Buckly-James estimating equation~\eqref{eq:bj} is difficult to solve because the function is 
+neither continuous nor (component-wise) monotone in $\beta$.
+\item \citet{jin2006least} proposed an iterative procedure to obtain a class of consistent and asymptotically normal estimators.
+\item Define
+\begin{equation*}
+U(\beta, b)\sum_{i = 1}^n(X_i -\bar  X)(\widehat Y_i (b)- X_i^\prime\beta), 
+\end{equation*}
+for some constant $b$.
+\item Holding $b$ fix, $\widehat\beta$ can be obtained by solving $U(\beta, b)$ for $\beta$.
+\item The closed form solution to $\beta$ (holding $b$ fix) is:
+\begin{equation*}
+\beta = L(b) = \left\{\sum_{i = 1}^n(X_i - \bar X)^{\otimes2}\right\}^{-1}\left[\sum_{i = 1}^n(X_i - \bar X)\{\widehat{Y}_i(b) - \bar{Y}(b)\}\right],
+\end{equation*}
+where $\bar{Y}(b) = n^{-1}\sum_{i = 1}^n\widehat{Y}_i(b)$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Least Squares Approach}
+\begin{itemize}
+\item \citet{jin2006least} proposed to start with an initial value, $\widehat\beta_{(0)}\equiv b$, then iterate
+$\widehat\beta_{(m)} = L(\widehat\beta_{(m-1)})$, for $m\ge1$, until convergence.
+\item \citet{jin2006least} also showed that for a consistent initial estimator $\widehat\beta_{(0)}$, $\widehat\beta_{(m)}$
+is consistent and asymptotically normal for every $m\ge1$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rank-based Approach}
+\begin{itemize}
+\item The other approach in obtaining $\widehat\beta$ in a semiparametric AFT model is 
+the \empr{rank regression} approach.
+\item Generalizes the basic idea of the linear rank (Wilcoxon rank sum) test.
+\item For the ease of discussion, we will assume there is only one covariate. 
+%\item 
+%\begin{equation*}
+%\sum_i\left(i - \frac{n + 1}{2}\right)\left(X_{(i)} - \bar X\right).
+%\end{equation*}
+\item Let $Y_{(i)}$ be the sorted $Y_i$'s.
+\item Let $X_{(i)}$ be the covariate value associated with the $i$th sorted $Y_i$'s.
+\item A nonparametric rank-based test for the association between $X$ and the $Y_i$ can be based on the test statistic
+\item The linear rank test statistic is 
+\begin{equation*}
+U = \sum_{i=1}^n\phi_i\left(X_{(i)} - \bar X\right),
+\end{equation*}
+where $\phi_i$ is some score function attached to $Y_i$. % and $\sum_{i = 1}^nS_i = 0$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rank-based Approach}
+\begin{itemize}
+\item In the presence of censoring, the test statistic is modified to 
+\begin{equation*}
+U = \sum_{i=1}^n\phi_i\Delta_i\left(X_{(i)} - \bar X^\ast\right),
+\end{equation*}
+where $\bar X^\ast$ denotes the average of the covariate values of all subjects at risk at time $T_i$.
+\item We need to be able to draw inference for $\beta$, therefore, we instead test whether the 
+residuals of the AFT model are associated with the covariate. 
+\item Define the residuals of the AFT model as $e_i(\beta) = Y_i - X_i^\prime \widehat\beta$.
+\item We construct an estimating equation using the same procedure as before using $e_i(\beta)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rank-based Approach}
+\begin{itemize}
+\item In the presence of censoring and replacing $Y_i$ with $e_i$, we have the test statistic
+\begin{equation*}
+U(\beta) = \sum_{i = 1}^n\phi\Delta_i\left\{X_i - \frac{\sum_{j= 1}^nX_j I\{e_j(\beta)\ge e_i(\beta)\}}
+{\sum_{j= 1}^nI\{e_j(\beta)\ge e_i(\beta)\}}\right\},
+\end{equation*}
+the weights, $\phi$, plays the same role as the weights in the log-rank test.
+\item When $\phi = 1$, the resulting $U(\beta)$ corresponds to the log-rank statistics.
+\item When $\phi = \sum_{j= 1}^nI\{e_j(\beta)\ge e_i(\beta)\}$ corresponds to the Gehan's statistics.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rank-based Approach}
+\begin{itemize}
+\item The estimator, $\widehat\beta$, can be obtained by solving $U(\beta) = 0$.
+\item With a general weight, it is difficult to solve the equation $U(\beta) = 0$ because $U(\beta)$ is neither continuous nor component-wise monotone in $\beta$.
+\item With the Gehan weight, $U(\beta)$ reduces to
+\begin{equation*}
+U_G(\beta) = \sum_{i = 1}^n\sum_{j = 1}^n\Delta_i(X_i - X_j)I\{e_j(\beta)\ge e_i(\beta)\}.
+\end{equation*}
+\item $U_G(\beta)$ is component-wise monotone in $\beta$, but is also not continuous.
+\item Procedures are available to smooth $U_G(\beta)$ to facilitate the usage of the AFT model.
+\end{itemize}
+\end{frame}
+%
+%\begin{frame}[fragile]
+%\frametitle{Fitting AFT models}
+% <<load, echo = FALSE, message = FALSE>>=
+%library(survival)
+%library(tidyverse)
+%load("whas100.RData")
+%whas100 <- as.tibble(whas100)
+%@
+%\begin{itemize}
+%\item Only a few packages are available for fitting semiparametric AFT models.
+%\item One of these is the \texttt{aftgee} package.
+%\end{itemize}
+%\end{frame}
+
+\section{Reference}
+\begin{frame}[shrink = 25]
+  \frametitle{Reference}
+  \begin{center}
+    \scriptsize
+    \bibliographystyle{biom}
+    \bibliography{stat6390}
+  \end{center}
+\end{frame}
+
+\end{document}
