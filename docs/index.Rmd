@@ -29,7 +29,7 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 * Homework 4: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw4/hw4.pdf) 
 
 # Exam 
-* Exam 1: [assignment](https://github.com/stc04003/stat6390/blob/master/exam/exam1/exam1.pdf)
+* Exam 1: [assignment](https://github.com/stc04003/stat6390/blob/master/exam/exam1/exam1.pdf) and [solution](https://github.com/stc04003/stat6390/blob/master/exam/exam1/exam1-sol.pdf)
 
 # Notes and other class documents
 * Unannotated class notes:
@@ -39,6 +39,7 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
     * [Note 4](https://github.com/stc04003/stat6390/blob/master/notes/note4.pdf): Proportional hazards regression model - theory
     * [Note 5](https://github.com/stc04003/stat6390/blob/master/notes/note5.pdf): Proportional hazards regression model - `coxph` outputs
     * [Note 6](https://github.com/stc04003/stat6390/blob/master/notes/note6.pdf): Proportional hazards regression model - residuals
+    * [Note 7](https://github.com/stc04003/stat6390/blob/master/notes/note7.pdf): Semiparametric accelerated failure time model
 * Annotated notes can be found on [eLearning](http://elearning.utdallas.edu/)
 * Syllabus can be found [here](https://www.sychiou.com/pdf/fall2018stat6390.pdf)
 * Project suggestions can be found [here](https://github.com/stc04003/stat6390/blob/master/project/project.pdf)
