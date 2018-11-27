@@ -207,7 +207,7 @@ a. For the `whas100` data:
 b. Perform permutation test, calculate $p$-value and produce histogram:
 ```{R getU-summary}
 set.seed(123)
-permU <- replicate(5000, with(whas100, getU(lenfol, fstat, sample(gender))))
+system.time(permU <- replicate(5000, with(whas100, getU(lenfol, fstat, sample(gender)))))
 summary(permU)
 
 2 * min(sum(U0 < permU), sum(U0 > permU)) / 5000
