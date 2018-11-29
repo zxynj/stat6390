@@ -9,7 +9,7 @@ knitr::opts_chunk$set(comment = NA, prompt = TRUE)
 ```
 **Instructions**
 
-  * Due date: **Tuesday, December 12**.
+  * Please hand in a hard copy by **Tuesday, December 11**.
   * This is a open resource exam, but you are not allowed to ask post exam questions online.
   * You are not allowed to collaborate with classmates and/or people outside of class.
   * Please circle or highlight your final answer. 
