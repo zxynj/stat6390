@@ -20,7 +20,7 @@ See the class [GitHub page](https://github.com/stc04003/stat6390) for the most u
 
 # Presentation order
 * **Tuesday, December 4:** Jose Alfaro, Kelly Daescu, Tianjian Shi
-* **Thursday, December 6:** Anthonyt Phung, Patrick Thompson
+* **Thursday, December 6:** Anthony Phung, Patrick Thompson
 
 # Homework
 * Homework 1: [assignment](https://github.com/stc04003/stat6390/blob/master/homework/hw1/hw1.pdf) and [solution](https://github.com/antphung/stat6390/blob/master/homework/hw1/hw1-sol.pdf)
