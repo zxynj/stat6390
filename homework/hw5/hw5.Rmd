@@ -1,0 +1,29 @@
+---
+title: Homework 5
+author: Steven Chiou
+output: pdf_document
+---
+
+\centering Due date: Tuesday, December 11
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+\flushleft
+This homework consists of questions proposed by the presenters. 
+You only need to do one part from each presenter.
+Each response is worth 2 points for a total of 10.
+
+1. Tianjian Shi
+    a. 
+    b. 
+  
+2. Survival analysis through the eyes of a molecular biologist by Kelly Daescu
+    a. List the cons and pros for both the `ggplot2` and `ploty` packages.
+    b. Interpret the Nelson-Aalen estimators presented on page 7.
+  
+3. A brief introduction to `R` `Shiny` by Jose Alfaro
+    a. What is the purpose of the UI function in a Shiny app?
+    b. List three widgets and their uses.
+    
+4. 
