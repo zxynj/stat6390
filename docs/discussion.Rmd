@@ -79,6 +79,8 @@ diff(rep(0:1, 10))
 rep(c(1, -1), 10)[1:19]
 ifelse(1:19 %% 2, 1, -1)
 ```
+<<<<<<< HEAD
+=======
 
 # Selecting subset for `lm`
 Suppose we want to fit a linear regression with `y` as the outcome variable and $\{$`X`, `Z`$\}$ as the covariates, 
@@ -165,3 +167,4 @@ with(dat, sum(status - Na))
 Origin of this historial note can be found [here](https://www4.stat.ncsu.edu/~dzhang2/st745/chap6.pdf).
 
 # Reference
+>>>>>>> e2c8136d4854ff9384fceb00437a00cc60452ee7
