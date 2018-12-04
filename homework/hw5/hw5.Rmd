@@ -14,9 +14,11 @@ This homework consists of questions proposed by the presenters.
 You only need to do one part from each presenter.
 Each response is worth 2 points for a total of 10.
 
-1. Tianjian Shi
-    a. 
-    b. 
+1. Diagnostics for the Cox Model by Tianjian Shi
+    a. Write down the Schoenfeld residuals formula and briefly explain how it works.
+    b. Describe the idea that Therneau et al. (1990) proposed to use
+martingale residuals in investigating the functional form of
+continuous covariate.
   
 2. Survival analysis through the eyes of a molecular biologist by Kelly Daescu
     a. List the cons and pros for both the `ggplot2` and `ploty` packages.
