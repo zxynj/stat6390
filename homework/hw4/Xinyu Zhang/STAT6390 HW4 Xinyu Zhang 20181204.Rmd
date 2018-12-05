@@ -1,0 +1,74 @@
+---
+title: Homework 4
+author: Xinyu Zhang
+output: pdf_document
+---
+
+\centering Due date: Tuesday, December 3
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+1. \textbf{Survival of root canal filled teeth} 
+Deep caries or restorations in teeth could lead to pulpal involvement, necessitating root canal therapy or extraction. In a retrospective dental study, the primary interest is to assess the impact of pulpal involvement on tooth survival. In this data analysis, a Cox model is fitted using the survival time of the teeth as the response variable. The covariates included in the model are 
+$$
+\begin{aligned}
+\mbox{MOLAR} = \left\{\begin{matrix}
+1 & \mbox{molar tooth}\\ 
+0 & \mbox{otherwise,}
+\end{matrix}\right.\,\,  
+\mbox{ROOT} = \left\{\begin{matrix}
+1 & \mbox{root canal treatment applied}\\ 
+0 & \mbox{otherwise,}
+\end{matrix}\right. \,\,\,\,
+\end{aligned}
+$$
+and three mutually exclusive categories of proximal contacts
+$$
+\begin{aligned}
+\mbox{PC1} = \left\{\begin{matrix}
+1 & \mbox{nonbridge abutment with one proximal contacts}\\ 
+0 & \mbox{otherwise,}
+\end{matrix}\right.
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\mbox{PC2} = \left\{\begin{matrix}
+1 & \mbox{nonbridge abutment with two proximal contacts}\\ 
+0 & \mbox{otherwise,}
+\end{matrix}\right. 
+\end{aligned}
+$$
+$$
+\begin{aligned}
+\mbox{PCABUT} = \left\{\begin{matrix}
+1 & \mbox{bridge abutment}\\ 
+0 & \mbox{otherwise,}
+\end{matrix}\right. \,\,
+\end{aligned}
+$$
+and the number of pockets larger than 5 mm (POCKET). 
+Use the attached the `coxph` output to answer the following questions:
+
+![`coxph` output](dental.png){width=450px}
+
+a. (2 points) Suppose the log-partial likelihood for the model is -581.4417, what is the log-partial likelihood for the reduced model with no covariates?
+
+$$2(-581.4417-l_{p}(0))=97.66\Rightarrow l_{p}(0)=-630.2717$$
+
+b. (2 points) What is the hazard ratio that compares teeth with bridge adutment with those without? \label{pocket}
+
+$$HR=0.5941$$
+
+c. (2 points) What is the 95\% confidence interval for the hazard ratio in \#\ref{pocket}?
+
+$$CI=e^{-0.5207\pm1.96\times0.5114}=\left[0.2180,1.6187\right]$$
+
+d. (2 points) What is the hazard ratio that compares teeth with nonbridge abutment and one proximal contacts with those with nonbridge abutment and two proximal contacts? 
+
+$$HR=e^{-0.7587-(-1.5423)}=2.1893$$
+
+e. (2 points) What is the hazard ratio that compares molar teeth with non-molar teeth **among those underwent root canal treatment**?
+
+$$HR=e^{-0.8440+0.6645)}=0.8357$$
