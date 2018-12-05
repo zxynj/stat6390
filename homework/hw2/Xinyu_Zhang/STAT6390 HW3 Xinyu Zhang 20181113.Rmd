@@ -1,0 +1,103 @@
+---
+title: Homework 3
+author: Xinyu Zhang
+output: pdf_document
+---
+
+\centering Due date: Tuesday, November 13
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+1. **Textbook problem 2.1** Listed below are values of survival time in  years for 6 males and 6 females from the *WHAS100* study.
+   Right-censored times are denoted by a "+" as a superscript. \label{text2.1}
+
+      \flushleft Males: 1.2, 3.4, $5.0^+$, 5.1, 6.1, 7.1 
+      \flushleft Females: 0.4, 1.2, 4.3, 4.9, 5.0, $5.1^+$
+
+      \flushleft Using these data, compute the following **without a software package**:
+
+    a. (2 pts) The Kaplan-Meier estimate of the survival function for each gender. \label{km-whas}
+    b. (2 pts) Pointwise 95 \% confidence intervals for the survival functions estimated in problem \eqref{km-whas}. \label{km-whas2}
+    c. (2 pts) Pointwise 95 \% confidence interval estimates of the 50th percentile of the survival time distribution for each gender. 
+    d. (2 pts) The estimated mean survival time for each gender using all available times, upto 7.1.
+    e. (2 pts) A graph of the estimated survival functions for each gender computed in problem \eqref{km-whas} along with the point wise and overall 95 \% limits computed in problem \eqref{km-whas2}.
+
+```{r, echo=FALSE, message=FALSE}
+library(survMisc)
+library(tidyverse)
+library(ggplot2)
+```
+
+```{r}
+data=
+  data.frame(time=c(0.4,1.2,3.4,4.3,4.9,5,5.1,6.1,7.1),
+             n.risk=c(12,11,9,8,7,6,4,2,1),
+             d1.event=c(0,1,1,0,0,0,1,1,1),
+             c1.censor=c(0,0,0,0,0,1,0,0,0),
+             d0.event=c(1,1,0,1,1,1,0,0,0),
+             c0.censor=c(0,0,0,0,0,0,1,0,0))
+
+data
+```
+
+  We count the number of event and censors for both male(1) and female(0), then put them into a table.
+
+```{r}
+surv=data %>%
+  mutate(n1.risk=6-head(c(0,cumsum(d1.event+c1.censor)),-1),s1=cumprod(1-d1.event/n1.risk)) %>%
+  mutate(n0.risk=6-head(c(0,cumsum(d0.event+c0.censor)),-1),s0=cumprod(1-d0.event/n0.risk)) %>%
+  mutate(s1=replace_na(s1,tail(s1[!is.na(s1)],1)),s0=replace_na(s0,tail(s0[!is.na(s0)],1)))
+
+surv
+```
+
+  KM survival functin is s1 and s0 for male and female respectively.
+
+```{r}
+surv.ci=surv %>% mutate(var.log.s1=cumsum(d1.event/n1.risk/(n1.risk-d1.event)),
+                     var.log.s0=cumsum(d0.event/n0.risk/(n0.risk-d0.event))) %>% 
+  mutate(lower.log.s1=log(s1)-1.96*sqrt(var.log.s1),upper.log.s1=log(s1)+1.96*sqrt(var.log.s1),
+         lower.log.s0=log(s0)-1.96*sqrt(var.log.s0),upper.log.s0=log(s0)+1.96*sqrt(var.log.s0)) %>% 
+  mutate(lower.s1=pmax(0,exp(lower.log.s1)),upper.s1=pmin(1,exp(upper.log.s1)),
+         lower.s0=pmax(0,exp(lower.log.s0)),upper.s0=pmin(1,exp(upper.log.s0))) %>%
+  select(time,lower.s1,s1,upper.s1,lower.s0,s0,upper.s0)
+
+surv.ci
+```
+
+  Above is the 95% CI of KM survival function for s1 and s0 using Greenwood formula.
+
+  We draw a horizontal line across S(t)=0.5. If the line cross the KM survival function at t_median, then it is the median survival time. If the line crosses the lower and upper CI at t_lower and t_upper respectively, then the 95% CI for t_median is (t_lower, t_upper). The median survival time for male is 5.1. Its 95% CI is (3.4, NA). The median survial time for female is 4.3. Its 95% CI is (1.2,NA).
+
+```{r}
+e.s1=with(surv,sum(head(c(1,s1),-1)*(surv$time-head(c(0,surv$time),-1))))
+e.s0=with(surv,sum(head(c(1,s0),-1)*(surv$time-head(c(0,surv$time),-1))))
+  
+e.s1
+e.s0
+```
+
+  The expected survival time up to 7.1 is 4.833333 and 3.816667 for male and female respectively.
+
+```{r}
+surv.ci %>% add_row(time=0,lower.s1=1,s1=1,upper.s1=1,lower.s0=1,s0=1,upper.s0=1,.before=1) %>%
+  filter(!is.na(upper.s1)) %>% 
+  ggplot()+
+  geom_step(aes(time,s1,linetype="dashed"))+
+  geom_step(aes(time,lower.s1,linetype="solid"))+
+  geom_step(aes(time,upper.s1,linetype="solid"))+
+  theme(legend.position="none")+
+  ggtitle("Male survival function and 95% CI")
+  
+surv.ci %>% add_row(time=0,lower.s1=1,s1=1,upper.s1=1,lower.s0=1,s0=1,upper.s0=1,.before=1) %>%
+  filter(!is.na(upper.s0)) %>% 
+  ggplot()+
+  geom_step(aes(time,s0,linetype="dashed"))+
+  geom_step(aes(time,lower.s0,linetype="solid"))+
+  geom_step(aes(time,upper.s0,linetype="solid"))+
+  theme(legend.position="none")+
+  ggtitle("Female survival function and 95% CI")
+```
+
+  Above is the KM survival curve for male and female.
