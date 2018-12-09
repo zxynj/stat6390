@@ -1,0 +1,159 @@
+---
+title: "Exam 2"
+author: "Xinyu Zhang"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+**Instructions**
+
+  * Please hand in a hard copy by **Tuesday, December 11**.
+  * This is a open resource exam, but you are not allowed to ask post exam questions online.
+  * You are not allowed to collaborate with classmates and/or people outside of class.
+  * Please circle or highlight your final answer. 
+  * The total possible point is 50.
+  
+Violation of this agreement will result in an **F** on this exam and it will be averaged in as a 0\%.
+  
+```{r load package and data, echo=F, message=F}
+library(survival)
+library(tidyverse)
+library(Hmisc)
+
+data(whas100, package = "survMisc")
+```
+
+  
+---
+1. Under the exponential model, we assume $T$ follows an exponential distribution with parameter $\lambda$ and derived the maximum likelihood for $\lambda$ to be $$\hat\lambda = \frac{\sum_{i = 1}^n\Delta_i}{\sum_{i = 1}t_i},$$ where $\Delta_i$'s is the censoring indicator and $t_i$'s are the 
+observed survival times. Now let's suppose each copy of $\{\Delta_i, t_i\}$ is associated with a weight $w_i$ (this weight could represent sampling weights, propensity score, or counts, etc.). 
+  
+    a. (5 points) Modify the likelihood presented in note 3 and derived the weighted maximum likelihood estimator for $\lambda$.
+      We will denote this $\hat\lambda_w$. \label{weight}
+      
+    If we just multiply each term of the likelihood function with its weight, then the weight will become 0 when we take the derivative of the log likelihood. Therefore, we raise the power of each term of the likelihood function to its weight and continue from there.
+
+    $$L(\lambda) = \prod_{i = 1}^n\left[\lambda e^{-\lambda t_i} \right]^{\Delta_i\cdot w_{i}} \cdot \left[ e^{-\lambda t_i}\right]^{(1 - \Delta_i)\cdot w_{i}} = \prod_{i =1 }^n\lambda^{\Delta_i\cdot w_{i}}\cdot e^{-\lambda t_i\cdot w_{i}}$$
+    $$\log L(\lambda) = \ell(\lambda)= \log(\lambda)\left(\sum_{i = 1}^n\Delta_i\cdot w_{i}\right) - \lambda\sum_{i = 1}^nt_i\cdot w_{i}$$
+    $$\frac{\text{d} \log L(\lambda)}{\text{d} \lambda} = \ell^\prime(\lambda) = 0 \mbox{ gives } \hat\lambda_{w} = \frac{\sum_{i = 1}^n\Delta_i\cdot w_{i}}{\sum_{i = 1}^nt_i\cdot w_{i}}$$
+
+
+    b. (5 points) Use `los` (length of stay) as the weight in *WHAS100*. Apply `survreg` to *WHAS100* to compute $\hat\lambda_w$.
+    
+    ```{r fit aft model with weight eq los}
+    fm <- Surv(lenfol, fstat) ~ 1
+    fit.aft.weighted <- survreg(fm, data = whas100, dist="exp", weight=los)
+    
+    summary(fit.aft.weighted)
+    ```
+    
+    We see that the intercept is 8 which is $-\log(\lambda_{w})$, so $\lambda_{w}=e^{-8}=3.3546\times10^{-4}$.
+
+    c. (5 points) Use the derivation in \ref{weight} and *WHAS100* to compute $\hat\lambda_w$.
+    
+    ```{r calc lambda.weight using formu in part a}
+    sum(whas100$fstat*whas100$los)/sum(whas100$lenfol*whas100$los)
+    ```
+    
+    $3.3495\times10^{-4}$ is very close to $3.3546\times10^{-4}$.
+    
+    d. (5 points) Derive the *information* and the asymptotic variance for $\hat\lambda_w$.
+    
+    $$\ell^{\prime\prime}(\lambda_{w}) = -\frac{1}{\lambda_{w}^2}\sum_{i = 1}^n\Delta_i\cdot w_{i}$$
+    
+    $$Var(\hat\lambda_{w}) \approx \frac{\hat\lambda_{w}^2}{\sum_{i = 1}^n\Delta_i\cdot w_{i}}$$
+  
+2. In exam 1, we have investigated different methods to compare two survival curves.
+   Another way to compare two survival curves is to fit a Cox model using the group
+   indicator as the covariate.
+   Use the complete *WHAS100* dataset and gender as the group indicator for the following questions.
+   
+    a. (5 points) Fit a Cox model and print the summary using gender as the covariate. \label{cox1}
+    
+    ```{r fit coxph to whas100 with gender}
+    fm <- Surv(lenfol, fstat) ~ gender
+    fit.cox.gender <- coxph(fm, data = whas100)
+
+    summary(fit.cox.gender)
+    ```
+    
+    b. (5 points) Interpret the estimated regression parameter ($\hat\beta$) in terms of hazard ratio.
+    
+    The hazard ratio that compares male(gender=1) with female(gender=0) is 1.7416. For the change from female to male, the risk of death is expected to increase by 1.7416 times. The log of survival time is expected to decrease by 0.5548 (days).
+
+    c. (5 points) Use part \ref{cox1} to test for the null hypothesis that there is no significant difference between the two survival curves.
+    
+    We see that the p-value for $b_{gender}$ is 0.0494 which is slightly smaller than $\alpha$=0.05. Therefore we reject the $H_{0}$: $b_{gender}$=0 and conclude that there is a significant difference between male and female survival curves, but it is very marginal.
+
+3.
+    a. (5 points) Fit a Cox model with `age` as the (only) covariate. Plot the estimated cumulative hazard function for patients with `age = 50`, `age = 60` and `age = 70`. \label{age1}
+
+    ```{r fit coxph to whas100 with age}
+    fm <- Surv(lenfol, fstat) ~ age
+    fit.cox.age <- coxph(fm, data = whas100)
+
+    summary(fit.cox.age)
+    ```
+    
+    The coefficient of age is 0.04567.
+        
+    ```{r plot coxph to whas100 with age}
+    H.fit.cox.age=basehaz(fit.cox.age) %>%
+    mutate(H.50age=hazard*exp(0.04567*50),
+           H.60age=hazard*exp(0.04567*60),
+           H.70age=hazard*exp(0.04567*70)) %>%
+    select(time,H.50age,H.60age,H.70age)
+
+    ggplot(data = H.fit.cox.age, aes(x = time)) +
+      geom_step(aes(y = H.50age, colour = "Age = 50")) +
+      geom_step(aes(y = H.60age, colour = "Age = 60")) +
+      geom_step(aes(y = H.70age, colour = "Age = 70")) +
+      scale_colour_manual("",breaks = c("Age = 50", "Age = 60", "Age = 70"),
+                          values = c("Age = 50"="green", "Age = 60"="red","Age = 70"="blue")) +
+      labs(title ="Estimated Ht for Cox model with age only", x = "Time", y = "Ht_hat")
+    ```
+    
+    b. (5 points) Fit another Cox model with `age` and `age^2` as covariates. Plot the estimated cumulative hazard function for patients with `age = 50`, `age = 60` and `age = 70`. \label{age2}
+      
+    ```{r fit coxph to whas100 with age and age sqrd}
+    fm2 <- Surv(lenfol, fstat) ~ age + I(age^2)
+    fit.cox.age2 <- coxph(fm2, data = whas100)
+      
+    summary(fit.cox.age2)
+    ```
+    
+    The coefficient of age is -0.0808322 and age^2 is 0.0009431.
+        
+    ```{r plot coxph to whas100 with age and age sqrd}
+    H.fit.cox.age2=basehaz(fit.cox.age2) %>%
+    mutate(H.50age=hazard*exp(-0.0808322*50+0.0009431*50^2),
+           H.60age=hazard*exp(-0.0808322*60+0.0009431*60^2),
+           H.70age=hazard*exp(-0.0808322*70+0.0009431*70^2)) %>%
+    select(time,H.50age,H.60age,H.70age)
+
+    ggplot(data = H.fit.cox.age2, aes(x = time)) +
+      geom_step(aes(y = H.50age, colour = "Age = 50")) +
+      geom_step(aes(y = H.60age, colour = "Age = 60")) +
+      geom_step(aes(y = H.70age, colour = "Age = 70")) +
+      scale_colour_manual("",breaks = c("Age = 50", "Age = 60", "Age = 70"),
+                          values = c("Age = 50"="green", "Age = 60"="red","Age = 70"="blue")) +
+      labs(title ="Estimated Ht for Cox model with age and age^2", x = "Time", y = "Ht_hat")
+    ```
+      
+    c. (5 points) Interpret the results in \ref{age1} and \ref{age2}. 
+    
+    For both models, the Nelson-Aalen estimator baseline hazard functions increase rapidly at the very beginning and the very end, but slowdown in the middle portion. The range of the hazard function for the first model is almost 70 times larger than the second one, so the two models provide significantly different hazard function.
+    
+    ```{r partial likelihood ratio test of age^2}
+    1 - pchisq(2 * sum(fit.cox.age2$loglik - fit.cox.age$loglik), 1)
+    ```
+    
+    The partial likelihood ratio test gives a p-value of 0.1888 larger than $\alpha$=0.05, so we cannot reject the $H_{0}$: $b_{age^{2}}$=0 and conclude that age^2 is not significant enough to include in the model. Thus, we should select the first model and use its hazard function.
+    
+      
+      
